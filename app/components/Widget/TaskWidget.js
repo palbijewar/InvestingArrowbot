@@ -1,83 +1,38 @@
-import React, { useState, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
+import { Card, CardContent, Typography } from '@mui/material';
 import { injectIntl } from 'react-intl';
-import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import useStyles from './widget-jss';
+import qrCodeImage from '../../api/images/qr.jpg';
 
-function TaskWidget(props) {
-  const [checked, setChecked] = useState([0]);
-
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
+function QRCodeWidget(props) {
   const { intl } = props;
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
 
   return (
     <PapperBlock
-      title={intl.formatMessage(messages.task_title)}
-      icon="playlist_add_check"
+      title={intl.formatMessage({ id: 'qr_code_title', defaultMessage: 'QR Code' })}
+      icon="qr_code"
       noMargin
       whiteBg
       colorMode="dark"
-      desc={intl.formatMessage(messages.task_desc)}
       className={classes.root}
     >
-      <List className={classes.taskList}>
-        {[0, 1, 2, 3, 4, 5, 6].map(value => (
-          <Fragment key={value}>
-            <ListItem
-              key={value}
-              role={undefined}
-              dense
-              button
-              onClick={handleToggle(value)}
-              className={
-                cx(
-                  classes.listItem,
-                  checked.indexOf(value) !== -1 ? classes.done : ''
-                )
-              }
-            >
-              <Checkbox
-                checked={checked.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-              />
-              <ListItemText primary={`Task item ${value + 1}`} secondary={`Task description ${value + 1}`} />
-              <ListItemSecondaryAction>
-                <IconButton aria-label="Comments" size="large">
-                  <CommentIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </Fragment>
-        ))}
-      </List>
+      <Card className={classes.card}>
+        <CardContent className={classes.content}>
+          <img src={qrCodeImage} alt="QR Code" className={classes.qrImage} />
+          <Typography variant="body1" align="center">
+            Scan this QR code for payment details.
+          </Typography>
+        </CardContent>
+      </Card>
     </PapperBlock>
   );
 }
 
-TaskWidget.propTypes = {
-  intl: PropTypes.object.isRequired
+QRCodeWidget.propTypes = {
+  intl: PropTypes.object.isRequired,
 };
 
-export default injectIntl(TaskWidget);
+export default injectIntl(QRCodeWidget);

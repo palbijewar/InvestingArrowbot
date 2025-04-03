@@ -161,6 +161,7 @@
     "mui-datatables": "^4.3.0",
     "organism-react-scroll-nav": "^1.1.0",
     "prop-types": "15.7.2",
+    "qrcode.react": "^4.2.0",
     "raw-loader": "^4.0.2",
     "rcolor": "^1.0.1",
     "react": "18.2.0",

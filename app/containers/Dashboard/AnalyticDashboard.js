@@ -5,6 +5,9 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import {
   CounterIconsWidget,
+  PerformanceChartWidget,
+  TaskWidget,
+  FilesWidget,
 } from 'enl-components';
 import useStyles from './dashboard-jss';
 
@@ -24,6 +27,7 @@ function AnalyticDashboard() {
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
       </Helmet>
+
       {/* 1st Section */}
       <Grid container spacing={3} className={classes.root}>
         <Grid item xs={12}>
@@ -31,6 +35,19 @@ function AnalyticDashboard() {
         </Grid>
       </Grid>
       <Divider className={classes.divider} />
+
+      {/* Performance & Task Widget Side by Side */}
+      <Grid container spacing={3} className={classes.root}>
+        <Grid item md={6} xs={12}>
+          <PerformanceChartWidget />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <TaskWidget />
+        </Grid>
+      </Grid>
+
+      <Divider className={classes.divider} />
+      <FilesWidget />
     </div>
   );
 }
