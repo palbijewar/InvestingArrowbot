@@ -9,9 +9,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
@@ -147,6 +149,11 @@ function LoginForm(props) {
             </FormControl>
           </div>
           <div className={classes.optArea}>
+            <FormControlLabel
+              className={classes.label}
+              control={<Checkbox name="checkbox" />}
+              label={intl.formatMessage(messages.loginRemember)}
+            />
             <Button size="small" component={LinkBtn} to="/reset-password" className={classes.buttonLink}>
               <FormattedMessage {...messages.loginForgotPassword} />
             </Button>
@@ -160,11 +167,6 @@ function LoginForm(props) {
           </div>
         </form>
       </section>
-      <h5 className={classes.divider}>
-        <span>
-          <FormattedMessage {...messages.loginOr} />
-        </span>
-      </h5>
     </Paper>
   );
 }

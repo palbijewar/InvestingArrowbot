@@ -7,9 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import Typography from '@mui/material/Typography';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ArrowBack from '@mui/icons-material/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
-import { SelectLanguage, RegisterForm } from 'enl-components';
+import { RegisterForm } from 'enl-components';
 import useStyles from 'enl-components/Forms/user-jss';
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
@@ -82,15 +81,6 @@ function Register() {
               <Typography variant="h6" component="p" className={classes.subpening}>
                 <FormattedMessage {...messages.greetingSubtitle} />
               </Typography>
-            </div>
-            <div className={classes.openingFooter}>
-              <NavLink to="/" className={classes.back}>
-                <ArrowBack />
-                &nbsp;back to site
-              </NavLink>
-              <div className={classes.lang}>
-                <SelectLanguage />
-              </div>
             </div>
           </div>
         )}
