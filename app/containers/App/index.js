@@ -22,11 +22,12 @@ function App(props) {
     <ThemeWrapper>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Corporate />}>
+          <Route path="/corporate" element={<Corporate />}>
             <Route index element={<HomePage />} />
           </Route>
           <Route path="app/*" element={<Application history={history} />} />
           <Route element={<Outer />}>
+            <Route path="/" element={<LoginFullstack />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="reset-password" element={<ResetPassword />} />
