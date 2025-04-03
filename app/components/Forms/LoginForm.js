@@ -9,12 +9,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import Icon from '@mui/material/Icon';
 import CircularProgress from '@mui/material/CircularProgress';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
@@ -47,7 +44,6 @@ function LoginForm(props) {
   const {
     link, intl, messagesAuth,
     closeMsg, loading, submitForm,
-    googleAuth, twitterAuth, githubAuth
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -56,8 +52,8 @@ function LoginForm(props) {
 
   const formik = useFormik({
     initialValues: {
-      email: 'john.doe@mail.com',
-      password: '12345678',
+      email: '',
+      password: '',
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -89,7 +85,6 @@ function LoginForm(props) {
           <FormattedMessage {...messages.login} />
         </Typography>
         <Button size="small" className={classes.buttonLink} component={LinkBtn} to={link}>
-          <Icon className={cx(classes.icon, classes.signArrow)}>arrow_forward</Icon>
           <FormattedMessage {...messages.createNewAccount} />
         </Button>
       </div>
@@ -152,11 +147,6 @@ function LoginForm(props) {
             </FormControl>
           </div>
           <div className={classes.optArea}>
-            <FormControlLabel
-              className={classes.label}
-              control={<Checkbox name="checkbox" />}
-              label={intl.formatMessage(messages.loginRemember)}
-            />
             <Button size="small" component={LinkBtn} to="/reset-password" className={classes.buttonLink}>
               <FormattedMessage {...messages.loginForgotPassword} />
             </Button>
@@ -175,38 +165,6 @@ function LoginForm(props) {
           <FormattedMessage {...messages.loginOr} />
         </span>
       </h5>
-      <section className={classes.socmedSideLogin}>
-        <Button
-          variant="contained"
-          className={classes.redBtn}
-          type="button"
-          size="large"
-          onClick={googleAuth}
-        >
-          <i className="ion-logo-google" />
-          Google
-        </Button>
-        <Button
-          variant="contained"
-          className={classes.cyanBtn}
-          type="button"
-          size="large"
-          onClick={twitterAuth}
-        >
-          <i className="ion-logo-twitter" />
-          Twitter
-        </Button>
-        <Button
-          variant="contained"
-          className={classes.greyBtn}
-          type="button"
-          size="large"
-          onClick={githubAuth}
-        >
-          <i className="ion-logo-github" />
-          Github
-        </Button>
-      </section>
     </Paper>
   );
 }

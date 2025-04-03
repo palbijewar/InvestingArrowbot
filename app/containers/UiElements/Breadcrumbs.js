@@ -24,7 +24,6 @@ function BreadCrumbs(props) {
       </Helmet>
       <PapperBlock
         title={intl.formatMessage(messages.breadcrumbClassicTitle)}
-        icon="arrow_forward_ios"
         desc={intl.formatMessage(messages.breadcrumbClassicDesc)}
       >
         <div>
@@ -34,7 +33,6 @@ function BreadCrumbs(props) {
       </PapperBlock>
       <PapperBlock
         title={intl.formatMessage(messages.breadcrumbPaperTitle)}
-        icon="arrow_forward_ios"
         desc={intl.formatMessage(messages.breadcrumbPaperDesc)}
       >
         <div>

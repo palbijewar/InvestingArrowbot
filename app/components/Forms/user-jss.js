@@ -2,7 +2,8 @@ import { makeStyles } from 'tss-react/mui';
 import { alpha } from '@mui/material/styles';
 import deco from 'enl-images/decoration/hexaMonochrome.svg';
 import {
-  cyan, blueGrey as grey, red, green, amber
+  blueGrey as grey, red, green, amber,
+  lime
 } from '@mui/material/colors';
 const rootWraper = {
   display: 'flex',
@@ -324,9 +325,9 @@ const useStyles = makeStyles()((theme, _params, classes) => ({
   },
   cyanBtn: {
     color: theme.palette.common.white,
-    background: cyan[500],
+    background: lime[500],
     '&:hover': {
-      background: cyan[700],
+      background: lime[700],
     },
   },
   buttonLink: {

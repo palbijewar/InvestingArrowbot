@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'Enlite Prime',
-  desc: 'Enlite Prime - React.js Fullstack Template',
-  prefix: 'enlite',
-  footerText: 'Enlite Prime All Rights Reserved 2023',
-  logoText: 'Enlite Prime',
+  name: 'Investing Arrowbot',
+  desc: 'Investing Arrowbot',
+  prefix: 'Investing Arrowbot',
+  footerText: 'Investing Arrowbot All Rights Reserved 2023',
+  logoText: 'Investing Arrowbot',
 };

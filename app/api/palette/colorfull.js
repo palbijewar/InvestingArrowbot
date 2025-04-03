@@ -1,17 +1,17 @@
 import {
-  pink, purple, orange,
-  teal, lightGreen, lightBlue,
-  indigo,
+  red, amber, cyan,
+  lime, deepPurple, deepOrange,
+  blueGrey,
 } from '@mui/material/colors';
 
 const colorfull = [
-  pink[400],
-  indigo.A200,
-  lightBlue[500],
-  teal[500],
-  orange[600],
-  lightGreen[600],
-  purple[500],
+  red[500],
+  amber[700],
+  cyan[600],
+  lime[800],
+  deepOrange[500],
+  deepPurple[700],
+  blueGrey[600],
 ];
 
 export default colorfull;

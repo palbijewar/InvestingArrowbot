@@ -2,15 +2,15 @@ module.exports = {
   redTheme: {
     palette: {
       primary: {
-        light: '#fce4ec',
-        main: '#e91e63',
-        dark: '#ad1457',
+        light: '#ffebee',
+        main: '#d32f2f',
+        dark: '#b71c1c',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#ff80ab',
-        main: '#ff4081',
-        dark: '#880e4f',
+        light: '#ff8a80',
+        main: '#c62828',
+        dark: '#8e0000',
         contrastText: '#fff',
       },
     },
@@ -18,14 +18,14 @@ module.exports = {
   greenTheme: {
     palette: {
       primary: {
-        light: '#e0f2f1',
-        main: '#009688',
-        dark: '#00695c',
+        light: '#d0f8ce',
+        main: '#388e3c',
+        dark: '#1b5e20',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#a7ffeb',
-        main: '#00bfa5',
+        light: '#a5d6a7',
+        main: '#2e7d32',
         dark: '#004d40',
         contrastText: '#fff',
       },
@@ -34,15 +34,15 @@ module.exports = {
   blueTheme: {
     palette: {
       primary: {
-        light: '#e8eaf6',
-        main: '#3f51b5',
-        dark: '#283593',
+        light: '#bbdefb',
+        main: '#1976d2',
+        dark: '#0d47a1',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#8c9eff',
-        main: '#304ffe',
-        dark: '#1a237e',
+        light: '#90caf9',
+        main: '#1565c0',
+        dark: '#0b3d91',
         contrastText: '#fff',
       },
     },
@@ -50,14 +50,14 @@ module.exports = {
   purpleTheme: {
     palette: {
       primary: {
-        light: '#f3e5f5',
-        main: '#9c27b0',
-        dark: '#6a1b9a',
+        light: '#e1bee7',
+        main: '#8e24aa',
+        dark: '#4a0072',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#ea80fc',
-        main: '#aa00ff',
+        light: '#ce93d8',
+        main: '#7b1fa2',
         dark: '#4a148c',
         contrastText: '#fff',
       },
@@ -66,15 +66,15 @@ module.exports = {
   orangeTheme: {
     palette: {
       primary: {
-        light: '#fbe9e7',
-        main: '#ff5722',
-        dark: '#d84315',
+        light: '#ffe0b2',
+        main: '#f57c00',
+        dark: '#e65100',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#ff9e80',
-        main: '#ff3d00',
-        dark: '#bf360c',
+        light: '#ffcc80',
+        main: '#fb8c00',
+        dark: '#ef6c00',
         contrastText: '#fff',
       },
     },
@@ -82,15 +82,15 @@ module.exports = {
   greyTheme: {
     palette: {
       primary: {
-        light: '#eceff1',
-        main: '#607d8b',
-        dark: '#37474f',
+        light: '#f5f5f5',
+        main: '#9e9e9e',
+        dark: '#616161',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#e0e0e0',
-        main: '#616161',
-        dark: '#263238',
+        light: '#eeeeee',
+        main: '#757575',
+        dark: '#424242',
         contrastText: '#fff',
       },
     },
@@ -98,15 +98,15 @@ module.exports = {
   lightGreenTheme: {
     palette: {
       primary: {
-        light: '#dcedc8',
-        main: '#8bc34a',
-        dark: '#558b2f',
+        light: '#e6ee9c',
+        main: '#cddc39',
+        dark: '#827717',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#ccff90',
-        main: '#64dd17',
-        dark: '#33691e',
+        light: '#d4e157',
+        main: '#afb42b',
+        dark: '#9e9d24',
         contrastText: '#fff',
       },
     },
@@ -114,15 +114,15 @@ module.exports = {
   lightBlueTheme: {
     palette: {
       primary: {
-        light: '#b3e5fc',
-        main: '#03a9f4',
-        dark: '#0277bd',
+        light: '#81d4fa',
+        main: '#0288d1',
+        dark: '#01579b',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#80d8ff',
-        main: '#0091ea',
-        dark: '#01579b',
+        light: '#29b6f6',
+        main: '#0277bd',
+        dark: '#004c8c',
         contrastText: '#fff',
       },
     },
@@ -130,14 +130,14 @@ module.exports = {
   brownTheme: {
     palette: {
       primary: {
-        light: '#d7ccc8',
-        main: '#795548',
-        dark: '#4e342e',
+        light: '#bcaaa4',
+        main: '#8d6e63',
+        dark: '#5d4037',
         contrastText: '#fff',
       },
       secondary: {
-        light: '#ccb0b0',
-        main: '#794848',
+        light: '#a1887f',
+        main: '#6d4c41',
         dark: '#3e2723',
         contrastText: '#fff',
       },

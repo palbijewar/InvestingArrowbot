@@ -1,6 +1,6 @@
 const guideSteps = [
   {
-    title: 'Welcome to Enlite Prime',
+    title: 'Welcome to Investing Arrowbot',
     label: 'Here is some guide to use this template. Click next to continue and back to previous or click on outside to skip it.',
     imgPath: '/images/guide/guide1.jpg',
   },

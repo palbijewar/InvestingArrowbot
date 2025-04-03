@@ -1,23 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import ArrowForward from '@mui/icons-material/ArrowForward';
-import Icon from '@mui/material/Icon';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
+import { v4 as uuidv4 } from 'uuid';
 import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
@@ -51,15 +49,16 @@ function RegisterForm(props) {
   const { classes, cx } = useStyles();
   const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
   const mdUp = useMediaQuery(theme => theme.breakpoints.up('md'));
+  const [generatedSponsorId, setGeneratedSponsorId] = useState('');
 
   const {
     link, intl, messagesAuth,
     closeMsg, loading, submitForm,
-    googleAuth, twitterAuth, githubAuth
   } = props;
 
   const formik = useFormik({
     initialValues: {
+      sponsorId: generatedSponsorId,
       name: '',
       email: '',
       password: '',
@@ -72,6 +71,12 @@ function RegisterForm(props) {
       submitForm(values);
     },
   });
+
+  useEffect(() => {
+    const sponsorId = uuidv4().slice(0, 8);
+    setGeneratedSponsorId(sponsorId);
+    formik.setFieldValue('sponsorId', sponsorId);
+  }, []);
 
   return (
     <Paper className={classes.sideWrap}>
@@ -88,7 +93,6 @@ function RegisterForm(props) {
           <FormattedMessage {...messages.register} />
         </Typography>
         <Button size="small" className={classes.buttonLink} component={LinkBtn} to={link}>
-          <Icon className={cx(classes.icon, classes.signArrow)}>arrow_forward</Icon>
           <FormattedMessage {...messages.toAccount} />
         </Button>
       </div>
@@ -106,6 +110,22 @@ function RegisterForm(props) {
       }
       <section>
         <form onSubmit={formik.handleSubmit}>
+          <div>
+            <FormControl variant="standard" className={classes.formControl}>
+              <TextField
+                fullWidth
+                id="sponsorId"
+                name="sponsorId"
+                label="Sponsor ID"
+                variant="outlined"
+                value={formik.values.sponsorId}
+                onChange={formik.handleChange}
+                error={formik.touched.sponsorId && Boolean(formik.errors.sponsorId)}
+                helperText={formik.touched.sponsorId && formik.errors.sponsorId}
+                disabled
+              />
+            </FormControl>
+          </div>
           <div>
             <FormControl variant="standard" className={classes.formControl}>
               <TextField
@@ -170,25 +190,6 @@ function RegisterForm(props) {
               </FormControl>
             </Grid>
           </Grid>
-          <div>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  id="termsAndConditions"
-                  name="termsAndConditions"
-                  checked={formik.values.check}
-                  value={formik.values.check}
-                  onChange={formik.handleChange}
-                  className={classes.agree}
-                  required
-                />
-              )}
-              label={intl.formatMessage(messages.aggree)}
-            />
-            <a href="/terms-conditions" target="_blank" className={classes.link}>
-              <FormattedMessage {...messages.terms} />
-            </a>
-          </div>
           <div className={classes.btnArea}>
             <Button variant="contained" fullWidth disabled={loading} color="primary" type="submit">
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
@@ -197,43 +198,6 @@ function RegisterForm(props) {
             </Button>
           </div>
         </form>
-      </section>
-      <h5 className={classes.divider}>
-        <span>
-          <FormattedMessage {...messages.registerOr} />
-        </span>
-      </h5>
-      <section className={classes.socmedSideLogin}>
-        <Button
-          variant="contained"
-          className={classes.redBtn}
-          type="button"
-          size="large"
-          onClick={googleAuth}
-        >
-          <i className="ion-logo-google" />
-          Google
-        </Button>
-        <Button
-          variant="contained"
-          className={classes.cyanBtn}
-          type="button"
-          size="large"
-          onClick={twitterAuth}
-        >
-          <i className="ion-logo-twitter" />
-          Twitter
-        </Button>
-        <Button
-          variant="contained"
-          className={classes.greyBtn}
-          type="button"
-          size="large"
-          onClick={githubAuth}
-        >
-          <i className="ion-logo-github" />
-          Github
-        </Button>
       </section>
     </Paper>
   );
@@ -245,18 +209,12 @@ RegisterForm.propTypes = {
   closeMsg: PropTypes.func,
   loading: PropTypes.bool,
   submitForm: PropTypes.func.isRequired,
-  googleAuth: PropTypes.func,
-  twitterAuth: PropTypes.func,
-  githubAuth: PropTypes.func,
   link: PropTypes.string,
 };
 
 RegisterForm.defaultProps = {
   messagesAuth: null,
   loading: false,
-  closeMsg: () => {},
-  googleAuth: () => {},
-  twitterAuth: () => {},
   link: '#'
 };
 

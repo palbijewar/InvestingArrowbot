@@ -5,25 +5,25 @@ import FormControl from '@mui/material/FormControl';
 import InputBase from '@mui/material/InputBase';
 import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
-import { green } from '@mui/material/colors';
+import { purple, teal, orange } from '@mui/material/colors';
 
 const CssTextField = withStyles(TextField, {
   root: {
     '& label.Mui-focused': {
-      color: 'green',
+      color: purple[500],
     },
     '& .MuiInput-underline:after': {
-      borderBottomColor: 'green',
+      borderBottomColor: teal[500],
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: 'red',
+        borderColor: orange[500],
       },
       '&:hover fieldset': {
-        borderColor: 'yellow',
+        borderColor: teal[700],
       },
       '&.Mui-focused fieldset': {
-        borderColor: 'green',
+        borderColor: purple[700],
       },
     },
   },
@@ -39,12 +39,11 @@ const BootstrapInput = withStyles(InputBase, theme => ({
     borderRadius: 4,
     position: 'relative',
     backgroundColor: theme.palette.common.white,
-    border: '1px solid #ced4da',
+    border: `1px solid ${orange[300]}`,
     fontSize: 16,
     width: 'auto',
     padding: '24px 12px 10px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
-    // Use the system font instead of the default Roboto font.
     fontFamily: [
       '-apple-system',
       'BlinkMacSystemFont',
@@ -66,7 +65,7 @@ const BootstrapInput = withStyles(InputBase, theme => ({
 
 const useStylesReddit = makeStyles()((theme, _params, classes) => ({
   root: {
-    border: '1px solid #e2e2e1',
+    border: `1px solid ${teal[300]}`,
     overflow: 'hidden',
     borderRadius: 4,
     backgroundColor: '#fcfcfb',
@@ -111,7 +110,7 @@ const useStyles = makeStyles()(theme => ({
 
 const theme = createTheme({
   palette: {
-    primary: green,
+    primary: purple,
   },
 });
 
