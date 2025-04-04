@@ -15,7 +15,7 @@ interceptorInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('Request error:', error.message);
+    console.error('Request error :', error.message);
     return Promise.reject(error);
   }
 );
