@@ -1,4 +1,4 @@
-module.exports = [
+const defaultMenu = [
   {
     key: 'dashboard',
     name: 'Dashboard',
@@ -180,3 +180,11 @@ module.exports = [
     linkParent: '/logout',
   },
 ];
+
+const getMenuByUserType = () => {
+  const userType = localStorage.getItem('user_type') || 'default';
+  // eslint-disable-next-line no-undef
+  return userType === 'superadmin' ? superAdminMenu : defaultMenu;
+};
+
+module.exports = getMenuByUserType();
