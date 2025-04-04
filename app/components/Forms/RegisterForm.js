@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FormControl from '@mui/material/FormControl';
@@ -13,52 +13,43 @@ import TextField from '@mui/material/TextField';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { v4 as uuidv4 } from 'uuid';
+
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
-import { v4 as uuidv4 } from 'uuid';
 import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
+import { signUpUser, loginService } from '../../middlewares/interceptors.js';
 
-// validation functions
 const validationSchema = yup.object({
-  name: yup
-    .string('Enter your name')
-    .required('Name is required'),
-  email: yup
-    .string('Enter your email')
-    .email('Enter a valid email')
-    .required('Email is required'),
-  password: yup
-    .string('Enter your password')
-    .required('Password is required'),
-  passwordConfirmation: yup
-    .string()
+  name: yup.string('Enter your name').required('Name is required'),
+  email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
+  password: yup.string('Enter your password').required('Password is required'),
+  passwordConfirmation: yup.string()
     .required('Re-type Password is required')
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
-  termsAndConditions: yup
-    .bool()
-    .oneOf([true])
 });
 
-const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
-  return <NavLink to={props.to} {...props} />; // eslint-disable-line
-});
+// eslint-disable-next-line react/display-name, react/prop-types
+const LinkBtn = React.forwardRef((props) => <NavLink to={props.to} {...props} />);
 
 function RegisterForm(props) {
   const { classes, cx } = useStyles();
-  const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
+  const navigate = useNavigate();
   const mdUp = useMediaQuery(theme => theme.breakpoints.up('md'));
   const [generatedSponsorId, setGeneratedSponsorId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [serverMessage, setServerMessage] = useState(null);
 
   const {
-    link, intl, messagesAuth,
-    closeMsg, loading, submitForm,
+    link, intl, messagesAuth, closeMsg
   } = props;
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      sponsorId: generatedSponsorId,
+      sponsorId: '',
       name: '',
       email: '',
       password: '',
@@ -67,8 +58,35 @@ function RegisterForm(props) {
     },
     validationSchema,
     onSubmit: async (values) => {
-      await sleep(500);
-      submitForm(values);
+      setLoading(true);
+      setServerMessage(null);
+      try {
+        const response = await signUpUser({
+          sponsor_id: values.sponsorId,
+          username: values.name,
+          email: values.email,
+          password: values.password,
+          confirm_password: values.passwordConfirmation,
+        });
+
+        if (response?.status === 'success') {
+          await loginService({
+            sponsor_id: values.sponsorId,
+            password: values.password,
+          });
+
+          setTimeout(() => navigate('/app'), 2000);
+        } else {
+          throw new Error(response?.message || 'Signup failed. Please try again.');
+        }
+      } catch (error) {
+        setServerMessage({
+          type: 'error',
+          text: error.response?.data?.message || error.message || 'Registration failed. Try again.',
+        });
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -96,69 +114,67 @@ function RegisterForm(props) {
           <FormattedMessage {...messages.toAccount} />
         </Button>
       </div>
-      {
-        messagesAuth !== null || ''
-          ? (
-            <MessagesForm
-              variant="error"
-              className={classes.msgUser}
-              message={messagesAuth}
-              onClose={closeMsg}
-            />
-          )
-          : ''
-      }
+
+      {messagesAuth && (
+        <MessagesForm
+          variant="error"
+          className={classes.msgUser}
+          message={messagesAuth}
+          onClose={closeMsg}
+        />
+      )}
+
+      {serverMessage && (
+        <MessagesForm
+          variant={serverMessage.type}
+          className={classes.msgUser}
+          message={serverMessage.text}
+          onClose={() => setServerMessage(null)}
+        />
+      )}
+
       <section>
         <form onSubmit={formik.handleSubmit}>
-          <div>
-            <FormControl variant="standard" className={classes.formControl}>
-              <TextField
-                fullWidth
-                id="sponsorId"
-                name="sponsorId"
-                label="Sponsor ID"
-                variant="outlined"
-                value={formik.values.sponsorId}
-                onChange={formik.handleChange}
-                error={formik.touched.sponsorId && Boolean(formik.errors.sponsorId)}
-                helperText={formik.touched.sponsorId && formik.errors.sponsorId}
-                disabled
-              />
-            </FormControl>
-          </div>
-          <div>
-            <FormControl variant="standard" className={classes.formControl}>
-              <TextField
-                id="name"
-                name="name"
-                label={intl.formatMessage(messages.loginFieldName)}
-                variant="standard"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-                className={classes.field}
-              />
-            </FormControl>
-          </div>
-          <div>
-            <FormControl variant="standard" className={classes.formControl}>
-              <TextField
-                id="email"
-                name="email"
-                label={intl.formatMessage(messages.loginFieldEmail)}
-                variant="standard"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                className={classes.field}
-              />
-            </FormControl>
-          </div>
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="sponsorId"
+              name="sponsorId"
+              label="Sponsor ID"
+              variant="outlined"
+              value={formik.values.sponsorId}
+              disabled
+            />
+          </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="name"
+              name="name"
+              label={intl.formatMessage(messages.loginFieldName)}
+              variant="standard"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
+            />
+          </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="email"
+              name="email"
+              label={intl.formatMessage(messages.loginFieldEmail)}
+              variant="standard"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
+          </FormControl>
+
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <FormControl variant="standard" className={classes.formControl}>
+              <FormControl fullWidth className={classes.formControl}>
                 <TextField
                   id="password"
                   name="password"
@@ -169,12 +185,11 @@ function RegisterForm(props) {
                   onChange={formik.handleChange}
                   error={formik.touched.password && Boolean(formik.errors.password)}
                   helperText={formik.touched.password && formik.errors.password}
-                  className={classes.field}
                 />
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl variant="standard" className={classes.formControl}>
+              <FormControl fullWidth className={classes.formControl}>
                 <TextField
                   id="passwordConfirmation"
                   name="passwordConfirmation"
@@ -185,15 +200,14 @@ function RegisterForm(props) {
                   onChange={formik.handleChange}
                   error={formik.touched.passwordConfirmation && Boolean(formik.errors.passwordConfirmation)}
                   helperText={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation}
-                  className={classes.field}
                 />
               </FormControl>
             </Grid>
           </Grid>
+
           <div className={classes.btnArea}>
             <Button variant="contained" fullWidth disabled={loading} color="primary" type="submit">
-              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-              <FormattedMessage {...messages.loginButtonContinue} />
+              {loading ? <CircularProgress size={24} className={classes.buttonProgress} /> : 'Sign Up'}
               {!loading && <ArrowForward className={cx(classes.rightIcon, classes.iconSmall, classes.signArrow)} />}
             </Button>
           </div>
@@ -207,15 +221,12 @@ RegisterForm.propTypes = {
   intl: PropTypes.object.isRequired,
   messagesAuth: PropTypes.string,
   closeMsg: PropTypes.func,
-  loading: PropTypes.bool,
-  submitForm: PropTypes.func.isRequired,
   link: PropTypes.string,
 };
 
 RegisterForm.defaultProps = {
   messagesAuth: null,
-  loading: false,
-  link: '#'
+  link: '#',
 };
 
 export default injectIntl(RegisterForm);

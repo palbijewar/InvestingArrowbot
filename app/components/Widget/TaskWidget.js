@@ -13,7 +13,7 @@ function QRCodeWidget(props) {
   const { intl } = props;
   const { classes } = useStyles();
 
-  const walletAddress = 'bc1qcquxqqh0pcruah35qlxmsax6znzlngust57a38';
+  const walletAddress = 'TR34MGSRAGWKVJvtfCY5XyTjD4gXvSZGuD';
   const [copySuccess, setCopySuccess] = useState(false);
 
   const handleCopy = async () => {
