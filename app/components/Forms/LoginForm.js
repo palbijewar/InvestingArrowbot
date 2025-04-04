@@ -187,8 +187,6 @@ LoginForm.defaultProps = {
   messagesAuth: null,
   loading: false,
   closeMsg: () => {},
-  googleAuth: () => {},
-  twitterAuth: () => {},
   link: '#'
 };
 

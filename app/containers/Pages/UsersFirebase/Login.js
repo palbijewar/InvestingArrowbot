@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import {
-  getAuth, signInWithEmailAndPassword,
+  getAuth,
 } from 'firebase/auth';
 import { FormattedMessage } from 'react-intl';
 import Typography from '@mui/material/Typography';
@@ -12,10 +12,7 @@ import { LoginForm } from 'enl-components';
 import logo from 'enl-images/logo.svg';
 import brand from 'enl-api/dummy/brand';
 import useStyles from 'enl-components/Forms/user-jss';
-import {
-  requestAuth, loginUser,
-  setMessage, hideMessage
-} from 'enl-redux/modules/auth';
+import { hideMessage } from 'enl-redux/modules/auth';
 import messages from './messages';
 
 function getUrlVars() {
@@ -39,28 +36,8 @@ function Login() {
 
   const title = brand.name + ' - Login';
 
-  const loginEmail = (values) => {
-    const { email, password } = values;
-    dispatch(requestAuth());
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const { user } = userCredential;
-        if (user) {
-          dispatch(loginUser(user));
-          if (getUrlVars().next) {
-            // Redirect to next route
-            navigate(getUrlVars().next);
-          } else {
-            // Redirect to dashboard if no next parameter
-            navigate('/app');
-          }
-        }
-      })
-      .catch((error) => {
-        dispatch(setMessage(error.message));
-      });
+  const loginEmail = () => {
+    navigate('/app');
   };
 
   return (
