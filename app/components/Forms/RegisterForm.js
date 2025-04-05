@@ -13,7 +13,6 @@ import TextField from '@mui/material/TextField';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { v4 as uuidv4 } from 'uuid';
 
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
@@ -91,7 +90,8 @@ function RegisterForm(props) {
   });
 
   useEffect(() => {
-    const sponsorId = uuidv4().slice(0, 8);
+    const randomNum = Math.floor(10000000 + Math.random() * 90000000); 
+    const sponsorId = `INA${randomNum}`;
     setGeneratedSponsorId(sponsorId);
     formik.setFieldValue('sponsorId', sponsorId);
   }, []);
