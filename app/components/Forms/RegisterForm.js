@@ -49,6 +49,7 @@ function RegisterForm(props) {
     enableReinitialize: true,
     initialValues: {
       sponsorId: '',
+      referralSponsorId: '',
       name: '',
       email: '',
       password: '',
@@ -61,7 +62,7 @@ function RegisterForm(props) {
       setServerMessage(null);
       try {
         const response = await signUpUser({
-          sponsor_id: values.sponsorId,
+          sponsor_id: values.referralSponsorId || values.sponsorId,
           username: values.name,
           email: values.email,
           password: values.password,
@@ -70,7 +71,7 @@ function RegisterForm(props) {
 
         if (response?.status === 'success') {
           await loginService({
-            sponsor_id: values.sponsorId,
+            sponsor_id: values.referralSponsorId || values.sponsorId,
             password: values.password,
           });
 
@@ -145,6 +146,17 @@ function RegisterForm(props) {
               disabled
             />
           </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+  <TextField
+    id="referralSponsorId"
+    name="referralSponsorId"
+    label="Referral Sponsor ID"
+    variant="outlined"
+    value={formik.values.referralSponsorId}
+    onChange={formik.handleChange}
+  />
+</FormControl>
 
           <FormControl fullWidth className={classes.formControl}>
             <TextField
