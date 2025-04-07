@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink, useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import FormControl from '@mui/material/FormControl';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import ArrowForward from '@mui/icons-material/ArrowForward';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
+import {
+  Button,
+  useMediaQuery,
+  FormControl,
+  Paper,
+  Grid,
+  Typography,
+  CircularProgress,
+  TextField
+} from '@mui/material';
+import { ArrowForward } from '@mui/icons-material';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -19,13 +21,14 @@ import logo from 'enl-images/logo.svg';
 import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
-import { signUpUser, loginService } from '../../middlewares/interceptors.js';
+import { signUpUser, loginService, getSponsorName } from '../../middlewares/interceptors.js';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
   password: yup.string('Enter your password').required('Password is required'),
-  passwordConfirmation: yup.string()
+  passwordConfirmation: yup
+    .string()
     .required('Re-type Password is required')
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
@@ -33,17 +36,14 @@ const validationSchema = yup.object({
 // eslint-disable-next-line react/display-name, react/prop-types
 const LinkBtn = React.forwardRef((props) => <NavLink to={props.to} {...props} />);
 
-function RegisterForm(props) {
+function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
   const mdUp = useMediaQuery(theme => theme.breakpoints.up('md'));
   const [generatedSponsorId, setGeneratedSponsorId] = useState('');
   const [loading, setLoading] = useState(false);
   const [serverMessage, setServerMessage] = useState(null);
-
-  const {
-    link, intl, messagesAuth, closeMsg
-  } = props;
+  const [referralSponsorName, setReferralSponsorName] = useState('');
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -74,7 +74,6 @@ function RegisterForm(props) {
             sponsor_id: values.referralSponsorId || values.sponsorId,
             password: values.password,
           });
-
           setTimeout(() => navigate('/app'), 2000);
         } else {
           throw new Error(response?.message || 'Signup failed. Please try again.');
@@ -97,6 +96,24 @@ function RegisterForm(props) {
     formik.setFieldValue('sponsorId', sponsorId);
   }, []);
 
+  useEffect(() => {
+    const fetchSponsorName = async () => {
+      const id = formik.values.referralSponsorId.trim();
+      if (!id) {
+        setReferralSponsorName('');
+        return;
+      }
+      try {
+        const response = await getSponsorName(id);
+        setReferralSponsorName(response?.data?.username || 'Sponsor not found');
+      } catch {
+        setReferralSponsorName('Sponsor not found');
+      }
+    };
+
+    fetchSponsorName();
+  }, [formik.values.referralSponsorId]);
+
   return (
     <Paper className={classes.sideWrap}>
       {!mdUp && (
@@ -107,6 +124,7 @@ function RegisterForm(props) {
           </NavLink>
         </div>
       )}
+
       <div className={classes.topBar}>
         <Typography variant="h4" className={classes.title}>
           <FormattedMessage {...messages.register} />
@@ -117,12 +135,7 @@ function RegisterForm(props) {
       </div>
 
       {messagesAuth && (
-        <MessagesForm
-          variant="error"
-          className={classes.msgUser}
-          message={messagesAuth}
-          onClose={closeMsg}
-        />
+        <MessagesForm variant="error" className={classes.msgUser} message={messagesAuth} onClose={closeMsg} />
       )}
 
       {serverMessage && (
@@ -148,22 +161,33 @@ function RegisterForm(props) {
           </FormControl>
 
           <FormControl fullWidth className={classes.formControl}>
-  <TextField
-    id="referralSponsorId"
-    name="referralSponsorId"
-    label="Referral Sponsor ID"
-    variant="outlined"
-    value={formik.values.referralSponsorId}
-    onChange={formik.handleChange}
-  />
-</FormControl>
+            <TextField
+              id="referralSponsorId"
+              name="referralSponsorId"
+              label="Referral Sponsor ID"
+              variant="outlined"
+              value={formik.values.referralSponsorId}
+              onChange={formik.handleChange}
+            />
+          </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="referralSponsorName"
+              name="referralSponsorName"
+              label="Sponsor Name"
+              variant="outlined"
+              value={referralSponsorName}
+              disabled
+            />
+          </FormControl>
 
           <FormControl fullWidth className={classes.formControl}>
             <TextField
               id="name"
               name="name"
               label={intl.formatMessage(messages.loginFieldName)}
-              variant="standard"
+              variant="outlined"
               value={formik.values.name}
               onChange={formik.handleChange}
               error={formik.touched.name && Boolean(formik.errors.name)}
@@ -176,7 +200,7 @@ function RegisterForm(props) {
               id="email"
               name="email"
               label={intl.formatMessage(messages.loginFieldEmail)}
-              variant="standard"
+              variant="outlined"
               value={formik.values.email}
               onChange={formik.handleChange}
               error={formik.touched.email && Boolean(formik.errors.email)}
@@ -192,7 +216,7 @@ function RegisterForm(props) {
                   name="password"
                   type="password"
                   label={intl.formatMessage(messages.loginFieldPassword)}
-                  variant="standard"
+                  variant="outlined"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   error={formik.touched.password && Boolean(formik.errors.password)}
@@ -207,7 +231,7 @@ function RegisterForm(props) {
                   name="passwordConfirmation"
                   type="password"
                   label={intl.formatMessage(messages.loginFieldRetypePassword)}
-                  variant="standard"
+                  variant="outlined"
                   value={formik.values.passwordConfirmation}
                   onChange={formik.handleChange}
                   error={formik.touched.passwordConfirmation && Boolean(formik.errors.passwordConfirmation)}
@@ -219,8 +243,14 @@ function RegisterForm(props) {
 
           <div className={classes.btnArea}>
             <Button variant="contained" fullWidth disabled={loading} color="primary" type="submit">
-              {loading ? <CircularProgress size={24} className={classes.buttonProgress} /> : 'Sign Up'}
-              {!loading && <ArrowForward className={cx(classes.rightIcon, classes.iconSmall, classes.signArrow)} />}
+              {loading ? (
+                <CircularProgress size={24} className={classes.buttonProgress} />
+              ) : (
+                <>
+                  Sign Up
+                  <ArrowForward className={cx(classes.rightIcon, classes.iconSmall, classes.signArrow)} />
+                </>
+              )}
             </Button>
           </div>
         </form>

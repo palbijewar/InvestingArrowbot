@@ -81,3 +81,17 @@ export const signUpUser = async (formData) => {
     throw error;
   }
 };
+
+export const getSponsorName = async (referralSponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/sponsors/${referralSponsorId}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Get Sponsor Name error:', error.response?.data || error.message);
+    } else {
+      console.error('Get Sponsor Name error:', error);
+    }
+    throw error;
+  }
+};
