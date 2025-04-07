@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardContent, Typography, IconButton, Tooltip
+  Card, CardContent, Typography, IconButton, Tooltip, Box
 } from '@mui/material';
 import { ContentCopy } from '@mui/icons-material';
 import { injectIntl } from 'react-intl';
@@ -37,24 +37,35 @@ function QRCodeWidget(props) {
     >
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={qrCodeImage} alt="QR Code" className={classes.qrImage} />
-          </div>
+          <Box display="flex" justifyContent="center" mb={2}>
+            <img
+              src={qrCodeImage}
+              alt="Scan this QR code for TRC20 Tether payment"
+              className={classes.qrImage}
+              style={{ maxWidth: 200, width: '100%' }}
+            />
+          </Box>
+
           <Typography variant="body1" align="center" gutterBottom>
-    Scan this QR code for payment details.
+            <strong>Note:</strong> Only send Tether (TRC20) assets to this address.
+            <br />
+            Scan this QR code for payment details.
           </Typography>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
+
+          <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+            <Typography
+              variant="body2"
+              sx={{ wordBreak: 'break-all', textAlign: 'center', mr: 1 }}
+            >
               {walletAddress}
             </Typography>
             <Tooltip title={copySuccess ? 'Copied!' : 'Copy'}>
-              <IconButton onClick={handleCopy} size="small">
+              <IconButton onClick={handleCopy} size="small" aria-label="Copy wallet address">
                 <ContentCopy fontSize="small" />
               </IconButton>
             </Tooltip>
-          </div>
+          </Box>
         </CardContent>
-
       </Card>
     </PapperBlock>
   );

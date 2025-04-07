@@ -84,7 +84,12 @@ export const signUpUser = async (formData) => {
 
 export const getSponsorName = async (referralSponsorId) => {
   try {
-    const response = await interceptorInstance.get(`/sponsors/${referralSponsorId}`);
+    const url = `/auth/sponsors/${referralSponsorId}`;
+    console.log('Fetching Sponsor Name from:', url);
+
+    const response = await interceptorInstance.get(url);
+    console.log('Sponsor Name Response:', response);
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

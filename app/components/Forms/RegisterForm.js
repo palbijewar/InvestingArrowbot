@@ -90,7 +90,7 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
   });
 
   useEffect(() => {
-    const randomNum = Math.floor(10000000 + Math.random() * 90000000); 
+    const randomNum = Math.floor(10000000 + Math.random() * 90000000);
     const sponsorId = `INA${randomNum}`;
     setGeneratedSponsorId(sponsorId);
     formik.setFieldValue('sponsorId', sponsorId);
@@ -98,14 +98,14 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
 
   useEffect(() => {
     const fetchSponsorName = async () => {
+      console.log(formik.values);
       const id = formik.values.referralSponsorId.trim();
-      if (!id) {
-        setReferralSponsorName('');
-        return;
-      }
+      if (!id) return;
+      console.log(id);
       try {
         const response = await getSponsorName(id);
-        setReferralSponsorName(response?.data?.username || 'Sponsor not found');
+        console.log(response);
+        setReferralSponsorName(response?.username || 'Sponsor not found');
       } catch {
         setReferralSponsorName('Sponsor not found');
       }
