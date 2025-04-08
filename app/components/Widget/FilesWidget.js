@@ -1,12 +1,20 @@
+/* eslint-disable prefer-arrow-callback */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import { injectIntl } from 'react-intl';
 import useStyles from './widget-jss';
 import PapperBlock from '../PapperBlock/PapperBlock';
+import { createBroker } from '../../middlewares/interceptors.js';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function FilesWidget() {
   const { classes } = useStyles();
@@ -19,13 +27,35 @@ function FilesWidget() {
     totalFund: '',
   });
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const handleChange = (e) => {
     setBrokerDetails({ ...brokerDetails, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted Broker Details:', brokerDetails);
+
+    try {
+      await createBroker(brokerDetails);
+
+      setBrokerDetails({
+        brokerName: '',
+        userId: '',
+        password: '',
+        serverId: '',
+        totalFund: '',
+      });
+
+      setOpenSnackbar(true); // Show success popup
+    } catch (error) {
+      console.error('Broker creation failed:', error);
+    }
+  };
+
+  const handleCloseSnackbar = (_, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenSnackbar(false);
   };
 
   return (
@@ -92,6 +122,18 @@ function FilesWidget() {
           </Grid>
         </form>
       </PapperBlock>
+
+      {/* Snackbar Success Message */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Broker details saved successfully!
+        </Alert>
+      </Snackbar>
     </Grid>
   );
 }

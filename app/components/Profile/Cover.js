@@ -4,21 +4,16 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import VerifiedUser from '@mui/icons-material/VerifiedUser';
 import Info from '@mui/icons-material/Info';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import messages from './messages';
+import { injectIntl } from 'react-intl';
 import useStyles from './cover-jss';
 
 const optionsOpt = [
   'Edit Profile',
   'Change Cover',
-  'Option 1',
-  'Option 2',
-  'Option 3',
 ];
 
 const ITEM_HEIGHT = 48;
@@ -39,13 +34,14 @@ function Cover(props) {
     avatar,
     name,
     desc,
+    phone,
     coverImg,
   } = props;
 
   return (
     <div className={classes.cover} style={{ backgroundImage: `url(${coverImg})` }}>
       <div className={classes.opt}>
-        <IconButton className={classes.button} aria-label="Delete" size="large">
+        <IconButton className={classes.button} aria-label="Info" size="large">
           <Info />
         </IconButton>
         <IconButton
@@ -85,9 +81,11 @@ function Cover(props) {
         <Typography className={classes.subheading} gutterBottom>
           {desc}
         </Typography>
-        <Button className={classes.button} size="large" variant="contained" color="secondary">
-          <FormattedMessage {...messages.add_to_connection} />
-        </Button>
+        {phone && (
+          <Typography className={classes.subheading} gutterBottom>
+            📞 {phone}
+          </Typography>
+        )}
       </div>
     </div>
   );
@@ -97,6 +95,7 @@ Cover.propTypes = {
   avatar: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
+  phone: PropTypes.string, // <-- added
   coverImg: PropTypes.string.isRequired,
 };
 
