@@ -98,14 +98,11 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
 
   useEffect(() => {
     const fetchSponsorName = async () => {
-      console.log(formik.values);
       const id = formik.values.referralSponsorId.trim();
       if (!id) return;
-      console.log(id);
       try {
         const response = await getSponsorName(id);
-        console.log(response);
-        setReferralSponsorName(response?.username || 'Sponsor not found');
+        setReferralSponsorName(response?.data?.username || 'Sponsor not found');
       } catch {
         setReferralSponsorName('Sponsor not found');
       }
@@ -151,17 +148,6 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
         <form onSubmit={formik.handleSubmit}>
           <FormControl fullWidth className={classes.formControl}>
             <TextField
-              id="sponsorId"
-              name="sponsorId"
-              label="Sponsor ID"
-              variant="outlined"
-              value={formik.values.sponsorId}
-              disabled
-            />
-          </FormControl>
-
-          <FormControl fullWidth className={classes.formControl}>
-            <TextField
               id="referralSponsorId"
               name="referralSponsorId"
               label="Referral Sponsor ID"
@@ -178,6 +164,17 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
               label="Sponsor Name"
               variant="outlined"
               value={referralSponsorName}
+              disabled
+            />
+          </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="sponsorId"
+              name="sponsorId"
+              label="Sponsor ID"
+              variant="outlined"
+              value={formik.values.sponsorId}
               disabled
             />
           </FormControl>
