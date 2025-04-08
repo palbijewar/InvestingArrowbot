@@ -26,6 +26,10 @@ import { signUpUser, getSponsorName } from '../../middlewares/interceptors.js';
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
+  phone: yup
+    .string()
+    .matches(/^[6-9]\d{9}$/, 'Enter a valid Indian phone number')
+    .required('Phone number is required'),
   password: yup.string('Enter your password').required('Password is required'),
   passwordConfirmation: yup
     .string()
@@ -52,6 +56,7 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
       referralSponsorId: '',
       name: '',
       email: '',
+      phone: '',
       password: '',
       passwordConfirmation: '',
       termsAndConditions: false
@@ -66,6 +71,7 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
           sponsor_id: values.sponsorId,
           username: values.name,
           email: values.email,
+          phone: values.phone,
           password: values.password,
           confirm_password: values.passwordConfirmation,
         });
@@ -186,6 +192,19 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
               onChange={formik.handleChange}
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
+            />
+          </FormControl>
+
+          <FormControl fullWidth className={classes.formControl}>
+            <TextField
+              id="phone"
+              name="phone"
+              label="Phone Number"
+              variant="outlined"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              error={formik.touched.phone && Boolean(formik.errors.phone)}
+              helperText={formik.touched.phone && formik.errors.phone}
             />
           </FormControl>
 
