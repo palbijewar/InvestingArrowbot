@@ -42,6 +42,7 @@ export TimelineWidget from './Widget/TimelineWidget';
 export TradingFormWidget from './Widget/TradingFormWidget';
 export TransferCryptoWidget from './Widget/TransferCryptoWidget';
 export ThumbnailWidget from './Widget/ThumbnailWidget';
+
 // Guide
 export GuideSlider from './GuideSlider';
 // Table Components

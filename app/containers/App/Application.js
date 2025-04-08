@@ -34,7 +34,8 @@ import {
   Photos, Error,
   MapMarker, MapDirection, SearchMap,
   TrafficIndicator, StreetViewMap,
-  NotFound
+  NotFound, DirectUsersWidget,
+  DownlineStreamWidget
 } from '../pageListAsync';
 
 function Application(props) {
@@ -55,6 +56,8 @@ function Application(props) {
         <Route path="widgets/analytics" element={<Analytics />} />
         <Route path="widgets/gallery-carousel" element={<Gallery />} />
         <Route path="widgets/status" element={<Status />} />
+        <Route path="widgets/direct-users" element={<DirectUsersWidget />} />
+        <Route path="widgets/downline-stream" element={<DownlineStreamWidget />} />
         { /* Layout */ }
         <Route path="layouts" element={<Parent />} />
         <Route path="layouts/grid" element={<Grid />} />

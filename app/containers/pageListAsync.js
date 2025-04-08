@@ -33,6 +33,12 @@ export const Gallery = loadable(() => import('./Widgets/Gallery'), {
 export const Status = loadable(() => import('./Widgets/Status'), {
   fallback: <Loading />,
 });
+export const DirectUsersWidget = loadable(() => import('./Widgets/DirectUsersWidget'), {
+  fallback: <Loading />,
+});
+export const DownlineStreamWidget = loadable(() => import('./Widgets/DownlineStreamWidget'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {
