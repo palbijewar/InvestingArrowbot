@@ -41,6 +41,7 @@ function UsersDetailsTable() {
             <TableCell><strong>Username</strong></TableCell>
             <TableCell><strong>Sponsor ID</strong></TableCell>
             <TableCell><strong>Email</strong></TableCell>
+            <TableCell><strong>Phone</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -49,6 +50,7 @@ function UsersDetailsTable() {
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{user.phone}</TableCell>
             </TableRow>
           ))}
         </TableBody>

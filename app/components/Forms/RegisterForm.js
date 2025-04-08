@@ -40,7 +40,9 @@ const validationSchema = yup.object({
 // eslint-disable-next-line react/display-name, react/prop-types
 const LinkBtn = React.forwardRef((props) => <NavLink to={props.to} {...props} />);
 
-function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
+function RegisterForm({
+  intl, messagesAuth, closeMsg, link
+}) {
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
   const mdUp = useMediaQuery(theme => theme.breakpoints.up('md'));
