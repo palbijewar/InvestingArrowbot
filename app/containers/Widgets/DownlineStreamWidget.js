@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,14 +6,26 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
-const usersData = [
-  { username: 'john_doe', sponsorId: 'SP12345', email: 'john@example.com' },
-  { username: 'jane_smith', sponsorId: 'SP67890', email: 'jane@example.com' },
-  { username: 'alex_k', sponsorId: 'SP54321', email: 'alex@example.com' }
-];
+import { getSecondLevelReferrals } from '../../middlewares/interceptors';
 
 export default function DownlineUsersWidget() {
+  const [usersData, setUsersData] = useState([]);
+
+  useEffect(() => {
+    const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
+    const sponsorId = sponsorDetails?.sponsor_id;
+
+    if (sponsorId) {
+      getSecondLevelReferrals(sponsorId)
+        .then((res) => {
+          setUsersData(res.data || []);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch second-level referrals:', err);
+        });
+    }
+  }, []);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="users details table">
@@ -28,7 +40,7 @@ export default function DownlineUsersWidget() {
           {usersData.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.username}</TableCell>
-              <TableCell>{user.sponsorId}</TableCell>
+              <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.email}</TableCell>
             </TableRow>
           ))}

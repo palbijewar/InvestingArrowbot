@@ -33,6 +33,16 @@ interceptorInstance.interceptors.response.use(
 
 export default interceptorInstance;
 
+export const getSponsorDetails = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/sponsor-details/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Sponsor Details error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const loginService = async (credentials) => {
   try {
     const response = await interceptorInstance.post(
@@ -45,8 +55,12 @@ export const loginService = async (credentials) => {
       }
     );
 
-    if (response.data?.access_token) {
-      localStorage.setItem('access_token', response.data.access_token);
+    const token = response.data?.data?.access_token;
+    if (token) {
+      localStorage.setItem('access_token', token);
+
+      const sponsorDetails = await getSponsorDetails(credentials.sponsor_id);
+      localStorage.setItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
     }
 
     return response.data;
@@ -67,10 +81,18 @@ export const signUpUser = async (formData) => {
     email: formData?.email,
     password: formData?.password,
     confirm_password: formData?.confirm_password,
+    referred_by: formData?.referred_by,
   };
 
   try {
     const response = await interceptorInstance.post('/auth/signup', reqBody);
+
+    if (reqBody.sponsor_id) {
+      const sponsorDetails = await getSponsorDetails(reqBody.sponsor_id);
+
+      localStorage.setItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
+    }
+
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -95,6 +117,28 @@ export const getSponsorName = async (referralSponsorId) => {
     } else {
       console.error('Get Sponsor Name error:', error);
     }
+    throw error;
+  }
+};
+
+export const getDirectReferrals = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/referrals/${sponsorId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error('Direct Referrals error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getSecondLevelReferrals = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/referrals/second-level/${sponsorId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error('Second-Level Referrals error:', error.response?.data || error.message);
     throw error;
   }
 };

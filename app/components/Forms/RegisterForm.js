@@ -21,7 +21,7 @@ import logo from 'enl-images/logo.svg';
 import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
-import { signUpUser, loginService, getSponsorName } from '../../middlewares/interceptors.js';
+import { signUpUser, getSponsorName } from '../../middlewares/interceptors.js';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
@@ -70,10 +70,6 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
         });
 
         if (response?.status === 'success') {
-          await loginService({
-            sponsor_id: values.referralSponsorId || values.sponsorId,
-            password: values.password,
-          });
           setTimeout(() => navigate('/app'), 2000);
         } else {
           throw new Error(response?.message || 'Signup failed. Please try again.');

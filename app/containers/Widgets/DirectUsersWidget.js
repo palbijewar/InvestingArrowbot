@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,14 +6,33 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { getDirectReferrals } from '../../middlewares/interceptors.js';
 
-const usersData = [
-  { username: 'john_doe', sponsorId: 'SP12345', email: 'john@example.com' },
-  { username: 'jane_smith', sponsorId: 'SP67890', email: 'jane@example.com' },
-  { username: 'alex_k', sponsorId: 'SP54321', email: 'alex@example.com' }
-];
+function UsersDetailsTable() {
+  const [usersData, setUsersData] = useState([]);
+  const [sponsorId, setSponsorId] = useState(null);
 
-export default function UsersDetailsTable() {
+  useEffect(() => {
+    const storedSponsorDetails = localStorage.getItem('sponsor_details');
+
+    if (storedSponsorDetails) {
+      const sponsorData = JSON.parse(storedSponsorDetails);
+      setSponsorId(sponsorData?.sponsor_id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (sponsorId) {
+      getDirectReferrals(sponsorId)
+        .then((res) => {
+          setUsersData(res.data || []);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch referrals:', err);
+        });
+    }
+  }, [sponsorId]);
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="users details table">
@@ -28,7 +47,7 @@ export default function UsersDetailsTable() {
           {usersData.map((user, index) => (
             <TableRow key={index}>
               <TableCell>{user.username}</TableCell>
-              <TableCell>{user.sponsorId}</TableCell>
+              <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.email}</TableCell>
             </TableRow>
           ))}
@@ -37,3 +56,5 @@ export default function UsersDetailsTable() {
     </TableContainer>
   );
 }
+
+export default UsersDetailsTable;
