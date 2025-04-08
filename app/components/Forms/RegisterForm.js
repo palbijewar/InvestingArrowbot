@@ -62,7 +62,8 @@ function RegisterForm({ intl, messagesAuth, closeMsg, link }) {
       setServerMessage(null);
       try {
         const response = await signUpUser({
-          sponsor_id: values.referralSponsorId || values.sponsorId,
+          referralSponsorId: values.referralSponsorId,
+          sponsor_id: values.sponsorId,
           username: values.name,
           email: values.email,
           password: values.password,

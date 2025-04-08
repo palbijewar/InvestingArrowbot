@@ -81,14 +81,14 @@ export const signUpUser = async (formData) => {
     email: formData?.email,
     password: formData?.password,
     confirm_password: formData?.confirm_password,
-    referred_by: formData?.referred_by,
+    referred_by: formData?.referralSponsorId,
   };
 
   try {
     const response = await interceptorInstance.post('/auth/signup', reqBody);
 
     if (reqBody.sponsor_id) {
-      const sponsorDetails = await getSponsorDetails(reqBody.sponsor_id);
+      const sponsorDetails = await getSponsorDetails(reqBody.referred_by);
 
       localStorage.setItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
     }

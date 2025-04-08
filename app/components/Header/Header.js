@@ -29,6 +29,8 @@ import useStyles from './header-jss';
 const elem = document.documentElement;
 
 function Header(props) {
+  const token = localStorage.getItem('access_token');
+  const isLogin = Boolean(token);
   const { classes, cx } = useStyles();
   const lgDown = useMediaQuery(theme => theme.breakpoints.down('lg'));
   const mdDown = useMediaQuery(theme => theme.breakpoints.down('md'));
@@ -44,7 +46,6 @@ function Header(props) {
     history,
     signOut,
     dense,
-    isLogin,
     avatar,
     intl
   } = props;
