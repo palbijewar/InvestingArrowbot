@@ -145,7 +145,7 @@ export const getSecondLevelReferrals = async (sponsorId) => {
 
 export const createBroker = async (brokerDetails) => {
   try {
-    const response = await interceptorInstance.post('/broker/broker-details', brokerDetails);
+    const response = await interceptorInstance.post('/broker-details', brokerDetails);
     return response.data;
   } catch (error) {
     console.error('Create Broker error:', error.response?.data || error.message);

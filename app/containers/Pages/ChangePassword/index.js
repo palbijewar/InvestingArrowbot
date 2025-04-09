@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Helmet } from 'react-helmet';
-import brand from 'enl-api/dummy/brand';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import LockIcon from '@mui/icons-material/Lock';
@@ -42,8 +40,6 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 function ChangePassword() {
-  const title = brand.name + ' - Change Password';
-  const description = brand.desc;
   const { classes } = useStyles();
 
   const [formData, setFormData] = useState({
