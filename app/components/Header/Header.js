@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import SearchIcon from '@mui/icons-material/Search';
 import FullscreenOutlined from '@mui/icons-material/FullscreenOutlined';
 import FullscreenExitOutlined from '@mui/icons-material/FullscreenExitOutlined';
 import InvertColors from '@mui/icons-material/InvertColorsOutlined';
-import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -17,12 +14,9 @@ import Button from '@mui/material/Button';
 import { NavLink, Link } from 'react-router-dom';
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import menuMessages from 'enl-api/ui/menuMessages';
+import { injectIntl } from 'react-intl';
 import link from 'enl-api/ui/link';
 import UserMenu from './UserMenu';
-import SearchUi from '../Search/SearchUi';
-import SelectLanguage from '../SelectLanguage';
 import messages from './messages';
 import useStyles from './header-jss';
 
@@ -41,9 +35,6 @@ function Header(props) {
     toggleDrawerOpen,
     margin,
     mode,
-    title,
-    openGuide,
-    history,
     signOut,
     dense,
     avatar,
@@ -170,36 +161,13 @@ function Header(props) {
                   <InvertColors />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={intl.formatMessage(messages.guide)} placement="bottom">
-                <IconButton className={classes.button} onClick={openGuide} size="large">
-                  <HelpOutlineOutlined />
-                </IconButton>
-              </Tooltip>
             </div>
-            <Typography
-              component="h2"
-              className={cx(
-                classes.headerTitle,
-                showTitle && classes.show,
-              )}
-            >
-              {menuMessages[title] !== undefined ? <FormattedMessage {...menuMessages[title]} /> : title}
-            </Typography>
           </div>
         )}
-        <div className={classes.searchWrapper}>
-          <div className={classes.wrapper}>
-            <div className={classes.search}>
-              <SearchIcon />
-            </div>
-            <SearchUi history={history} />
-          </div>
-        </div>
         {!smDown && (
           <span className={classes.separatorV} />
         )}
         <div className={classes.userToolbar}>
-          <SelectLanguage />
           {isLogin
             ? <UserMenu signOut={signOut} avatar={avatar} />
             : (
@@ -211,7 +179,6 @@ function Header(props) {
                 variant="contained"
               >
                 <AccountCircle />
-                <FormattedMessage {...messages.login} />
               </Button>
             )
           }

@@ -14,7 +14,7 @@ const defaultMenu = [
         key: 'view_profile',
         name: 'View Profile',
         icon: 'account_circle',
-        link: '/app/pages/profile',
+        link: '/app/pages/user-profile',
       },
       {
         key: 'change_password',

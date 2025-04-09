@@ -37,6 +37,7 @@ import {
   NotFound, DirectUsersWidget,
   DownlineStreamWidget
 } from '../pageListAsync';
+import ChangePassword from '../Pages/ChangePassword';
 
 function Application(props) {
   const { history } = props;
@@ -129,6 +130,7 @@ function Application(props) {
         <Route path="pages/chat" element={<Chat />} />
         <Route path="pages/ecommerce" element={<Ecommerce />} />
         <Route path="pages/product-detail" element={<ProductPage />} />
+        <Route path="pages/change-password" element={<ChangePassword />} />
         <Route path="pages/checkout" element={<CheckoutPage />} />
         <Route path="pages/invoice" element={<InvoicePage />} />
         <Route

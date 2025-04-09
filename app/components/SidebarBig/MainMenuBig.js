@@ -12,7 +12,6 @@ import Icon from '@mui/material/Icon';
 import { openAction, openMenuAction, closeMenuAction } from 'enl-redux/modules/ui';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from 'enl-api/ui/menuMessages';
-import MenuProfile from './MenuProfile';
 import useStyles from './sidebarBig-jss';
 
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disable-line
@@ -22,7 +21,6 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) { // eslint-disabl
 function MainMenuBig(props) { // eslint-disable-line
   const { classes, cx } = useStyles();
   const {
-    userAttr,
     intl,
     mobile,
     loadTransition,
@@ -193,7 +191,6 @@ function MainMenuBig(props) { // eslint-disable-line
     <aside className={classes.bigSidebar}>
       <nav className={classes.category}>
         <div className={classes.fixedWrap}>
-          <MenuProfile userAttr={userAttr} />
           {getMenus(dataMenu)}
         </div>
       </nav>

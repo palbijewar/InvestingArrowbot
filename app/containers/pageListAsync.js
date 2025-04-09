@@ -243,6 +243,9 @@ export const BlankPage = loadable(() => import('./Pages/BlankPage'), {
 export const AuthenticatedPage = loadable(() => import('./Pages/AuthenticatedPage'), {
   fallback: <Loading />,
 });
+export const ChangePassword = loadable(() => import('./Pages/ChangePassword'), {
+  fallback: <Loading />,
+});
 
 // Sample Pre Build Apps
 export const Todo = loadable(() => import('./SampleApps/Todo'), {
