@@ -82,6 +82,7 @@ export const signUpUser = async (formData) => {
     password: formData?.password,
     confirm_password: formData?.confirm_password,
     referred_by: formData?.referralSponsorId,
+    phone: formData?.phone,
   };
 
   try {
