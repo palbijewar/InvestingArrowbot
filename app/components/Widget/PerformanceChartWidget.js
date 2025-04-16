@@ -12,10 +12,25 @@ function PaymentForm() {
     setFile(event.target.files[0]);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Payment Amount:', paymentAmount);
-    console.log('Uploaded File:', file);
+
+    const formData = new FormData();
+    formData.append('amount', paymentAmount);
+    if (file) {
+      formData.append('file', file);
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/payment-options', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
   };
 
   return (

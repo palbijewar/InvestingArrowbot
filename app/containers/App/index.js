@@ -5,6 +5,8 @@ import Corporate from '../Templates/Corporate';
 import Outer from '../Templates/Outer';
 import Application from './Application';
 import ThemeWrapper from './ThemeWrapper';
+import ProtectedRoute from './ProtectedRoute';
+
 import {
   HomePage, Login, Register,
   LoginFullstack, RegisterFullstack,
@@ -18,6 +20,7 @@ window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
 function App(props) {
   const { history } = props;
+
   return (
     <ThemeWrapper>
       <BrowserRouter>
@@ -25,7 +28,16 @@ function App(props) {
           <Route path="/corporate" element={<Corporate />}>
             <Route index element={<HomePage />} />
           </Route>
-          <Route path="app/*" element={<Application history={history} />} />
+
+          <Route
+            path="app/*"
+            element={
+              <ProtectedRoute>
+                <Application history={history} />
+              </ProtectedRoute>
+            }
+          />
+
           <Route element={<Outer />}>
             <Route path="/" element={<LoginFullstack />} />
             <Route path="login" element={<Login />} />
@@ -39,6 +51,7 @@ function App(props) {
             <Route path="coming-soon" element={<ComingSoon />} />
             <Route path="terms-conditions" element={<TermsConditions />} />
           </Route>
+
           <Route path="*" element={<NotFoundDedicated />} />
         </Routes>
       </BrowserRouter>
@@ -47,7 +60,7 @@ function App(props) {
 }
 
 App.propTypes = {
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
 };
 
 export default App;

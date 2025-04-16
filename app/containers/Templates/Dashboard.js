@@ -26,6 +26,7 @@ function Dashboard(props) {
   const signOutApp = () => {
     signOut(auth).then(() => {
       navigate('/');
+      localStorage.removeItem('access_token');
       dispatch(logoutUser());
     }).catch((error) => {
       console.error(error);
