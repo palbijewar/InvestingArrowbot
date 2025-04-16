@@ -1,40 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import Info from '@mui/icons-material/Info';
-import Warning from '@mui/icons-material/Warning';
-import Check from '@mui/icons-material/CheckCircle';
-import Error from '@mui/icons-material/RemoveCircle';
-import ExitToApp from '@mui/icons-material/ExitToApp';
-import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import dummy from 'enl-api/dummy/dummyContents';
+import ExitToApp from '@mui/icons-material/ExitToApp';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import messageStyles from 'enl-styles/Messages.scss';
-import avatarApi from 'enl-api/images/avatars';
+import dummy from 'enl-api/dummy/dummyContents';
 import link from 'enl-api/ui/link';
-import NotificationsActiveOutlined from '@mui/icons-material/NotificationsActiveOutlined';
 import messages from './messages';
 import useStyles from './header-jss';
 
 function UserMenu(props) {
   const { classes, cx } = useStyles();
-  const {
-    signOut,
-    avatar
-  } = props;
+  const { signOut } = props;
 
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
+  const [avatar, setAvatar] = useState(dummy.user.avatar);
+
   const handleMenu = menu => (event) => {
     setOpenMenu(openMenu === menu ? null : menu);
     setAnchorEl(event.currentTarget);
@@ -45,13 +33,24 @@ function UserMenu(props) {
     setOpenMenu(null);
   };
 
+  useEffect(() => {
+    const userInfo = localStorage.getItem('user_info');
+    if (userInfo) {
+      try {
+        const parsed = JSON.parse(userInfo);
+        if (parsed.photoURL) {
+          setAvatar(parsed.photoURL);
+        }
+      } catch (e) {
+        console.warn('Invalid user_info in localStorage', e);
+      }
+    }
+  }, []);
+
   return (
     <div>
       <Button onClick={handleMenu('user-setting')}>
-        <Avatar
-          alt="avatar"
-          src={avatar}
-        />
+        <Avatar alt="avatar" src={avatar} />
       </Button>
       <Menu
         id="menu-appbar"
@@ -84,12 +83,6 @@ function UserMenu(props) {
 
 UserMenu.propTypes = {
   signOut: PropTypes.func.isRequired,
-  avatar: PropTypes.string.isRequired,
-  dark: PropTypes.bool,
-};
-
-UserMenu.defaultProps = {
-  dark: false
 };
 
 export default injectIntl(UserMenu);
