@@ -57,6 +57,7 @@ export LoginForm from './Forms/LoginForm';
 export RegisterForm from './Forms/RegisterForm';
 export ResetForm from './Forms/ResetForm';
 export LockForm from './Forms/LockForm';
+export EditProfileForm from './Forms/EditProfileForm';
 // Texteditor Toolbar
 export HeadlinesButton from './TextEditor/HeadlinesButton';
 // UI

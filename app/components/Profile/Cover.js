@@ -9,6 +9,7 @@ import VerifiedUser from '@mui/icons-material/VerifiedUser';
 import Info from '@mui/icons-material/Info';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { injectIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom'; // ✅ import navigate
 import useStyles from './cover-jss';
 
 const optionsOpt = [
@@ -20,6 +21,7 @@ const ITEM_HEIGHT = 48;
 
 function Cover(props) {
   const [anchorElOpt, setAnchorElOpt] = useState(null);
+  const navigate = useNavigate(); // ✅ initialize navigator
 
   const handleClickOpt = event => {
     setAnchorElOpt(event.currentTarget);
@@ -27,6 +29,14 @@ function Cover(props) {
 
   const handleCloseOpt = () => {
     setAnchorElOpt(null);
+  };
+
+  const handleMenuItemClick = (option) => {
+    handleCloseOpt();
+    if (option === 'Edit Profile') {
+      navigate('/edit-profile'); // ✅ redirect on edit profile click
+    }
+    // Add logic for other menu items if needed
   };
 
   const { classes } = useStyles();
@@ -66,7 +76,7 @@ function Cover(props) {
           }}
         >
           {optionsOpt.map(option => (
-            <MenuItem key={option} selected={option === 'Edit Profile'} onClick={handleCloseOpt}>
+            <MenuItem key={option} onClick={() => handleMenuItemClick(option)}>
               {option}
             </MenuItem>
           ))}
@@ -95,7 +105,7 @@ Cover.propTypes = {
   avatar: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
-  phone: PropTypes.string, // <-- added
+  phone: PropTypes.string,
   coverImg: PropTypes.string.isRequired,
 };
 

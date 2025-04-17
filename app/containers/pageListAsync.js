@@ -209,6 +209,9 @@ export const Register = loadable(() => import('./Pages/Users/Register'), {
 export const ResetPassword = loadable(() => import('./Pages/Users/ResetPassword'), {
   fallback: <Loading />,
 });
+export const EditProfile = loadable(() => import('./Pages/Users/EditProfile'), {
+  fallback: <Loading />,
+});
 
 export const LockScreen = loadable(() => import('./Pages/Users/LockScreen'), {
   fallback: <Loading />,

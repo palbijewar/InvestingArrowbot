@@ -13,7 +13,8 @@ import {
   ResetPassword, ResetPasswordFullstack,
   LockScreen, ComingSoon,
   Maintenance, TermsConditions,
-  NotFoundDedicated
+  NotFoundDedicated,
+  EditProfile
 } from '../pageListAsync';
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -42,6 +43,7 @@ function App(props) {
             <Route path="/" element={<LoginFullstack />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="edit-profile" element={<EditProfile />} />
             <Route path="reset-password" element={<ResetPassword />} />
             <Route path="login-firebase" element={<LoginFullstack />} />
             <Route path="register-firebase" element={<RegisterFullstack />} />

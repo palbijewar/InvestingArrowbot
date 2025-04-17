@@ -35,7 +35,8 @@ import {
   MapMarker, MapDirection, SearchMap,
   TrafficIndicator, StreetViewMap,
   NotFound, DirectUsersWidget,
-  DownlineStreamWidget
+  DownlineStreamWidget,
+  EditProfile
 } from '../pageListAsync';
 import ChangePassword from '../Pages/ChangePassword';
 
@@ -126,6 +127,7 @@ function Application(props) {
         { /* Pages */ }
         <Route path="pages" element={<Parent />} />
         <Route path="pages/user-profile" element={<Profile />} />
+        <Route path="pages/edit-profile" element={<EditProfile />} />
         <Route path="pages/timeline" element={<Timeline />} />
         <Route path="pages/chat" element={<Chat />} />
         <Route path="pages/ecommerce" element={<Ecommerce />} />
