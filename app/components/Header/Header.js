@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import FullscreenOutlined from '@mui/icons-material/FullscreenOutlined';
-import FullscreenExitOutlined from '@mui/icons-material/FullscreenExitOutlined';
 import InvertColors from '@mui/icons-material/InvertColorsOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -14,17 +13,14 @@ import Button from '@mui/material/Button';
 import { NavLink, Link } from 'react-router-dom';
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import link from 'enl-api/ui/link';
 import UserMenu from './UserMenu';
 import messages from './messages';
 import useStyles from './header-jss';
-
-const elem = document.documentElement;
+import { getSponsorDetails } from '../../middlewares/interceptors';
 
 function Header(props) {
-  const token = localStorage.getItem('access_token');
-  const isLogin = Boolean(token);
   const { classes, cx } = useStyles();
   const lgDown = useMediaQuery(theme => theme.breakpoints.down('lg'));
   const mdDown = useMediaQuery(theme => theme.breakpoints.down('md'));
@@ -41,13 +37,32 @@ function Header(props) {
     intl
   } = props;
   const [open] = useState(false);
-  const [fullScreen, setFullScreen] = useState(false);
   const [turnDarker, setTurnDarker] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [userInitial, setUserInitial] = useState('');
 
+  const isAuthenticated = localStorage.getItem('access_token');
   // Initial header style
   let flagDarker = false;
   let flagTitle = false;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const userInfo = localStorage.getItem('sponsor_details');
+      if (userInfo) {
+        try {
+          const parsed = JSON.parse(userInfo);
+          if (parsed.username) {
+            setUserId(parsed.sponsor_id);
+            setUserInitial(parsed.username.charAt(0).toUpperCase());
+          }
+        } catch (e) {
+          console.warn('Invalid user_info in localStorage', e);
+        }
+      }
+    }
+  }, [isAuthenticated]);
 
   const handleScroll = () => {
     const doc = document.documentElement;
@@ -61,35 +76,6 @@ function Header(props) {
     if (flagTitle !== newFlagTitle) {
       setShowTitle(newFlagTitle);
       flagTitle = newFlagTitle;
-    }
-  };
-
-  const openFullScreen = () => {
-    setFullScreen(true);
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari & Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-  };
-
-  const closeFullScreen = () => {
-    setFullScreen(false);
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
     }
   };
 
@@ -143,19 +129,6 @@ function Header(props) {
                 showTitle && classes.fadeOut,
               )}
             >
-              {fullScreen ? (
-                <Tooltip title={intl.formatMessage(messages.fullScreen)} placement="bottom">
-                  <IconButton className={classes.button} onClick={closeFullScreen} size="large">
-                    <FullscreenExitOutlined />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title={intl.formatMessage(messages.exitFullScreen)} placement="bottom">
-                  <IconButton className={classes.button} onClick={openFullScreen} size="large">
-                    <FullscreenOutlined />
-                  </IconButton>
-                </Tooltip>
-              )}
               <Tooltip title={intl.formatMessage(messages.lamp)} placement="bottom">
                 <IconButton className={classes.button} onClick={() => turnMode(mode)} size="large">
                   <InvertColors />
@@ -168,20 +141,25 @@ function Header(props) {
           <span className={classes.separatorV} />
         )}
         <div className={classes.userToolbar}>
-          {isLogin
-            ? <UserMenu signOut={signOut} avatar={avatar} />
-            : (
-              <Button
-                color="primary"
-                className={classes.buttonTop}
-                component={Link}
-                to={link.login}
-                variant="contained"
-              >
-                <AccountCircle />
-              </Button>
-            )
-          }
+          {isAuthenticated ? (
+            <>
+              <Typography variant="body1" style={{ marginRight: 10, color: mode === 'light' ? '#000' : '#fff' }}>
+                Sponsor ID: {userId || 'Loading...'}
+              </Typography>
+              <UserMenu signOut={signOut} avatar={userInitial} />
+            </>
+          ) : (
+            <Button
+              color="primary"
+              className={classes.buttonTop}
+              component={Link}
+              to={link.login}
+              variant="contained"
+            >
+              <AccountCircle />
+              <FormattedMessage {...messages.login} />
+            </Button>
+          )}
         </div>
       </Toolbar>
     </AppBar>

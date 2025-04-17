@@ -4,8 +4,6 @@ import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import { Cover } from 'enl-components';
 import { injectIntl } from 'react-intl';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 function TabContainer(props) {
   const { children } = props;
@@ -50,11 +48,6 @@ function UserProfile() {
         desc={user.email || 'Welcome to your profile'}
         phone={user.phone || '0000-000-000'}
       />
-      {user.phone && (
-        <Box sx={{ padding: 2 }}>
-          <Typography variant="body1"><strong>Phone:</strong> {user.phone}</Typography>
-        </Box>
-      )}
     </div>
   );
 }

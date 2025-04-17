@@ -153,3 +153,16 @@ export const createBroker = async (brokerDetails) => {
     throw error;
   }
 };
+
+export const updateUserProfile = async (userData) => {
+  try {
+    const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
+    const sponsorId = sponsorDetails?.sponsor_id;
+
+    const response = await interceptorInstance.put(`/auth/users/${sponsorId}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Update Profile error:', error.response?.data || error.message);
+    throw error;
+  }
+};
