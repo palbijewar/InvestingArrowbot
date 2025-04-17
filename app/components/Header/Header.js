@@ -18,7 +18,6 @@ import link from 'enl-api/ui/link';
 import UserMenu from './UserMenu';
 import messages from './messages';
 import useStyles from './header-jss';
-import { getSponsorDetails } from '../../middlewares/interceptors';
 
 function Header(props) {
   const { classes, cx } = useStyles();
@@ -33,7 +32,6 @@ function Header(props) {
     mode,
     signOut,
     dense,
-    avatar,
     intl
   } = props;
   const [open] = useState(false);
