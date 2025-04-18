@@ -192,3 +192,14 @@ export const getPaymentOptions = async () => {
     throw error;
   }
 };
+
+export const getTotalDematFund = async () => {
+  try {
+    const response = await interceptorInstance.get('/cards/total-fund');
+
+    return response.data;
+  } catch (error) {
+    console.error('Second-Level Referrals error:', error.response?.data || error.message);
+    throw error;
+  }
+};
