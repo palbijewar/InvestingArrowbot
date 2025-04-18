@@ -33,24 +33,37 @@ function UsersDetailsTable() {
     }
   }, [sponsorId]);
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="users details table">
         <TableHead>
           <TableRow>
+            <TableCell><strong>Sr No.</strong></TableCell>
             <TableCell><strong>Username</strong></TableCell>
             <TableCell><strong>Sponsor ID</strong></TableCell>
             <TableCell><strong>Email</strong></TableCell>
             <TableCell><strong>Phone</strong></TableCell>
+            <TableCell><strong>Registration Date</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {usersData.map((user, index) => (
             <TableRow key={index}>
+              <TableCell>{index + 1}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.phone}</TableCell>
+              <TableCell>{formatDate(user.createdAt)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

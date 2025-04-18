@@ -28,22 +28,30 @@ export default function DownlineUsersWidget() {
 
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="users details table">
+      <Table aria-label="second level referral users table">
         <TableHead>
           <TableRow>
-            <TableCell><strong>Username</strong></TableCell>
+            <TableCell><strong>Sr. No.</strong></TableCell>
+            <TableCell><strong>Registration Date</strong></TableCell>
             <TableCell><strong>Sponsor ID</strong></TableCell>
-            <TableCell><strong>Email</strong></TableCell>
-            <TableCell><strong>Phone</strong></TableCell>
+            <TableCell><strong>Sponsor Name</strong></TableCell>
+            <TableCell><strong>Referral ID</strong></TableCell>
+            <TableCell><strong>Referral Username</strong></TableCell>
+            <TableCell><strong>Package</strong></TableCell>
+            <TableCell><strong>Level</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {usersData.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.username}</TableCell>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell>{new Date(user.registration_date).toLocaleDateString()}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.sponsor_name}</TableCell>
+              <TableCell>{user.referral_id}</TableCell>
+              <TableCell>{user.referral_username}</TableCell>
+              <TableCell>{user.package || '-'}</TableCell>
+              <TableCell>{user.level || '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
