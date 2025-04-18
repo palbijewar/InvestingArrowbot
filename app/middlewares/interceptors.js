@@ -166,3 +166,18 @@ export const updateUserProfile = async (userData) => {
     throw error;
   }
 };
+
+export const createPaymentOption = async (userData) => {
+  try {
+    const response = await interceptorInstance.post('/payment-options', userData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Create Payment Option error:', error.response?.data || error.message);
+    throw error;
+  }
+};
