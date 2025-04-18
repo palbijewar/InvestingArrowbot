@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import OndemandVideo from '@mui/icons-material/OndemandVideo';
@@ -15,15 +15,30 @@ import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import { injectIntl } from 'react-intl';
 import CounterWidget from '../Counter/CounterWidget';
 import useStyles from './widget-jss';
+import { getPaymentOptions } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
   const { classes } = useStyles();
+
+  const [paymentOptionCount, setPaymentOptionCount] = useState(0);
+
+  useEffect(() => {
+    const fetchPaymentOptions = async () => {
+      try {
+        const response = await getPaymentOptions();
+        setPaymentOptionCount(response?.data?.total_payment_options || 0);
+      } catch (error) {
+        console.error('Error fetching payment option count', error);
+      }
+    };
+    fetchPaymentOptions();
+  }, []);
 
   return (
     <div className={classes.rootCounterFull}>
       <Grid container spacing={2}>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Bot Activation">
+          <CounterWidget color="secondary-dark" start={0} end={paymentOptionCount} duration={3} title="Bot Activation">
             <OndemandVideo className={classes.counterIcon} />
           </CounterWidget>
         </Grid>

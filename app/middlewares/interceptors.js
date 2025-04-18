@@ -181,3 +181,14 @@ export const createPaymentOption = async (userData) => {
     throw error;
   }
 };
+
+export const getPaymentOptions = async () => {
+  try {
+    const response = await interceptorInstance.get('/cards/payment-count');
+
+    return response.data;
+  } catch (error) {
+    console.error('Second-Level Referrals error:', error.response?.data || error.message);
+    throw error;
+  }
+};
