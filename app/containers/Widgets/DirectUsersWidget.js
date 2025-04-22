@@ -50,8 +50,7 @@ function UsersDetailsTable() {
             <TableCell><strong>Sr No.</strong></TableCell>
             <TableCell><strong>Username</strong></TableCell>
             <TableCell><strong>Sponsor ID</strong></TableCell>
-            <TableCell><strong>Email</strong></TableCell>
-            <TableCell><strong>Phone</strong></TableCell>
+            <TableCell><strong>Package</strong></TableCell>
             <TableCell><strong>Registration Date</strong></TableCell>
           </TableRow>
         </TableHead>
@@ -61,8 +60,7 @@ function UsersDetailsTable() {
               <TableCell>{index + 1}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.package || '-'}</TableCell>
               <TableCell>{formatDate(user.createdAt)}</TableCell>
             </TableRow>
           ))}
