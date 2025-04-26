@@ -203,3 +203,23 @@ export const getTotalDematFund = async () => {
     throw error;
   }
 };
+
+export const getReferredSponsorsTotalIncome = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/referred-income/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Referred Sponsors Total Income error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getSecondLevelReferralsTotalIncome = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/second-level-income/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Second Level Referrals Total Income error:', error.response?.data || error.message);
+    throw error;
+  }
+};

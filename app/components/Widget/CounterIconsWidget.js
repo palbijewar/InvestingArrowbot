@@ -15,24 +15,50 @@ import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import { injectIntl } from 'react-intl';
 import CounterWidget from '../Counter/CounterWidget';
 import useStyles from './widget-jss';
-import { getPaymentOptions, getTotalDematFund } from '../../middlewares/interceptors';
+import {
+  getPaymentOptions,
+  getTotalDematFund,
+  getDirectReferrals,
+  getSecondLevelReferrals,
+  getSecondLevelReferralsTotalIncome
+} from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
   const { classes } = useStyles();
 
   const [paymentOptionCount, setPaymentOptionCount] = useState(0);
   const [portfolioFund, setPortfolioFund] = useState(0);
+  const [directTeamCount, setDirectTeamCount] = useState(0);
+  const [downlineTeamCount, setDownlineTeamCount] = useState(0);
+  const [levelIncome, setLevelIncome] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [paymentResponse, fundResponse] = await Promise.all([
+        const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
+        const sponsorId = sponsorDetails?.sponsor_id;
+
+        const [paymentResponse, fundResponse, directResponse, secondLevelResponse] = await Promise.all([
           getPaymentOptions(),
           getTotalDematFund(),
+          getDirectReferrals(sponsorId),
+          getSecondLevelReferrals(sponsorId)
         ]);
 
         setPaymentOptionCount(paymentResponse?.data?.total_payment_options || 0);
         setPortfolioFund(fundResponse?.data?.total_demat_amount || 0);
+
+        const directReferrals = directResponse?.data || [];
+        const secondLevelReferrals = secondLevelResponse?.data || [];
+
+        setDirectTeamCount(directReferrals.length);
+        setDownlineTeamCount(secondLevelReferrals.length);
+
+        const totalIncome = secondLevelReferrals.reduce(
+          (sum, user) => sum + (Number(user.package) || 0),
+          0
+        );
+        setLevelIncome(totalIncome);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
@@ -64,7 +90,6 @@ function CounterIconWidget() {
           >
             <BusinessCenter className={classes.counterIcon} />
           </CounterWidget>
-
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Gas Wallet">
@@ -82,7 +107,7 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Level Income">
+          <CounterWidget color="secondary-main" start={0} end={levelIncome} duration={3} title="Level Income">
             <TrendingUp className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -92,12 +117,12 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Team">
+          <CounterWidget color="secondary-dark" start={0} end={directTeamCount} duration={3} title="Direct Team">
             <Group className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Team">
+          <CounterWidget color="secondary-main" start={0} end={downlineTeamCount} duration={3} title="Downline Team">
             <SupervisorAccount className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
