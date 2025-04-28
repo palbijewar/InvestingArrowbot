@@ -60,7 +60,7 @@ function Banner() {
           {!mdDown && (
             <>
               <div className={cx(classes.m1, classes.screen)}>
-                <img src="https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" alt="crm dashboard" />
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXkIA7Fzl7Zt_R9cGLmvKEAA9RdKjTLhSB4Q&s" alt="crm dashboard" />
               </div>
               <div className={cx(classes.m2, classes.screen)}>
                 <img src="https://t3.ftcdn.net/jpg/04/24/53/50/360_F_424535039_f0HgjloFjZodjP0qDErF6HZrVm7qJ7mo.jpg" alt="crm dashboard" />
@@ -71,7 +71,7 @@ function Banner() {
             </>
           )}
           <div className={cx(classes.m4, classes.screen)}>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXkIA7Fzl7Zt_R9cGLmvKEAA9RdKjTLhSB4Q&s" alt="personal dashboard" />
+            <img src="https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" alt="personal dashboard" />
           </div>
         </div>
       </div>
