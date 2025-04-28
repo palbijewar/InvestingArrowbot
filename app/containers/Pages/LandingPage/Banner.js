@@ -33,7 +33,7 @@ function Banner() {
         Welcome to investing arrow, join us now!
         </Typography>
 
-        {/* <div className={classes.btnArea}>
+        <div className={classes.btnArea}>
           <Button
             size="large"
             variant="outlined"
@@ -54,7 +54,7 @@ function Banner() {
           >
             Login
           </Button>
-        </div> */}
+        </div>
 
         <div className={classes.previewApp}>
           {!mdDown && (
@@ -70,9 +70,6 @@ function Banner() {
               </div>
             </>
           )}
-          <div className={cx(classes.m4, classes.screen)}>
-            <img src="https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg" alt="personal dashboard" />
-          </div>
         </div>
       </div>
     </div>
