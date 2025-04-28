@@ -240,7 +240,7 @@ export const Timeline = loadable(() => import('./Pages/Timeline'), {
 export const Chat = loadable(() => import('./Pages/Chat'), {
   fallback: <Loading />,
 });
-export const BlankPage = loadable(() => import('./Pages/BlankPage'), {
+export const LandingPage = loadable(() => import('./Pages/LandingPage/Banner'), {
   fallback: <Loading />,
 });
 export const AuthenticatedPage = loadable(() => import('./Pages/AuthenticatedPage'), {

@@ -8,13 +8,14 @@ import ThemeWrapper from './ThemeWrapper';
 import ProtectedRoute from './ProtectedRoute';
 
 import {
-  HomePage, Login, Register,
+  HomePage, Register,
   LoginFullstack, RegisterFullstack,
   ResetPassword, ResetPasswordFullstack,
   LockScreen, ComingSoon,
   Maintenance, TermsConditions,
   NotFoundDedicated,
-  EditProfile
+  EditProfile,
+  LandingPage
 } from '../pageListAsync';
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -40,8 +41,8 @@ function App(props) {
           />
 
           <Route element={<Outer />}>
-            <Route path="/" element={<LoginFullstack />} />
-            <Route path="login" element={<Login />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="login" element={<LoginFullstack />} />
             <Route path="register" element={<Register />} />
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="reset-password" element={<ResetPassword />} />

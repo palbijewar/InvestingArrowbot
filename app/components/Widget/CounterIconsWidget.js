@@ -31,6 +31,7 @@ function CounterIconWidget() {
   const [directTeamCount, setDirectTeamCount] = useState(0);
   const [downlineTeamCount, setDownlineTeamCount] = useState(0);
   const [levelIncome, setLevelIncome] = useState(0);
+  const [totalDownlineIncome, setTotalDownlineIncome] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -38,11 +39,18 @@ function CounterIconWidget() {
         const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
         const sponsorId = sponsorDetails?.sponsor_id;
 
-        const [paymentResponse, fundResponse, directResponse, secondLevelResponse] = await Promise.all([
+        const [
+          paymentResponse,
+          fundResponse,
+          directResponse,
+          secondLevelResponse,
+          levelIncomeResponse
+        ] = await Promise.all([
           getPaymentOptions(),
           getTotalDematFund(),
           getDirectReferrals(sponsorId),
-          getSecondLevelReferrals(sponsorId)
+          getSecondLevelReferrals(sponsorId),
+          getSecondLevelReferralsTotalIncome(sponsorId)
         ]);
 
         setPaymentOptionCount(paymentResponse?.data?.total_payment_options || 0);
@@ -54,11 +62,14 @@ function CounterIconWidget() {
         setDirectTeamCount(directReferrals.length);
         setDownlineTeamCount(secondLevelReferrals.length);
 
-        const totalIncome = secondLevelReferrals.reduce(
+        const totalIncome = levelIncomeResponse?.data?.total_income || 0;
+        setLevelIncome(totalIncome);
+
+        const downlineIncome = secondLevelReferrals.reduce(
           (sum, user) => sum + (Number(user.package) || 0),
           0
         );
-        setLevelIncome(totalIncome);
+        setTotalDownlineIncome(downlineIncome);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
@@ -127,7 +138,7 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Bot Business">
+          <CounterWidget color="secondary-main" start={0} end={totalDownlineIncome} duration={3} title="Downline Bot Business">
             <CollectionsBookmark className={classes.counterIcon} />
           </CounterWidget>
         </Grid>

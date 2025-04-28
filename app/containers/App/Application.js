@@ -30,7 +30,7 @@ import {
   TodoFirebase, EmailFirebase, ContactFirebase,
   Chat, Timeline, Profile, Ecommerce,
   ProductPage, CheckoutPage, InvoicePage,
-  BlankPage, AuthenticatedPage,
+  LandingPage, AuthenticatedPage,
   Photos, Error,
   MapMarker, MapDirection, SearchMap,
   TrafficIndicator, StreetViewMap,
@@ -143,7 +143,7 @@ function Application(props) {
             </ProtectedPage>
           }
         />
-        <Route path="pages/blank-page" element={<BlankPage />} />
+        <Route path="pages/landing-page" element={<LandingPage />} />
         <Route path="pages/photo-gallery" element={<Photos />} />
         <Route path="pages/not-found" element={<NotFound />} />
         <Route path="pages/error" element={<Error />} />
