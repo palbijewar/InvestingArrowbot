@@ -30,7 +30,7 @@ function Banner() {
           Investing Arrow Bot
         </Typography>
         <Typography component="p" variant="h5" gutterBottom>
-          <FormattedMessage {...messages.subtitle} />
+        Welcome to investing arrow, join us now!
         </Typography>
 
         {/* <div className={classes.btnArea}>
