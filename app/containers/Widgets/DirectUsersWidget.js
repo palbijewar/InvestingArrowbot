@@ -51,7 +51,9 @@ function UsersDetailsTable() {
             <TableCell><strong>Username</strong></TableCell>
             <TableCell><strong>Sponsor ID</strong></TableCell>
             <TableCell><strong>Package</strong></TableCell>
+            <TableCell><strong>Amount Deposited</strong></TableCell>
             <TableCell><strong>Registration Date</strong></TableCell>
+            <TableCell><strong>Active</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -61,7 +63,9 @@ function UsersDetailsTable() {
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.package || '-'}</TableCell>
+              <TableCell>{user.amount_deposited || '-'}</TableCell>
               <TableCell>{formatDate(user.createdAt)}</TableCell>
+              <TableCell>{user.is_active}</TableCell>
             </TableRow>
           ))}
         </TableBody>

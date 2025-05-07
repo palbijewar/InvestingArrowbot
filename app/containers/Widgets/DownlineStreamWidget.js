@@ -38,7 +38,9 @@ export default function DownlineUsersWidget() {
             <TableCell><strong>Referral ID</strong></TableCell>
             <TableCell><strong>Referral Username</strong></TableCell>
             <TableCell><strong>Package</strong></TableCell>
+            <TableCell><strong>Amount Deposited</strong></TableCell>
             <TableCell><strong>Level</strong></TableCell>
+            <TableCell><strong>Active</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,7 +53,9 @@ export default function DownlineUsersWidget() {
               <TableCell>{user.referral_id}</TableCell>
               <TableCell>{user.referral_username}</TableCell>
               <TableCell>{user.package || '-'}</TableCell>
+              <TableCell>{user.amount_deposited || '-'}</TableCell>
               <TableCell>{user.level || '-'}</TableCell>
+              <TableCell>{user.is_active}</TableCell>
             </TableRow>
           ))}
         </TableBody>
