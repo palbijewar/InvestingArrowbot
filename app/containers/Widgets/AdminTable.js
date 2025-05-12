@@ -37,7 +37,6 @@ function AdminTable() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Sponsor Management</h2>
       <table className="min-w-full border border-gray-300">
         <thead className="bg-gray-100">
           <tr>
