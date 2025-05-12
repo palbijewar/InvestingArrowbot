@@ -60,6 +60,7 @@ export const loginService = async (credentials) => {
       localStorage.setItem('access_token', token);
 
       const sponsorDetails = await getSponsorDetails(credentials.sponsor_id);
+
       localStorage.setItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
     }
 
@@ -220,6 +221,27 @@ export const getSecondLevelReferralsTotalIncome = async (sponsorId) => {
     return response.data;
   } catch (error) {
     console.error('Second Level Referrals Total Income error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const activateUser = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.patch(`/auth/activate/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getAllSponsors = async () => {
+  try {
+    const response = await interceptorInstance.get('/auth/users');
+
+    return response.data;
+  } catch (error) {
+    console.error('Second-Level Referrals error:', error.response?.data || error.message);
     throw error;
   }
 };

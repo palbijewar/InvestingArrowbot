@@ -36,7 +36,9 @@ import {
   TrafficIndicator, StreetViewMap,
   NotFound, DirectUsersWidget,
   DownlineStreamWidget,
-  EditProfile
+  EditProfile, History,
+  PortfolioInvestment, BotActivation,
+  AdminTable
 } from '../pageListAsync';
 import ChangePassword from '../Pages/ChangePassword';
 
@@ -60,6 +62,10 @@ function Application(props) {
         <Route path="widgets/status" element={<Status />} />
         <Route path="widgets/direct-users" element={<DirectUsersWidget />} />
         <Route path="widgets/downline-stream" element={<DownlineStreamWidget />} />
+        <Route path="widgets/history" element={<History />} />
+        <Route path="widgets/portfolio-investment" element={<PortfolioInvestment />} />
+        <Route path="widgets/bot-activation" element={<BotActivation />} />
+        <Route path="widgets/admin-table" element={<AdminTable />} />
         { /* Layout */ }
         <Route path="layouts" element={<Parent />} />
         <Route path="layouts/grid" element={<Grid />} />

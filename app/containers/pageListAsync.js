@@ -39,6 +39,18 @@ export const DirectUsersWidget = loadable(() => import('./Widgets/DirectUsersWid
 export const DownlineStreamWidget = loadable(() => import('./Widgets/DownlineStreamWidget'), {
   fallback: <Loading />,
 });
+export const History = loadable(() => import('./Widgets/History'), {
+  fallback: <Loading />,
+});
+export const PortfolioInvestment = loadable(() => import('./Widgets/PortfolioInvestment'), {
+  fallback: <Loading />,
+});
+export const BotActivation = loadable(() => import('./Widgets/BotActivation'), {
+  fallback: <Loading />,
+});
+export const AdminTable = loadable(() => import('./Widgets/AdminTable'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {
