@@ -12,6 +12,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Dialog
 } from '@mui/material';
 import {
   getAllSponsors,
@@ -28,6 +29,8 @@ function AdminTable() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [editAmount, setEditAmount] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
   const limit = 10;
 
   useEffect(() => {
@@ -77,7 +80,8 @@ function AdminTable() {
       window.open(url, '_blank');
     } catch (error) {
       if (error.response?.status === 404) {
-        alert('No payment screenshot found for this sponsor.');
+        setDialogMessage('No payment screenshot found for this sponsor.');
+        setOpenDialog(true);
       } else {
         console.error('Failed to load payment screenshot:', error);
       }
@@ -222,6 +226,15 @@ function AdminTable() {
           Next
         </Button>
       </Box>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <Box p={3}>
+          <Typography variant="body1">{dialogMessage}</Typography>
+          <Box mt={2} display="flex" justifyContent="flex-end">
+            <Button onClick={() => setOpenDialog(false)} variant="contained">OK</Button>
+          </Box>
+        </Box>
+      </Dialog>
+
     </Box>
   );
 }
