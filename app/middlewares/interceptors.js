@@ -245,3 +245,37 @@ export const getAllSponsors = async () => {
     throw error;
   }
 };
+
+export const getSponsorPdf = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/payment-options/pdf/${sponsorId}`, {
+      responseType: 'blob',
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Get Sponsor PDF error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getUserTransactions = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/transactions/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Transactions error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateAmount = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/auth/amount-deposited/${sponsorId}`, data);
+    console.log({response});
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};

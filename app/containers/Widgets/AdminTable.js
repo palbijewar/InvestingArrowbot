@@ -1,33 +1,123 @@
 import React, { useEffect, useState } from 'react';
-import { getAllSponsors, activateUser } from '../../middlewares/interceptors.js';
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+} from '@mui/material';
+import {
+  getAllSponsors,
+  activateUser,
+  getSponsorPdf,
+  updateAmount,
+} from '../../middlewares/interceptors.js';
 
 function AdminTable() {
   const [sponsors, setSponsors] = useState([]);
+  const [filteredSponsors, setFilteredSponsors] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [editAmount, setEditAmount] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
-
         setSponsors(res.data);
+        setFilteredSponsors(res.data);
       } catch (err) {
         console.error('Failed to fetch sponsors:', err);
       }
     };
-
     fetchSponsors();
   }, []);
+
+  useEffect(() => {
+    let filtered = [...sponsors];
+    if (searchTerm) {
+      const lower = searchTerm.toLowerCase();
+      filtered = sponsors.filter(
+        (sponsor) =>
+          sponsor.username?.toLowerCase().includes(lower) ||
+          sponsor.email?.toLowerCase().includes(lower) ||
+          sponsor.phone?.toLowerCase().includes(lower)
+      );
+    }
+    setFilteredSponsors(filtered);
+    setCurrentPage(1);
+  }, [searchTerm, sponsors]);
+
+  const handleSort = (key) => {
+    const direction =
+      sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    setSortConfig({ key, direction });
+
+    const sorted = [...filteredSponsors].sort((a, b) => {
+      const aVal = a[key] || '';
+      const bVal = b[key] || '';
+      return direction === 'asc'
+        ? aVal.toString().localeCompare(bVal.toString())
+        : bVal.toString().localeCompare(aVal.toString());
+    });
+    setFilteredSponsors(sorted);
+  };
+
+  const handleViewScreenshot = async (sponsorId) => {
+    try {
+      const blob = await getSponsorPdf(sponsorId);
+      const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+      window.open(url, '_blank');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert('No payment screenshot found for this sponsor.');
+      } else {
+        console.error('Failed to load payment screenshot:', error);
+      }
+    }
+  };
+
+  const handleAmountChange = (sponsorId, value) => {
+    setEditAmount((prev) => ({
+      ...prev,
+      [sponsorId]: value,
+    }));
+  };
+
+  const handleAmountUpdate = async (sponsorId) => {
+    const amount = editAmount[sponsorId];
+    if (!amount) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+
+    try {
+      await updateAmount(sponsorId, { amount_deposited: Number(amount) });
+      alert('Amount updated successfully!');
+    } catch (error) {
+      console.error('Failed to update amount:', error);
+      alert('Error updating amount');
+    }
+  };
 
   const handleToggle = async (sponsorId, currentStatus) => {
     setLoadingId(sponsorId);
     try {
       await activateUser(sponsorId);
-      setSponsors((prev) => prev.map((sponsor) => (sponsor.sponsor_id === sponsorId
-        ? { ...sponsor, is_active: !currentStatus }
-        : sponsor)
+      setSponsors((prev) => prev.map((sponsor) => (sponsor.sponsor_id === sponsorId ? { ...sponsor, is_active: !currentStatus } : sponsor)
       )
       );
+      if (!currentStatus) await handleAmountUpdate(sponsorId);
     } catch (error) {
       console.error('Activation failed', error);
     } finally {
@@ -35,46 +125,107 @@ function AdminTable() {
     }
   };
 
-  return (
-    <div className="p-4">
-      <table className="min-w-full border border-gray-300">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border p-2">Sponsor ID</th>
-            <th className="border p-2">Username</th>
-            <th className="border p-2">Email</th>
-            <th className="border p-2">Phone</th>
-            <th className="border p-2">Package</th>
-            <th className="border p-2">Is Active</th>
-            <th className="border p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sponsors.map((sponsor) => (
-            <tr key={sponsor.sponsor_id} className="text-center">
-              <td className="border p-2">{sponsor.sponsor_id}</td>
-              <td className="border p-2">{sponsor.username}</td>
-              <td className="border p-2">{sponsor.email}</td>
-              <td className="border p-2">{sponsor.phone}</td>
-              <td className="border p-2">{sponsor.package || 'N/A'}</td>
-              <td className="border p-2">{sponsor.is_active ? 'Yes' : 'No'}</td>
-              <td className="border p-2">
-                <button
-                  onClick={() => handleToggle(sponsor.sponsor_id, sponsor.is_active)}
-                  disabled={loadingId === sponsor.sponsor_id}
-                  className={`px-3 py-1 rounded ${
-                    sponsor.is_active ? 'bg-red-500' : 'bg-green-500'
-                  } text-white`}
-                >
-                  {loadingId === sponsor.sponsor_id ? 'Loading...' : sponsor.is_active ? 'Deactivate' : 'Activate'}
-                </button>
+  const totalPages = Math.ceil(filteredSponsors.length / limit);
+  const paginatedSponsors = filteredSponsors.slice(
+    (currentPage - 1) * limit,
+    currentPage * limit
+  );
 
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+  return (
+    <Box p={2}>
+      <TextField
+        label="Search by username, email, or phone"
+        fullWidth
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 3 }}
+      />
+
+      <TableContainer component={Paper} sx={{ maxHeight: 500, overflowX: 'auto' }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited'].map((key) => (
+                <TableCell
+                  key={key}
+                  onClick={() => handleSort(key)}
+                  sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  {key.replace('_', ' ').toUpperCase()}
+                </TableCell>
+              ))}
+              <TableCell>Document</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {paginatedSponsors.map((sponsor) => (
+              <TableRow key={sponsor.sponsor_id}>
+                <TableCell>{sponsor.sponsor_id}</TableCell>
+                <TableCell>{sponsor.username}</TableCell>
+                <TableCell>{sponsor.email}</TableCell>
+                <TableCell>{sponsor.phone}</TableCell>
+                <TableCell>{sponsor.package || 'N/A'}</TableCell>
+                <TableCell>
+                  <TextField
+                    type="number"
+                    size="small"
+                    variant="outlined"
+                    value={
+                      // eslint-disable-next-line no-prototype-builtins
+                      editAmount.hasOwnProperty(sponsor.sponsor_id)
+                        ? editAmount[sponsor.sponsor_id]
+                        : sponsor.amount_deposited ?? ''
+                    }
+                    onChange={(e) => handleAmountChange(sponsor.sponsor_id, e.target.value)}
+                    sx={{ width: 100 }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleViewScreenshot(sponsor.sponsor_id)}
+                  >
+                    View
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    color={sponsor.is_active ? 'error' : 'success'}
+                    onClick={() => handleToggle(sponsor.sponsor_id, sponsor.is_active)}
+                    disabled={loadingId === sponsor.sponsor_id}
+                    startIcon={loadingId === sponsor.sponsor_id ? <CircularProgress size={14} /> : null}
+                  >
+                    {sponsor.is_active ? 'Deactivate' : 'Activate'}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Pagination */}
+      <Box mt={3} display="flex" justifyContent="center" alignItems="center" gap={2}>
+        <Button
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </Button>
+        <Typography>Page {currentPage} of {totalPages}</Typography>
+        <Button
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </Button>
+      </Box>
+    </Box>
   );
 }
 
