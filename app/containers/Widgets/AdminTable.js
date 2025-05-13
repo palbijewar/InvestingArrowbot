@@ -48,10 +48,8 @@ function AdminTable() {
     if (searchTerm) {
       const lower = searchTerm.toLowerCase();
       filtered = sponsors.filter(
-        (sponsor) =>
-          sponsor.username?.toLowerCase().includes(lower) ||
-          sponsor.email?.toLowerCase().includes(lower) ||
-          sponsor.phone?.toLowerCase().includes(lower)
+        (sponsor) => sponsor.username?.toLowerCase().includes(lower)
+          || sponsor.email?.toLowerCase().includes(lower) || sponsor.phone?.toLowerCase().includes(lower)
       );
     }
     setFilteredSponsors(filtered);
@@ -59,8 +57,7 @@ function AdminTable() {
   }, [searchTerm, sponsors]);
 
   const handleSort = (key) => {
-    const direction =
-      sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
     setSortConfig({ key, direction });
 
     const sorted = [...filteredSponsors].sort((a, b) => {
