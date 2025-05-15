@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import {
   TableContainer,
@@ -37,6 +38,8 @@ function AdminTable() {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
+        console.log({res});
+
         setSponsors(res.data);
         setFilteredSponsors(res.data);
       } catch (err) {
@@ -88,23 +91,35 @@ function AdminTable() {
     }
   };
 
-  const handleAmountChange = (sponsorId, value) => {
-    setEditAmount((prev) => ({
-      ...prev,
-      [sponsorId]: value,
-    }));
-  };
-
   const handleAmountUpdate = async (sponsorId) => {
-    const amount = editAmount[sponsorId];
-    if (!amount) {
-      alert('Please enter a valid amount.');
+    let amountStr = editAmount[sponsorId];
+  
+    if (amountStr === '' || amountStr === null || amountStr === undefined) {
+      alert('Please enter an amount.');
       return;
     }
-
+  
+    // fallback to original sponsor amount if user hasn't edited it
+    if (!editAmount.hasOwnProperty(sponsorId)) {
+      amountStr = sponsors.find(s => s.sponsor_id === sponsorId)?.amount_deposited;
+    }
+  
+    const amount = parseFloat(amountStr);
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid numeric amount.');
+      return;
+    }
+  
     try {
-      await updateAmount(sponsorId, { amount_deposited: Number(amount) });
-      alert('Amount updated successfully!');
+      await updateAmount(sponsorId, { amount_deposited: amount });
+  
+      setSponsors(prev =>
+        prev.map(sponsor =>
+          sponsor.sponsor_id === sponsorId
+            ? { ...sponsor, amount_deposited: amount }
+            : sponsor
+        )
+      );
     } catch (error) {
       console.error('Failed to update amount:', error);
       alert('Error updating amount');
@@ -112,15 +127,45 @@ function AdminTable() {
   };
 
   const handleToggle = async (sponsorId, currentStatus) => {
+    const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
+    const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
+    const amount = parseFloat(raw);
+
+    if (!currentStatus) {
+      // eslint-disable-next-line no-restricted-globals
+      if (isNaN(amount) || amount <= 0) {
+        setOpenDialog(true);
+        return;
+      }
+    }
+
     setLoadingId(sponsorId);
     try {
-      await activateUser(sponsorId);
-      setSponsors((prev) => prev.map((sponsor) => (sponsor.sponsor_id === sponsorId ? { ...sponsor, is_active: !currentStatus } : sponsor)
-      )
+      await handleAmountUpdate(sponsorId);
+
+      await activateUser(sponsorId, !currentStatus);
+
+      setSponsors((prev) => prev.map((s) => {
+        if (s.sponsor_id !== sponsorId) return s;
+        return {
+          ...s,
+          is_active: !currentStatus,
+          ...(!currentStatus
+            ? { amount_deposited: amount.toString() }
+            : {}
+          ),
+        };
+      })
       );
-      if (!currentStatus) await handleAmountUpdate(sponsorId);
-    } catch (error) {
-      console.error('Activation failed', error);
+
+      setDialogMessage(currentStatus
+        ? 'Sponsor deactivated successfully.'
+        : 'Sponsor activated successfully!');
+      setOpenDialog(true);
+    } catch (err) {
+      console.error('Activation failed', err);
+      setDialogMessage('Failed to activate/deactivate sponsor.');
+      setOpenDialog(true);
     } finally {
       setLoadingId(null);
     }
@@ -177,9 +222,14 @@ function AdminTable() {
                       // eslint-disable-next-line no-prototype-builtins
                       editAmount.hasOwnProperty(sponsor.sponsor_id)
                         ? editAmount[sponsor.sponsor_id]
-                        : sponsor.amount_deposited ?? ''
+                        : (sponsor.amount_deposited ?? '')
                     }
-                    onChange={(e) => handleAmountChange(sponsor.sponsor_id, e.target.value)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (v === '' || !isNaN(Number(v))) {
+                        setEditAmount((p) => ({ ...p, [sponsor.sponsor_id]: v }));
+                      }
+                    }}
                     sx={{ width: 100 }}
                   />
                 </TableCell>
@@ -234,7 +284,6 @@ function AdminTable() {
           </Box>
         </Box>
       </Dialog>
-
     </Box>
   );
 }

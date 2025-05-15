@@ -225,12 +225,17 @@ export const getSecondLevelReferralsTotalIncome = async (sponsorId) => {
   }
 };
 
-export const activateUser = async (sponsorId) => {
+export const activateUser = async (sponsorId, isActive) => {
   try {
-    const response = await interceptorInstance.patch(`/auth/activate/${sponsorId}`);
+    const response = await interceptorInstance.patch(
+      `/auth/activate/${sponsorId}`,
+      { is_active: isActive }
+    );
+    console.log({ response });
+
     return response.data;
   } catch (error) {
-    console.error('Activate User error:', error.response?.data || error.message);
+    console.error('Activate/Deactivate User error:', error.response?.data || error.message);
     throw error;
   }
 };
