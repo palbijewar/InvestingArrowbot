@@ -77,9 +77,22 @@ function AdminTable() {
 
   const handleViewScreenshot = async (sponsorId) => {
     try {
-      const blob = await getSponsorPdf(sponsorId);
-      const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-      window.open(url, '_blank');
+      const { data } = await getSponsorPdf(sponsorId);
+
+      if (!data) {
+        setDialogMessage('No PDF file path returned for this sponsor.');
+        setOpenDialog(true);
+        return;
+      }
+
+      // Open in new tab or trigger download
+      const link = document.createElement('a');
+      link.href = data; // direct path or S3 presigned URL
+      link.target = '_blank';
+      link.download = `screenshot_${sponsorId}.pdf`; // Optional: triggers download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
       if (error.response?.status === 404) {
         setDialogMessage('No payment screenshot found for this sponsor.');
