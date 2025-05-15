@@ -175,7 +175,7 @@ export const createPaymentOption = async (userData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
+    console.log({response});
     return response.data;
   } catch (error) {
     console.error('Create Payment Option error:', error.response?.data || error.message);
@@ -252,10 +252,9 @@ export const getAllSponsors = async () => {
 
 export const getSponsorPdf = async (sponsorId) => {
   try {
-    const response = await interceptorInstance.get(`/payment-options/pdf/${sponsorId}`, {
-      responseType: 'blob',
-    });
-
+    const response = await interceptorInstance.get(`/payment-options/pdf/${sponsorId}`);
+    console.log({response});
+    
     return response.data;
   } catch (error) {
     console.error('Get Sponsor PDF error:', error.response?.data || error.message);

@@ -102,11 +102,6 @@ function AdminTable() {
     // make sure to convert it to string before parsing
     const amount = parseFloat(amountStr?.toString());
 
-    if (isNaN(amount)) {
-      alert('Invalid amount entered.');
-      return;
-    }
-
     try {
       await updateAmount(sponsorId, { amount_deposited: amount });
 
@@ -117,7 +112,6 @@ function AdminTable() {
       );
     } catch (error) {
       console.error('Failed to update amount:', error);
-      alert('Error updating amount');
     }
   };
 

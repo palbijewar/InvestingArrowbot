@@ -383,4 +383,4 @@ const getMenuByUserType = () => {
   return sponsorDetails?.user_type === 'superadmin' ? superAdminMenu : defaultMenu;
 };
 
-module.exports = getMenuByUserType();
+export default getMenuByUserType();
