@@ -231,7 +231,6 @@ export const activateUser = async (sponsorId, isActive) => {
       `/auth/activate/${sponsorId}`,
       { is_active: isActive }
     );
-    console.log({ response });
 
     return response.data;
   } catch (error) {
@@ -277,7 +276,7 @@ export const getUserTransactions = async (sponsorId) => {
 export const updateAmount = async (sponsorId, data) => {
   try {
     const response = await interceptorInstance.patch(`/auth/amount-deposited/${sponsorId}`, data);
-    console.log({response});
+
     return response.data;
   } catch (error) {
     console.error('Activate User error:', error.response?.data || error.message);

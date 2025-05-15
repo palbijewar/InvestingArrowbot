@@ -38,7 +38,6 @@ function AdminTable() {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
-        console.log({res});
 
         setSponsors(res.data);
         setFilteredSponsors(res.data);
@@ -93,32 +92,28 @@ function AdminTable() {
 
   const handleAmountUpdate = async (sponsorId) => {
     let amountStr = editAmount[sponsorId];
-  
-    if (amountStr === '' || amountStr === null || amountStr === undefined) {
-      alert('Please enter an amount.');
-      return;
-    }
-  
-    // fallback to original sponsor amount if user hasn't edited it
-    if (!editAmount.hasOwnProperty(sponsorId)) {
+
+    // fallback to original sponsor amount if not manually edited
+    // eslint-disable-next-line no-prototype-builtins
+    if (!editAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr === null || amountStr === undefined) {
       amountStr = sponsors.find(s => s.sponsor_id === sponsorId)?.amount_deposited;
     }
-  
-    const amount = parseFloat(amountStr);
-    if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid numeric amount.');
+
+    // make sure to convert it to string before parsing
+    const amount = parseFloat(amountStr?.toString());
+
+    if (isNaN(amount)) {
+      alert('Invalid amount entered.');
       return;
     }
-  
+
     try {
       await updateAmount(sponsorId, { amount_deposited: amount });
-  
-      setSponsors(prev =>
-        prev.map(sponsor =>
-          sponsor.sponsor_id === sponsorId
-            ? { ...sponsor, amount_deposited: amount }
-            : sponsor
-        )
+
+      setSponsors(prev => prev.map(sponsor => (sponsor.sponsor_id === sponsorId
+        ? { ...sponsor, amount_deposited: amount }
+        : sponsor)
+      )
       );
     } catch (error) {
       console.error('Failed to update amount:', error);
@@ -226,10 +221,11 @@ function AdminTable() {
                     }
                     onChange={(e) => {
                       const v = e.target.value;
-                      if (v === '' || !isNaN(Number(v))) {
+                      if (/^\d*\.?\d*$/.test(v)) {
                         setEditAmount((p) => ({ ...p, [sponsor.sponsor_id]: v }));
                       }
                     }}
+
                     sx={{ width: 100 }}
                   />
                 </TableCell>

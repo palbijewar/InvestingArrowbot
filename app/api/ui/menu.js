@@ -380,9 +380,6 @@ const getMenuByUserType = () => {
     console.error('Failed to parse sponsor_details from localStorage:', err);
   }
 
-  console.log({ usertype: sponsorDetails?.user_type });
-  console.log({ sponsorDetails });
-
   return sponsorDetails?.user_type === 'superadmin' ? superAdminMenu : defaultMenu;
 };
 
