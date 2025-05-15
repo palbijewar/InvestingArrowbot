@@ -280,3 +280,14 @@ export const updateAmount = async (sponsorId, data) => {
     throw error;
   }
 };
+
+export const updatePackage = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/auth/package/${sponsorId}`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};

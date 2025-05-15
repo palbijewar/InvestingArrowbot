@@ -20,6 +20,7 @@ import {
   activateUser,
   getSponsorPdf,
   updateAmount,
+  updatePackage,
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -32,6 +33,7 @@ function AdminTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
+  const [editPackage, setEditPackage] = useState({});
   const limit = 10;
 
   useEffect(() => {
@@ -179,6 +181,22 @@ function AdminTable() {
     currentPage * limit
   );
 
+  const handlePackageUpdate = async (sponsorId) => {
+    const pkg = editPackage[sponsorId] ?? sponsors.find(s => s.sponsor_id === sponsorId)?.package;
+    try {
+    await updatePackage(sponsorId, { package: pkg });
+    setSponsors(prev => prev.map(s =>
+    (s.sponsor_id === sponsorId ? { ...s, package: pkg } : s)
+    ));
+    setDialogMessage('Package updated successfully.');
+    setOpenDialog(true);
+    } catch (error) {
+    console.error('Failed to update package:', error);
+      setDialogMessage('Failed to update package.');
+    setOpenDialog(true);
+    }
+    };
+
   return (
     <Box p={2}>
       <TextField
@@ -203,8 +221,8 @@ function AdminTable() {
                   {key.replace('_', ' ').toUpperCase()}
                 </TableCell>
               ))}
-              <TableCell>Document</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell sx={{ cursor: 'pointer', fontWeight: 'bold' }}>DOCUMENT</TableCell>
+              <TableCell sx={{ cursor: 'pointer', fontWeight: 'bold' }}>ACTION</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -214,7 +232,7 @@ function AdminTable() {
                 <TableCell>{sponsor.username}</TableCell>
                 <TableCell>{sponsor.email}</TableCell>
                 <TableCell>{sponsor.phone}</TableCell>
-                <TableCell>{sponsor.package || 'N/A'}</TableCell>
+               <TableCell> <select value={ editPackage.hasOwnProperty(sponsor.sponsor_id) ? editPackage[sponsor.sponsor_id] : (sponsor.package ?? '') } onChange={(e) => setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: e.target.value, })) } style={{ padding: '6px', borderRadius: '4px' }} > <option value="">Select</option> {[30, 75, 125, 220, 650].map((val) => ( <option key={val} value={val}> ${val} </option> ))} </select> <Button size="small" variant="outlined" onClick={() => handlePackageUpdate(sponsor.sponsor_id)} sx={{ ml: 1 }} > Save </Button> </TableCell>
                 <TableCell>
                   <TextField
                     type="number"
