@@ -379,8 +379,7 @@ const getMenuByUserType = () => {
   } catch (err) {
     console.error('Failed to parse sponsor_details from localStorage:', err);
   }
-
   return sponsorDetails?.user_type === 'superadmin' ? superAdminMenu : defaultMenu;
 };
 
-export default getMenuByUserType();
+module.exports = getMenuByUserType();
