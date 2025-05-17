@@ -232,7 +232,42 @@ function AdminTable() {
                 <TableCell>{sponsor.username}</TableCell>
                 <TableCell>{sponsor.email}</TableCell>
                 <TableCell>{sponsor.phone}</TableCell>
-               <TableCell> <select value={ editPackage.hasOwnProperty(sponsor.sponsor_id) ? editPackage[sponsor.sponsor_id] : (sponsor.package ?? '') } onChange={(e) => setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: e.target.value, })) } style={{ padding: '6px', borderRadius: '4px' }} > <option value="">Select</option> {[30, 75, 125, 220, 650].map((val) => ( <option key={val} value={val}> ${val} </option> ))} </select> <Button size="small" variant="outlined" onClick={() => handlePackageUpdate(sponsor.sponsor_id)} sx={{ ml: 1 }} > Save </Button> </TableCell>
+                <TableCell>
+  <select
+    value={
+      editPackage.hasOwnProperty(sponsor.sponsor_id)
+        ? editPackage[sponsor.sponsor_id]
+        : (sponsor.package ?? '')
+    }
+    onChange={async (e) => {
+      const pkg = e.target.value;
+      setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: pkg }));
+      try {
+        await updatePackage(sponsor.sponsor_id, { package: pkg });
+        setSponsors((prev) =>
+          prev.map((s) =>
+            s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s
+          )
+        );
+        setDialogMessage('Package updated successfully.');
+        setOpenDialog(true);
+      } catch (error) {
+        console.error('Failed to update package:', error);
+        setDialogMessage('Failed to update package.');
+        setOpenDialog(true);
+      }
+    }}
+    style={{ padding: '6px', borderRadius: '4px' }}
+  >
+    <option value="">Select</option>
+    {[30, 75, 125, 220, 650].map((val) => (
+      <option key={val} value={val}>
+        ${val}
+      </option>
+    ))}
+  </select>
+</TableCell>
+
                 <TableCell>
                   <TextField
                     type="number"
