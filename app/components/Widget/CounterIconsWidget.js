@@ -25,9 +25,6 @@ import {
 
 function CounterIconWidget() {
   const { classes } = useStyles();
-
-  const [paymentOptionCount, setPaymentOptionCount] = useState(0);
-  const [portfolioFund, setPortfolioFund] = useState(0);
   const [directTeamCount, setDirectTeamCount] = useState(0);
   const [downlineTeamCount, setDownlineTeamCount] = useState(0);
   const [levelIncome, setLevelIncome] = useState(0);
@@ -40,8 +37,6 @@ function CounterIconWidget() {
         const sponsorId = sponsorDetails?.sponsor_id;
 
         const [
-          paymentResponse,
-          fundResponse,
           directResponse,
           secondLevelResponse,
           levelIncomeResponse
@@ -52,9 +47,6 @@ function CounterIconWidget() {
           getSecondLevelReferrals(sponsorId),
           getSecondLevelReferralsTotalIncome(sponsorId)
         ]);
-
-        setPaymentOptionCount(paymentResponse?.data?.total_payment_options || 0);
-        setPortfolioFund(fundResponse?.data?.total_demat_amount || 0);
 
         const directReferrals = directResponse?.data || [];
         const secondLevelReferrals = secondLevelResponse?.data || [];
@@ -82,12 +74,22 @@ function CounterIconWidget() {
     <div className={classes.rootCounterFull}>
       <Grid container spacing={2}>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={paymentOptionCount} duration={3} title="Bot Activation">
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Bot Activation">
             <OndemandVideo className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Day's Remaining">
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Bot Business">
+            <OndemandVideo className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Bot Activation">
+            <Assessment className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Bot Business">
             <Assessment className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -95,20 +97,31 @@ function CounterIconWidget() {
           <CounterWidget
             color="secondary-main"
             start={0}
-            end={portfolioFund}
+            end={0}
             duration={3}
-            title="Portfolio Investment"
+            title="Direct Portfolio Investment"
           >
             <BusinessCenter className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Gas Wallet">
-            <AccountBalanceWallet className={classes.counterIcon} />
+          <CounterWidget
+            color="secondary-main"
+            start={0}
+            end={0}
+            duration={3}
+            title="Downline Portfolio Investment"
+          >
+            <BusinessCenter className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Portfolio Income">
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Portfolio Income">
+            <MonetizationOn className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-dark" start={0} end={totalDownlineIncome} duration={3} title="Downline Portfolio Income">
             <MonetizationOn className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -123,11 +136,6 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Trading Portfolio">
-            <ShowChart className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directTeamCount} duration={3} title="Direct Team">
             <Group className={classes.counterIcon} />
           </CounterWidget>
@@ -135,21 +143,6 @@ function CounterIconWidget() {
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={downlineTeamCount} duration={3} title="Downline Team">
             <SupervisorAccount className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={totalDownlineIncome} duration={3} title="Downline Bot Business">
-            <CollectionsBookmark className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Portfolio Business">
-            <BusinessCenter className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Total Balance">
-            <AccountBalanceWallet className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
