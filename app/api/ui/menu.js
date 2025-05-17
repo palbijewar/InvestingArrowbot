@@ -301,35 +301,10 @@ const superAdminMenu = [
     ],
   },
   {
-    key: 'my_income',
-    name: 'My Income',
+    key: 'broker_information',
+    name: 'Broker Information',
     icon: 'monetization_on',
-    child: [
-      {
-        key: 'ai_robot',
-        name: 'AI Robot',
-        icon: 'smart_toy',
-        link: '/app/income/ai-robot',
-      },
-      {
-        key: 'level_income',
-        name: 'Level Income',
-        icon: 'trending_up',
-        link: '/app/income/level',
-      },
-      {
-        key: 'trading_portfolio',
-        name: 'Trading Portfolio',
-        icon: 'bar_chart',
-        link: '/app/income/portfolio',
-      },
-      {
-        key: 'rank_income',
-        name: 'Rank Income',
-        icon: 'emoji_events',
-        link: '/app/income/rank',
-      },
-    ],
+    linkParent: '/app/widgets/broker-informations',
   },
   {
     key: 'withdrawal',

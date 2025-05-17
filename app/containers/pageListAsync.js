@@ -51,6 +51,9 @@ export const BotActivation = loadable(() => import('./Widgets/BotActivation'), {
 export const AdminTable = loadable(() => import('./Widgets/AdminTable'), {
   fallback: <Loading />,
 });
+export const BrokerInformations = loadable(() => import('./Widgets/BrokerInformations'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {
