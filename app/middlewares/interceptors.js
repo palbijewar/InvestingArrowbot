@@ -291,3 +291,25 @@ export const updatePackage = async (sponsorId, data) => {
     throw error;
   }
 };
+
+// Get Direct Team Count
+export const getDirectTeamCount = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/team/direct/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Get Total Downline Team Count
+export const getTotalDownlineTeamCount = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/team/downline/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Downline Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};

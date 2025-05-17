@@ -20,7 +20,9 @@ import {
   getTotalDematFund,
   getDirectReferrals,
   getSecondLevelReferrals,
-  getSecondLevelReferralsTotalIncome
+  getSecondLevelReferralsTotalIncome,
+  getTotalDownlineTeamCount,
+  getDirectTeamCount
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
@@ -35,28 +37,34 @@ function CounterIconWidget() {
       try {
         const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
         const sponsorId = sponsorDetails?.sponsor_id;
-
+  
         const [
-          directResponse,
-          secondLevelResponse,
-          levelIncomeResponse
+          paymentOptionsResponse,
+          dematFundResponse,
+          directReferralsResponse,
+          secondLevelReferralsResponse,
+          totalSecondLevelIncomeResponse,
+          directTeamCountResponse,
+          downlineTeamCountResponse,
         ] = await Promise.all([
           getPaymentOptions(),
           getTotalDematFund(),
           getDirectReferrals(sponsorId),
           getSecondLevelReferrals(sponsorId),
-          getSecondLevelReferralsTotalIncome(sponsorId)
+          getSecondLevelReferralsTotalIncome(sponsorId),
+          getDirectTeamCount(sponsorId),
+          getTotalDownlineTeamCount(sponsorId),
         ]);
-
-        const directReferrals = directResponse?.data || [];
-        const secondLevelReferrals = secondLevelResponse?.data || [];
-
-        setDirectTeamCount(directReferrals.length);
-        setDownlineTeamCount(secondLevelReferrals.length);
-
-        const totalIncome = levelIncomeResponse?.data?.total_income || 0;
+  
+        const directReferrals = directReferralsResponse?.data || [];
+        const secondLevelReferrals = secondLevelReferralsResponse?.data || [];
+  
+        setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
+        setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
+  
+        const totalIncome = totalSecondLevelIncomeResponse?.data?.total_income || 0;
         setLevelIncome(totalIncome);
-
+  
         const downlineIncome = secondLevelReferrals.reduce(
           (sum, user) => sum + (Number(user.package) || 0),
           0
@@ -66,9 +74,10 @@ function CounterIconWidget() {
         console.error('Error fetching dashboard data', error);
       }
     };
-
+  
     fetchDashboardData();
   }, []);
+  
 
   return (
     <div className={classes.rootCounterFull}>
