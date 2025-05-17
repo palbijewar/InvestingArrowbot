@@ -313,3 +313,63 @@ export const getTotalDownlineTeamCount = async (sponsorId) => {
     throw error;
   }
 };
+
+export const getDirectPortfolioInvestment = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/direct-portfolio-investment/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Direct Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getDownlinePortfolioInvestment = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/downline-portfolio-investment/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Downline Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getBotDirectActivationCount = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/team/direct-bot/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Bot Direct Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getBotDownlineActivationCount = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/team/downline-bot/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Bot Downline Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getBotDirectPortfolioInvestment = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/bot-direct/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Bot Direct Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getBotDownlinePortfolioInvestment = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/bot-downline/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Bot Downline Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};

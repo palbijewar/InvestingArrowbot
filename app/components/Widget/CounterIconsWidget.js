@@ -22,83 +22,89 @@ import {
   getSecondLevelReferrals,
   getSecondLevelReferralsTotalIncome,
   getTotalDownlineTeamCount,
-  getDirectTeamCount
+  getDirectTeamCount,
+  getDirectPortfolioInvestment,
+  getDownlinePortfolioInvestment,
+  getBotDirectPortfolioInvestment,
+  getBotDownlinePortfolioInvestment,
+  getBotDirectActivationCount,
+  getBotDownlineActivationCount,
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
   const { classes } = useStyles();
   const [directTeamCount, setDirectTeamCount] = useState(0);
   const [downlineTeamCount, setDownlineTeamCount] = useState(0);
-  const [levelIncome, setLevelIncome] = useState(0);
-  const [totalDownlineIncome, setTotalDownlineIncome] = useState(0);
+  const [directPortfolioInvestment, setDirectPortfolioInvestment] = useState(0);
+  const [downlinePortfolioInvestment, setDownlinePortfolioInvestment] = useState(0);
+  const [directBotAtivation, setDirectBotAtivation] = useState(0);
+  const [downlineBotAtivation, setBotAtivation] = useState(0);
+  const [directBotBusiness, setDirectBotBusiness] = useState(0);
+  const [downlineBotBusiness, setDownlineBotBusiness] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
         const sponsorId = sponsorDetails?.sponsor_id;
-  
+console.log({sponsorId});
+
         const [
-          paymentOptionsResponse,
-          dematFundResponse,
-          directReferralsResponse,
-          secondLevelReferralsResponse,
-          totalSecondLevelIncomeResponse,
           directTeamCountResponse,
           downlineTeamCountResponse,
+          directPortfolioInvestmentResponse,
+          downlinePortfolioInvestmentResponse,
+          botDirectPortfolioInvestmentResponse,
+          botDownlinePortfolioInvestmentResponse,
+          botDirectBotActivationResponse,
+          botDownlineBotActivationResponse,
         ] = await Promise.all([
-          getPaymentOptions(),
-          getTotalDematFund(),
-          getDirectReferrals(sponsorId),
-          getSecondLevelReferrals(sponsorId),
-          getSecondLevelReferralsTotalIncome(sponsorId),
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
+          getDirectPortfolioInvestment(sponsorId),
+          getDownlinePortfolioInvestment(sponsorId),
+          getBotDirectPortfolioInvestment(sponsorId),
+          getBotDownlinePortfolioInvestment(sponsorId),
+          getBotDirectActivationCount(sponsorId),
+          getBotDownlineActivationCount(sponsorId),
         ]);
-  
-        const directReferrals = directReferralsResponse?.data || [];
-        const secondLevelReferrals = secondLevelReferralsResponse?.data || [];
-  
         setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
         setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
-  
-        const totalIncome = totalSecondLevelIncomeResponse?.data?.total_income || 0;
-        setLevelIncome(totalIncome);
-  
-        const downlineIncome = secondLevelReferrals.reduce(
-          (sum, user) => sum + (Number(user.package) || 0),
-          0
-        );
-        setTotalDownlineIncome(downlineIncome);
+
+        setDirectPortfolioInvestment(directPortfolioInvestmentResponse?.data?.direct_portfolio_investment || 0);
+
+        setDownlinePortfolioInvestment(downlinePortfolioInvestmentResponse?.data?.downline_portfolio_investment || 0);
+        setDirectBotBusiness(botDirectPortfolioInvestmentResponse?.data?.direct_bot_income || 0);
+        setDownlineBotBusiness(botDownlinePortfolioInvestmentResponse?.data?.downline_bot_income || 0);
+        setDirectBotAtivation(botDirectBotActivationResponse?.data?.direct_bot_count || 0);
+        setBotAtivation(botDownlineBotActivationResponse?.data?.downline_bot_count || 0);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
     };
-  
     fetchDashboardData();
   }, []);
-  
 
   return (
     <div className={classes.rootCounterFull}>
       <Grid container spacing={2}>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Bot Activation">
+          <CounterWidget color="secondary-dark" start={0} end={directBotAtivation} duration={3} title="Direct Bot Activation">
             <OndemandVideo className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Bot Business">
+          <CounterWidget color="secondary-dark" start={0} end={directBotBusiness} duration={3} title="Direct Bot Business">
             <OndemandVideo className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Bot Activation">
+          <CounterWidget color="secondary-main" start={0} end={downlineBotAtivation} duration={3} title="Downline Bot Activation">
             <Assessment className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Downline Bot Business">
+          <CounterWidget color="secondary-main" start={0} end={downlineBotBusiness} duration={3} title="Downline Bot Business">
             <Assessment className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -106,7 +112,7 @@ function CounterIconWidget() {
           <CounterWidget
             color="secondary-main"
             start={0}
-            end={0}
+            end={directPortfolioInvestment}
             duration={3}
             title="Direct Portfolio Investment"
           >
@@ -117,7 +123,7 @@ function CounterIconWidget() {
           <CounterWidget
             color="secondary-main"
             start={0}
-            end={0}
+            end={downlinePortfolioInvestment}
             duration={3}
             title="Downline Portfolio Investment"
           >
@@ -130,7 +136,7 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={totalDownlineIncome} duration={3} title="Downline Portfolio Income">
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Downline Portfolio Income">
             <MonetizationOn className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -140,7 +146,7 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={levelIncome} duration={3} title="Level Income">
+          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Level Income">
             <TrendingUp className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
