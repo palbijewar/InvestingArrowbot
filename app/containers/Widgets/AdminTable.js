@@ -181,22 +181,6 @@ function AdminTable() {
     currentPage * limit
   );
 
-  const handlePackageUpdate = async (sponsorId) => {
-    const pkg = editPackage[sponsorId] ?? sponsors.find(s => s.sponsor_id === sponsorId)?.package;
-    try {
-    await updatePackage(sponsorId, { package: pkg });
-    setSponsors(prev => prev.map(s =>
-    (s.sponsor_id === sponsorId ? { ...s, package: pkg } : s)
-    ));
-    setDialogMessage('Package updated successfully.');
-    setOpenDialog(true);
-    } catch (error) {
-    console.error('Failed to update package:', error);
-      setDialogMessage('Failed to update package.');
-    setOpenDialog(true);
-    }
-    };
-
   return (
     <Box p={2}>
       <TextField

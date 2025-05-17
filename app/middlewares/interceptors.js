@@ -373,3 +373,13 @@ export const getBotDownlinePortfolioInvestment = async (sponsorId) => {
     throw error;
   }
 };
+
+export const getRankInformations = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/ranks/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Bot Downline Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};

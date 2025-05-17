@@ -16,10 +16,7 @@ import { injectIntl } from 'react-intl';
 import CounterWidget from '../Counter/CounterWidget';
 import useStyles from './widget-jss';
 import {
-  getPaymentOptions,
-  getTotalDematFund,
-  getDirectReferrals,
-  getSecondLevelReferrals,
+  getRankInformations,
   getSecondLevelReferralsTotalIncome,
   getTotalDownlineTeamCount,
   getDirectTeamCount,
@@ -41,13 +38,15 @@ function CounterIconWidget() {
   const [downlineBotAtivation, setBotAtivation] = useState(0);
   const [directBotBusiness, setDirectBotBusiness] = useState(0);
   const [downlineBotBusiness, setDownlineBotBusiness] = useState(0);
+  const [levelIncome, setLevelIncome] = useState(0);
+  const [currentRank, setCurrentRank] = useState(0);
+  const [rankIncome, setRankIncome] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
         const sponsorId = sponsorDetails?.sponsor_id;
-console.log({sponsorId});
 
         const [
           directTeamCountResponse,
@@ -58,6 +57,8 @@ console.log({sponsorId});
           botDownlinePortfolioInvestmentResponse,
           botDirectBotActivationResponse,
           botDownlineBotActivationResponse,
+          levelIncomeResponse,
+          rankInformationsResponse
         ] = await Promise.all([
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
@@ -67,7 +68,11 @@ console.log({sponsorId});
           getBotDownlinePortfolioInvestment(sponsorId),
           getBotDirectActivationCount(sponsorId),
           getBotDownlineActivationCount(sponsorId),
+          getSecondLevelReferralsTotalIncome(sponsorId),
+          getRankInformations(sponsorId),
         ]);
+        console.log({levelIncomeResponse});
+        
         setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
         setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
 
@@ -78,6 +83,9 @@ console.log({sponsorId});
         setDownlineBotBusiness(botDownlinePortfolioInvestmentResponse?.data?.downline_bot_income || 0);
         setDirectBotAtivation(botDirectBotActivationResponse?.data?.direct_bot_count || 0);
         setBotAtivation(botDownlineBotActivationResponse?.data?.downline_bot_count || 0);
+        setLevelIncome(levelIncomeResponse?.data?.level_income || 0);
+        setCurrentRank(rankInformationsResponse?.data?.rank || '');
+        setRankIncome(rankInformationsResponse?.data?.income || 0);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
@@ -141,12 +149,12 @@ console.log({sponsorId});
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Rank Income">
+          <CounterWidget color="secondary-main" start={0} end={rankIncome} duration={3} title="Rank Income">
             <EmojiEvents className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Level Income">
+          <CounterWidget color="secondary-main" start={0} end={levelIncome} duration={3} title="Level Income">
             <TrendingUp className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
@@ -161,7 +169,7 @@ console.log({sponsorId});
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={0} duration={3} title="Current Rank">
+          <CounterWidget color="secondary-main" start={0} end={currentRank} duration={3} title="Current Rank">
             <EmojiEvents className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
