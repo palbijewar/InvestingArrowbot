@@ -54,6 +54,9 @@ export const AdminTable = loadable(() => import('./Widgets/AdminTable'), {
 export const BrokerInformations = loadable(() => import('./Widgets/BrokerInformations'), {
   fallback: <Loading />,
 });
+export const TradingDetails = loadable(() => import('./Widgets/TradingDetails'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {

@@ -38,7 +38,8 @@ import {
   DownlineStreamWidget,
   EditProfile, History,
   PortfolioInvestment, BotActivation,
-  AdminTable, BrokerInformations
+  AdminTable, BrokerInformations,
+  TradingDetails
 } from '../pageListAsync';
 import ChangePassword from '../Pages/ChangePassword';
 
@@ -67,6 +68,7 @@ function Application(props) {
         <Route path="widgets/bot-activation" element={<BotActivation />} />
         <Route path="widgets/admin-table" element={<AdminTable />} />
         <Route path="widgets/broker-informations" element={<BrokerInformations />} />
+        <Route path="widgets/trading-details" element={<TradingDetails />} />
         { /* Layout */ }
         <Route path="layouts" element={<Parent />} />
         <Route path="layouts/grid" element={<Grid />} />

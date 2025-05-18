@@ -239,6 +239,18 @@ const superAdminMenu = [
     ],
   },
   {
+    key: 'broker_information',
+    name: 'Broker Information',
+    icon: 'monetization_on',
+    linkParent: '/app/widgets/broker-informations',
+  },
+  {
+    key: 'trading_details',
+    name: 'Trading Details',
+    icon: 'monetization_on',
+    linkParent: '/app/widgets/trading-details',
+  },
+  {
     key: 'topup',
     name: 'Topup',
     icon: 'attach_money',
@@ -299,12 +311,6 @@ const superAdminMenu = [
         link: '/app/widgets/received-history',
       },
     ],
-  },
-  {
-    key: 'broker_information',
-    name: 'Broker Information',
-    icon: 'monetization_on',
-    linkParent: '/app/widgets/broker-informations',
   },
   {
     key: 'withdrawal',
