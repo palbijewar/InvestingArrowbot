@@ -383,3 +383,13 @@ export const getRankInformations = async (sponsorId) => {
     throw error;
   }
 };
+
+export const getBrokerInformations = async () => {
+  try {
+    const response = await interceptorInstance.get('/broker-details');
+    return response.data;
+  } catch (error) {
+    console.error('Bot Downline Portfolio Investment error:', error.response?.data || error.message);
+    throw error;
+  }
+};

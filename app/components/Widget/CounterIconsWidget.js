@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import OndemandVideo from '@mui/icons-material/OndemandVideo';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
-import CollectionsBookmark from '@mui/icons-material/CollectionsBookmark';
-import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
 import TrendingUp from '@mui/icons-material/TrendingUp';
 import Assessment from '@mui/icons-material/Assessment';
 import Group from '@mui/icons-material/Group';
 import BusinessCenter from '@mui/icons-material/BusinessCenter';
 import MonetizationOn from '@mui/icons-material/MonetizationOn';
-import ShowChart from '@mui/icons-material/ShowChart';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import { injectIntl } from 'react-intl';
 import CounterWidget from '../Counter/CounterWidget';
@@ -71,8 +68,7 @@ function CounterIconWidget() {
           getSecondLevelReferralsTotalIncome(sponsorId),
           getRankInformations(sponsorId),
         ]);
-        console.log({levelIncomeResponse});
-        
+
         setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
         setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
 
