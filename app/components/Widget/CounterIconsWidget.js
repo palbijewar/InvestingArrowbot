@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
-import OndemandVideo from '@mui/icons-material/OndemandVideo';
-import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
-import TrendingUp from '@mui/icons-material/TrendingUp';
-import Assessment from '@mui/icons-material/Assessment';
-import Group from '@mui/icons-material/Group';
-import BusinessCenter from '@mui/icons-material/BusinessCenter';
-import MonetizationOn from '@mui/icons-material/MonetizationOn';
+
+// Icons
+import SmartToy from '@mui/icons-material/SmartToy';
+import PrecisionManufacturing from '@mui/icons-material/PrecisionManufacturing';
+import GroupAdd from '@mui/icons-material/GroupAdd';
+import Groups3 from '@mui/icons-material/Groups3';
+import LocalAtm from '@mui/icons-material/LocalAtm';
+import AccountBalance from '@mui/icons-material/AccountBalance';
+import Paid from '@mui/icons-material/Paid';
+import Savings from '@mui/icons-material/Savings';
 import EmojiEvents from '@mui/icons-material/EmojiEvents';
+import TrendingUp from '@mui/icons-material/TrendingUp';
+import Diversity1 from '@mui/icons-material/Diversity1';
+import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
+import MilitaryTech from '@mui/icons-material/MilitaryTech';
+
 import { injectIntl } from 'react-intl';
 import CounterWidget from '../Counter/CounterWidget';
 import useStyles from './widget-jss';
@@ -73,7 +81,6 @@ function CounterIconWidget() {
         setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
 
         setDirectPortfolioInvestment(directPortfolioInvestmentResponse?.data?.direct_portfolio_investment || 0);
-
         setDownlinePortfolioInvestment(downlinePortfolioInvestmentResponse?.data?.downline_portfolio_investment || 0);
         setDirectBotBusiness(botDirectPortfolioInvestmentResponse?.data?.direct_bot_income || 0);
         setDownlineBotBusiness(botDownlinePortfolioInvestmentResponse?.data?.downline_bot_income || 0);
@@ -94,22 +101,22 @@ function CounterIconWidget() {
       <Grid container spacing={2}>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directBotAtivation} duration={3} title="Direct Bot Activation">
-            <OndemandVideo className={classes.counterIcon} />
+            <SmartToy className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directBotBusiness} duration={3} title="Direct Bot Business">
-            <OndemandVideo className={classes.counterIcon} />
+            <PrecisionManufacturing className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={downlineBotAtivation} duration={3} title="Downline Bot Activation">
-            <Assessment className={classes.counterIcon} />
+            <GroupAdd className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={downlineBotBusiness} duration={3} title="Downline Bot Business">
-            <Assessment className={classes.counterIcon} />
+            <Groups3 className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
@@ -120,7 +127,7 @@ function CounterIconWidget() {
             duration={3}
             title="Direct Portfolio Investment"
           >
-            <BusinessCenter className={classes.counterIcon} />
+            <LocalAtm className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
@@ -131,17 +138,27 @@ function CounterIconWidget() {
             duration={3}
             title="Downline Portfolio Investment"
           >
-            <BusinessCenter className={classes.counterIcon} />
+            <AccountBalance className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Trading Portfolio">
+            <Paid className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Downline Trading Portfolio">
+            <Savings className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Portfolio Income">
-            <MonetizationOn className={classes.counterIcon} />
+            <LocalAtm className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Downline Portfolio Income">
-            <MonetizationOn className={classes.counterIcon} />
+            <AccountBalance className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
@@ -156,7 +173,7 @@ function CounterIconWidget() {
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directTeamCount} duration={3} title="Direct Team">
-            <Group className={classes.counterIcon} />
+            <Diversity1 className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
@@ -166,7 +183,7 @@ function CounterIconWidget() {
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={currentRank} duration={3} title="Current Rank">
-            <EmojiEvents className={classes.counterIcon} />
+            <MilitaryTech className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
       </Grid>
