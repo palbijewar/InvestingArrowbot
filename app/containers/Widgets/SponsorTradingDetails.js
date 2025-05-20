@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -14,19 +15,28 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { getAllSponsors } from '../../middlewares/interceptors';
+import { getAllSponsors, updateProfit } from '../../middlewares/interceptors';
 
 function SponsorTradingDetails() {
   const [sponsors, setSponsors] = useState([]);
   const [profits, setProfits] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState({});
+  const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
-        setSponsors(res?.data || []);
+        const sponsorData = res?.data || [];
+        setSponsors(sponsorData);
+
+        // Initialize profits from sponsor.profit
+        const initialProfits = {};
+        sponsorData.forEach((s) => {
+          initialProfits[s.sponsor_id] = s.profit ?? '';
+        });
+        setProfits(initialProfits);
       } catch (error) {
         console.error('Failed to fetch sponsors:', error);
       } finally {
@@ -38,21 +48,35 @@ function SponsorTradingDetails() {
   }, []);
 
   const handleProfitChange = (sponsorId, value) => {
-    setProfits((prev) => ({
-      ...prev,
-      [sponsorId]: value,
-    }));
+    setProfits((prev) => ({ ...prev, [sponsorId]: value }));
   };
 
   const handleSaveProfit = async (sponsorId) => {
     const profitValue = profits[sponsorId];
-    if (!profitValue || isNaN(profitValue)) return;
+    if (profitValue === '' || isNaN(profitValue)) {
+      alert('Please enter a valid profit value.');
+      return;
+    }
 
     setSaving((prev) => ({ ...prev, [sponsorId]: true }));
+    setSuccessMsg('');
 
     try {
-      await updateAmount(sponsorId, { profit: parseFloat(profitValue) });
-      alert('Profit updated successfully!');
+      const payload = { profit: parseFloat(profitValue) };
+      const res = await updateProfit(sponsorId, payload);
+
+      // 1) Update sponsors state so sponsor.profit is current
+      setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, profit: res.data.profit } : s)
+      )
+      );
+
+      // 2) Update profits state so the input shows the saved value
+      setProfits((prev) => ({
+        ...prev,
+        [sponsorId]: res.data.profit,
+      }));
+
+      setSuccessMsg(`Profit for ${sponsorId} updated to ${res.data.profit}`);
     } catch (error) {
       console.error('Error updating profit:', error);
       alert('Failed to update profit.');
@@ -74,6 +98,13 @@ function SponsorTradingDetails() {
       <Typography variant="h5" gutterBottom>
         Sponsor Trading Details
       </Typography>
+
+      {successMsg && (
+        <Typography variant="subtitle1" color="success.main" mb={2}>
+          {successMsg}
+        </Typography>
+      )}
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -93,9 +124,8 @@ function SponsorTradingDetails() {
                   <TextField
                     type="number"
                     size="small"
-                    value={profits[sponsor.sponsor_id] || ''}
-                    onChange={(e) =>
-                      handleProfitChange(sponsor.sponsor_id, e.target.value)
+                    value={profits[sponsor.sponsor_id]}
+                    onChange={(e) => handleProfitChange(sponsor.sponsor_id, e.target.value)
                     }
                     placeholder="Enter profit"
                   />

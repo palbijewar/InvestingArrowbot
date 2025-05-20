@@ -292,6 +292,17 @@ export const updatePackage = async (sponsorId, data) => {
   }
 };
 
+export const updateProfit = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/auth/users/profit/${sponsorId}`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 // Get Direct Team Count
 export const getDirectTeamCount = async (sponsorId) => {
   try {
