@@ -57,6 +57,9 @@ export const BrokerInformations = loadable(() => import('./Widgets/BrokerInforma
 export const TradingDetails = loadable(() => import('./Widgets/TradingDetails'), {
   fallback: <Loading />,
 });
+export const SponsorTradingDetails = loadable(() => import('./Widgets/SponsorTradingDetails'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {

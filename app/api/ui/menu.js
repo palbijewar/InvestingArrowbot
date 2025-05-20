@@ -281,6 +281,12 @@ const superAdminMenu = [
     icon: 'account_balance',
     child: [
       {
+        key: 'sponsor_trading_details',
+        name: 'Sponsor Trading Details',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-details',
+      },
+      {
         key: 'fund_transfer',
         name: 'Fund Transfer',
         icon: 'send',
