@@ -15,7 +15,7 @@ import { ArrowForward } from '@mui/icons-material';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
+import emailjs from '@emailjs/browser';
 import brand from 'enl-api/dummy/brand';
 import logo from 'enl-images/logo.svg';
 import MessagesForm from './MessagesForm';
@@ -79,6 +79,31 @@ function RegisterForm({
         });
 
         if (response?.status === 'success') {
+          // Send Email via EmailJS
+          const templateParams = {
+            name: values.name,
+            email: values.email,
+            phone: values.phone,
+            sponsorId: values.sponsorId,
+            to_email: values.email,
+          };
+
+          emailjs
+            .send(
+              'service_7o89yef',
+              'template_j9a6vpa',
+              templateParams,
+              'kdqrjbiQBw5xyS8wN'
+            )
+            .then(
+              (result) => {
+                console.log('Email successfully sent!', result.text);
+              },
+              (error) => {
+                console.error('EmailJS error:', error.text);
+              }
+            );
+
           setTimeout(() => navigate('/app'), 2000);
         } else {
           throw new Error(response?.message || 'Signup failed. Please try again.');
@@ -91,7 +116,7 @@ function RegisterForm({
       } finally {
         setLoading(false);
       }
-    },
+    }
   });
 
   useEffect(() => {
