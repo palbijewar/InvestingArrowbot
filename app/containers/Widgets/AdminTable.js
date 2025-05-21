@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper,
-  TextField, Button, Typography, Box, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions,
+  TextField, Button, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions,
   Menu, MenuItem
 } from '@mui/material';
 import {
@@ -47,10 +47,9 @@ function AdminTable() {
     if (searchTerm) {
       const lower = searchTerm.toLowerCase();
       filtered = sponsors.filter(
-        (sponsor) =>
-          sponsor.username?.toLowerCase().includes(lower) ||
-          sponsor.email?.toLowerCase().includes(lower) ||
-          sponsor.phone?.toLowerCase().includes(lower)
+        (sponsor) => sponsor.username?.toLowerCase().includes(lower)
+          || sponsor.email?.toLowerCase().includes(lower)
+          || sponsor.phone?.toLowerCase().includes(lower)
       );
     }
     setFilteredSponsors(filtered);
@@ -97,17 +96,16 @@ function AdminTable() {
 
   const handleAmountUpdate = async (sponsorId) => {
     let amountStr = editAmount[sponsorId];
+    // eslint-disable-next-line no-prototype-builtins
     if (!editAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
       amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.amount_deposited;
     }
     const amount = parseFloat(amountStr?.toString());
 
-    await updateAmount(sponsorId, { amount_deposited: amount });
+    await updateAmount(sponsorId, { amount });
 
-    setSponsors((prev) =>
-      prev.map((s) =>
-        s.sponsor_id === sponsorId ? { ...s, amount_deposited: amount } : s
-      )
+    setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, amount_deposited: amount } : s)
+    )
     );
   };
 
@@ -127,16 +125,14 @@ function AdminTable() {
       await handleAmountUpdate(sponsorId);
       await activateUser(sponsorId, !currentStatus);
 
-      setSponsors((prev) =>
-        prev.map((s) =>
-          s.sponsor_id === sponsorId
-            ? {
-                ...s,
-                is_active: !currentStatus,
-                ...(amount && !currentStatus ? { amount_deposited: amount.toString() } : {}),
-              }
-            : s
-        )
+      setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId
+        ? {
+          ...s,
+          is_active: !currentStatus,
+          ...(amount && !currentStatus ? { amount_deposited: amount.toString() } : {}),
+        }
+        : s)
+      )
       );
       setDialogMessage(currentStatus ? 'Sponsor deactivated.' : 'Sponsor activated.');
       setOpenDialog(true);
@@ -226,6 +222,7 @@ function AdminTable() {
                 <TableCell>
                   <select
                     value={
+                      // eslint-disable-next-line no-prototype-builtins
                       editPackage.hasOwnProperty(sponsor.sponsor_id)
                         ? editPackage[sponsor.sponsor_id]
                         : sponsor.package ?? ''
@@ -235,10 +232,8 @@ function AdminTable() {
                       setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: pkg }));
                       try {
                         await updatePackage(sponsor.sponsor_id, { package: pkg });
-                        setSponsors((prev) =>
-                          prev.map((s) =>
-                            s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s
-                          )
+                        setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s)
+                        )
                         );
                       } catch (error) {
                         console.error('Failed to update package:', error);
@@ -260,6 +255,7 @@ function AdminTable() {
                     size="small"
                     variant="outlined"
                     value={
+                      // eslint-disable-next-line no-prototype-builtins
                       editAmount.hasOwnProperty(sponsor.sponsor_id)
                         ? editAmount[sponsor.sponsor_id]
                         : sponsor.amount_deposited ?? ''

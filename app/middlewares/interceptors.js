@@ -262,8 +262,6 @@ export const getSponsorPdf = async (sponsorId) => {
 
 export const updateDematAmount = async (sponsorId, payload) => {
   try {
-    console.log({payload});
-    
     const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/demat-amount`, payload);
     return response.data;
   } catch (error) {
@@ -284,7 +282,7 @@ export const getUserTransactions = async (sponsorId) => {
 
 export const updateAmount = async (sponsorId, data) => {
   try {
-    const response = await interceptorInstance.patch(`/auth/amount-deposited/${sponsorId}`, data);
+    const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/deposit-amount`, data);
 
     return response.data;
   } catch (error) {
