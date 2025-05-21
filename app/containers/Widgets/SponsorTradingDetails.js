@@ -15,28 +15,37 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { getAllSponsors, updateProfit } from '../../middlewares/interceptors';
+import {
+  getAllSponsors,
+  updateProfit,
+  updateDematAmount,
+} from '../../middlewares/interceptors';
 
 function SponsorTradingDetails() {
   const [sponsors, setSponsors] = useState([]);
   const [profits, setProfits] = useState({});
+  const [dematAmounts, setDematAmounts] = useState({});
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState({});
   const [successMsg, setSuccessMsg] = useState('');
+  const [savingBoth, setSavingBoth] = useState({});
 
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
         const sponsorData = res?.data || [];
+
         setSponsors(sponsorData);
 
-        // Initialize profits from sponsor.profit
         const initialProfits = {};
+        const initialDemats = {};
         sponsorData.forEach((s) => {
           initialProfits[s.sponsor_id] = s.profit ?? '';
+          initialDemats[s.sponsor_id] = s.demat_amount ?? '';
         });
+
         setProfits(initialProfits);
+        setDematAmounts(initialDemats);
       } catch (error) {
         console.error('Failed to fetch sponsors:', error);
       } finally {
@@ -51,37 +60,53 @@ function SponsorTradingDetails() {
     setProfits((prev) => ({ ...prev, [sponsorId]: value }));
   };
 
-  const handleSaveProfit = async (sponsorId) => {
+  const handleDematChange = (sponsorId, value) => {
+    setDematAmounts((prev) => ({ ...prev, [sponsorId]: value }));
+  };
+
+  const handleSaveBoth = async (sponsorId) => {
     const profitValue = profits[sponsorId];
+    const dematValue = dematAmounts[sponsorId];
+  
     if (profitValue === '' || isNaN(profitValue)) {
       alert('Please enter a valid profit value.');
       return;
     }
-
-    setSaving((prev) => ({ ...prev, [sponsorId]: true }));
+  
+    if (dematValue === '' || isNaN(dematValue)) {
+      alert('Please enter a valid demat amount.');
+      return;
+    }
+  
+    setSavingBoth((prev) => ({ ...prev, [sponsorId]: true }));
     setSuccessMsg('');
-
+  
     try {
-      const payload = { profit: parseFloat(profitValue) };
-      const res = await updateProfit(sponsorId, payload);
-
-      // 1) Update sponsors state so sponsor.profit is current
-      setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, profit: res.data.profit } : s)
-      )
+      const [profitRes, dematRes] = await Promise.all([
+        updateProfit(sponsorId, { profit: parseFloat(profitValue) }),
+        updateDematAmount(sponsorId, { demat_amount: parseFloat(dematValue) })
+      ]);
+  
+      // Update state with responses
+      setSponsors((prev) =>
+        prev.map((s) =>
+          s.sponsor_id === sponsorId
+            ? { ...s, profit: profitRes.data.profit, demat_amount: dematRes.demat_amount }
+            : s
+        )
       );
-
-      // 2) Update profits state so the input shows the saved value
-      setProfits((prev) => ({
-        ...prev,
-        [sponsorId]: res.data.profit,
-      }));
-
-      setSuccessMsg(`Profit for ${sponsorId} updated to ${res.data.profit}`);
+  
+      setProfits((prev) => ({ ...prev, [sponsorId]: profitRes.data.profit }));
+      setDematAmounts((prev) => ({ ...prev, [sponsorId]: dematRes.demat_amount }));
     } catch (error) {
-      console.error('Error updating profit:', error);
-      alert('Failed to update profit.');
+      console.error('Error saving sponsor data:', error);
+      if (error?.response?.status === 404) {
+        alert(`Demat Amount failed: No payment option found for ${sponsorId}`);
+      } else {
+        alert('Failed to update profit or demat amount.');
+      }
     } finally {
-      setSaving((prev) => ({ ...prev, [sponsorId]: false }));
+      setSavingBoth((prev) => ({ ...prev, [sponsorId]: false }));
     }
   };
 
@@ -111,8 +136,9 @@ function SponsorTradingDetails() {
             <TableRow>
               <TableCell><strong>Sponsor ID</strong></TableCell>
               <TableCell><strong>Name</strong></TableCell>
+              <TableCell><strong>Demat Amount</strong></TableCell>
               <TableCell><strong>Profit</strong></TableCell>
-              <TableCell><strong>Action</strong></TableCell>
+              <TableCell><strong>Actions</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -124,22 +150,34 @@ function SponsorTradingDetails() {
                   <TextField
                     type="number"
                     size="small"
+                    value={dematAmounts[sponsor.sponsor_id]}
+                    onChange={(e) => handleDematChange(sponsor.sponsor_id, e.target.value)
+                    }
+                    placeholder="Enter Demat Amount"
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    type="number"
+                    size="small"
                     value={profits[sponsor.sponsor_id]}
                     onChange={(e) => handleProfitChange(sponsor.sponsor_id, e.target.value)
                     }
-                    placeholder="Enter profit"
+                    placeholder="Enter Profit"
                   />
                 </TableCell>
                 <TableCell>
                   <Button
                     variant="contained"
                     size="small"
-                    disabled={saving[sponsor.sponsor_id]}
-                    onClick={() => handleSaveProfit(sponsor.sponsor_id)}
+                    fullWidth
+                    disabled={savingBoth[sponsor.sponsor_id]}
+                    onClick={() => handleSaveBoth(sponsor.sponsor_id)}
                   >
-                    {saving[sponsor.sponsor_id] ? 'Saving...' : 'Save'}
+                    {savingBoth[sponsor.sponsor_id] ? 'Saving...' : 'Save'}
                   </Button>
                 </TableCell>
+
               </TableRow>
             ))}
           </TableBody>

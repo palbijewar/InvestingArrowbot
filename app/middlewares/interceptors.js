@@ -260,6 +260,18 @@ export const getSponsorPdf = async (sponsorId) => {
   }
 };
 
+export const updateDematAmount = async (sponsorId, payload) => {
+  try {
+    console.log({payload});
+    
+    const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/demat-amount`, payload);
+    return response.data;
+  } catch (error) {
+    console.error('Update Demat Amount error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const getUserTransactions = async (sponsorId) => {
   try {
     const response = await interceptorInstance.get(`/transactions/${sponsorId}`);
