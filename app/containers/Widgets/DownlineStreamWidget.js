@@ -48,10 +48,10 @@ export default function DownlineUsersWidget() {
             <TableRow key={index}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{new Date(user.registration_date).toLocaleDateString()}</TableCell>
-              <TableCell>{user.referral_id}</TableCell>
-              <TableCell>{user.referral_username}</TableCell>
               <TableCell>{user.sponsor_id}</TableCell>
               <TableCell>{user.sponsor_name}</TableCell>
+              <TableCell>{user.referral_id}</TableCell>
+              <TableCell>{user.referral_username}</TableCell>
               <TableCell>{user.package || '-'}</TableCell>
               <TableCell>{user.amount_deposited || '-'}</TableCell>
               <TableCell>{user.level || '-'}</TableCell>
