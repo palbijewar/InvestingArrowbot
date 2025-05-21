@@ -6,6 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { createPaymentOption } from '../../middlewares/interceptors';
 
 function PaymentForm() {
+  const [sponsorId, setSponsorId] = useState('');
   const [paymentAmount, setPaymentAmount] = useState('');
   const [dematAmount, setDematAmount] = useState('');
   const [file, setFile] = useState(null);
@@ -19,6 +20,7 @@ function PaymentForm() {
     event.preventDefault();
     try {
       const formData = new FormData();
+      formData.append('sponsor_id', sponsorId);
       formData.append('amount', paymentAmount);
       formData.append('dematAmount', dematAmount);
       formData.append('file', file);
@@ -26,6 +28,7 @@ function PaymentForm() {
       await createPaymentOption(formData);
 
       // Reset values
+      setSponsorId('');
       setPaymentAmount('');
       setDematAmount('');
       setFile(null);
@@ -45,7 +48,18 @@ function PaymentForm() {
 
           <Grid item xs={12}>
             <TextField
-              label="Enter Amount"
+              label="Sponsor ID"
+              type="text"
+              fullWidth
+              value={sponsorId}
+              onChange={(e) => setSponsorId(e.target.value)}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Bot Amount"
               type="number"
               fullWidth
               value={paymentAmount}
