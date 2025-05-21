@@ -404,3 +404,13 @@ export const getBrokerInformations = async () => {
     throw error;
   }
 };
+
+export const getProfitSummary = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/users/profit-summary/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};

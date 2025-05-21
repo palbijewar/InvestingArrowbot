@@ -31,6 +31,7 @@ import {
   getBotDownlinePortfolioInvestment,
   getBotDirectActivationCount,
   getBotDownlineActivationCount,
+  getProfitSummary,
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
@@ -46,6 +47,10 @@ function CounterIconWidget() {
   const [levelIncome, setLevelIncome] = useState(0);
   const [currentRank, setCurrentRank] = useState(0);
   const [rankIncome, setRankIncome] = useState(0);
+  const [directPortfolioIncome, setDirectPortfolioIncome] = useState(0);
+  const [downlinePortfolioIncome, setDownlinePortfolioIncome] = useState(0);
+  const [directTradingPortfolio, setDirectTradingPortfolio] = useState(0);
+  const [downlineTradingPortfolio, setDownlineTradingPortfolio] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -63,7 +68,8 @@ function CounterIconWidget() {
           botDirectBotActivationResponse,
           botDownlineBotActivationResponse,
           levelIncomeResponse,
-          rankInformationsResponse
+          rankInformationsResponse,
+          profitSummaryResponse,
         ] = await Promise.all([
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
@@ -75,6 +81,7 @@ function CounterIconWidget() {
           getBotDownlineActivationCount(sponsorId),
           getSecondLevelReferralsTotalIncome(sponsorId),
           getRankInformations(sponsorId),
+          getProfitSummary(sponsorId)
         ]);
 
         setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
@@ -89,6 +96,10 @@ function CounterIconWidget() {
         setLevelIncome(levelIncomeResponse?.data?.level_income || 0);
         setCurrentRank(rankInformationsResponse?.data?.rank || '');
         setRankIncome(rankInformationsResponse?.data?.income || 0);
+        setDirectPortfolioIncome(profitSummaryResponse?.data?.direct_percentage_profit || 0);
+        setDownlinePortfolioIncome(profitSummaryResponse?.data?.downline_percentage_profit || 0);
+        setDirectTradingPortfolio(profitSummaryResponse?.data?.direct_actual_profit || 0);
+        setDownlineTradingPortfolio(profitSummaryResponse?.data?.downline_actual_profit || 0);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
@@ -142,22 +153,22 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Trading Portfolio">
+          <CounterWidget color="secondary-dark" start={0} end={directTradingPortfolio} duration={3} title="Direct Trading Portfolio">
             <Paid className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Downline Trading Portfolio">
+          <CounterWidget color="secondary-dark" start={0} end={downlineTradingPortfolio} duration={3} title="Downline Trading Portfolio">
             <Savings className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Direct Portfolio Income">
+          <CounterWidget color="secondary-dark" start={0} end={directPortfolioIncome} duration={3} title="Direct Portfolio Income">
             <LocalAtm className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={0} duration={3} title="Downline Portfolio Income">
+          <CounterWidget color="secondary-dark" start={0} end={downlinePortfolioIncome} duration={3} title="Downline Portfolio Income">
             <AccountBalance className={classes.counterIcon} />
           </CounterWidget>
         </Grid>
