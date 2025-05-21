@@ -1,19 +1,9 @@
 /* eslint-disable no-restricted-globals */
 import React, { useEffect, useState } from 'react';
 import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  CircularProgress,
-  Dialog
+  TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper,
+  TextField, Button, Typography, Box, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions,
+  Menu, MenuItem
 } from '@mui/material';
 import {
   getAllSponsors,
@@ -21,6 +11,7 @@ import {
   getSponsorPdf,
   updateAmount,
   updatePackage,
+  deleteSponsor
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -30,17 +21,18 @@ function AdminTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [editAmount, setEditAmount] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState('');
   const [editPackage, setEditPackage] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedSponsor, setSelectedSponsor] = useState(null);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
   const limit = 10;
 
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
-
         setSponsors(res.data);
         setFilteredSponsors(res.data);
       } catch (err) {
@@ -55,8 +47,10 @@ function AdminTable() {
     if (searchTerm) {
       const lower = searchTerm.toLowerCase();
       filtered = sponsors.filter(
-        (sponsor) => sponsor.username?.toLowerCase().includes(lower)
-          || sponsor.email?.toLowerCase().includes(lower) || sponsor.phone?.toLowerCase().includes(lower)
+        (sponsor) =>
+          sponsor.username?.toLowerCase().includes(lower) ||
+          sponsor.email?.toLowerCase().includes(lower) ||
+          sponsor.phone?.toLowerCase().includes(lower)
       );
     }
     setFilteredSponsors(filtered);
@@ -66,7 +60,6 @@ function AdminTable() {
   const handleSort = (key) => {
     const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
     setSortConfig({ key, direction });
-
     const sorted = [...filteredSponsors].sort((a, b) => {
       const aVal = a[key] || '';
       const bVal = b[key] || '';
@@ -80,18 +73,15 @@ function AdminTable() {
   const handleViewScreenshot = async (sponsorId) => {
     try {
       const { data } = await getSponsorPdf(sponsorId);
-
       if (!data) {
         setDialogMessage('No PDF file path returned for this sponsor.');
         setOpenDialog(true);
         return;
       }
-
-      // Open in new tab or trigger download
       const link = document.createElement('a');
-      link.href = data; // direct path or S3 presigned URL
+      link.href = data;
       link.target = '_blank';
-      link.download = `screenshot_${sponsorId}.pdf`; // Optional: triggers download
+      link.download = `screenshot_${sponsorId}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -107,27 +97,18 @@ function AdminTable() {
 
   const handleAmountUpdate = async (sponsorId) => {
     let amountStr = editAmount[sponsorId];
-
-    // fallback to original sponsor amount if not manually edited
-    // eslint-disable-next-line no-prototype-builtins
-    if (!editAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr === null || amountStr === undefined) {
-      amountStr = sponsors.find(s => s.sponsor_id === sponsorId)?.amount_deposited;
+    if (!editAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
+      amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.amount_deposited;
     }
-
-    // make sure to convert it to string before parsing
     const amount = parseFloat(amountStr?.toString());
 
-    try {
-      await updateAmount(sponsorId, { amount_deposited: amount });
+    await updateAmount(sponsorId, { amount_deposited: amount });
 
-      setSponsors(prev => prev.map(sponsor => (sponsor.sponsor_id === sponsorId
-        ? { ...sponsor, amount_deposited: amount }
-        : sponsor)
+    setSponsors((prev) =>
+      prev.map((s) =>
+        s.sponsor_id === sponsorId ? { ...s, amount_deposited: amount } : s
       )
-      );
-    } catch (error) {
-      console.error('Failed to update amount:', error);
-    }
+    );
   };
 
   const handleToggle = async (sponsorId, currentStatus) => {
@@ -135,36 +116,29 @@ function AdminTable() {
     const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
     const amount = parseFloat(raw);
 
-    if (!currentStatus) {
-      // eslint-disable-next-line no-restricted-globals
-      if (isNaN(amount) || amount <= 0) {
-        setOpenDialog(true);
-        return;
-      }
+    if (!currentStatus && (isNaN(amount) || amount <= 0)) {
+      setDialogMessage('Amount must be greater than 0 to activate sponsor.');
+      setOpenDialog(true);
+      return;
     }
 
     setLoadingId(sponsorId);
     try {
       await handleAmountUpdate(sponsorId);
-
       await activateUser(sponsorId, !currentStatus);
 
-      setSponsors((prev) => prev.map((s) => {
-        if (s.sponsor_id !== sponsorId) return s;
-        return {
-          ...s,
-          is_active: !currentStatus,
-          ...(!currentStatus
-            ? { amount_deposited: amount.toString() }
-            : {}
-          ),
-        };
-      })
+      setSponsors((prev) =>
+        prev.map((s) =>
+          s.sponsor_id === sponsorId
+            ? {
+                ...s,
+                is_active: !currentStatus,
+                ...(amount && !currentStatus ? { amount_deposited: amount.toString() } : {}),
+              }
+            : s
+        )
       );
-
-      setDialogMessage(currentStatus
-        ? 'Sponsor deactivated successfully.'
-        : 'Sponsor activated successfully!');
+      setDialogMessage(currentStatus ? 'Sponsor deactivated.' : 'Sponsor activated.');
       setOpenDialog(true);
     } catch (err) {
       console.error('Activation failed', err);
@@ -173,6 +147,39 @@ function AdminTable() {
     } finally {
       setLoadingId(null);
     }
+  };
+
+  const handleDelete = async (sponsorId) => {
+    try {
+      await deleteSponsor(sponsorId);
+      setSponsors((prev) => prev.filter((s) => s.sponsor_id !== sponsorId));
+      setDialogMessage('Sponsor deleted.');
+      setOpenDialog(true);
+    } catch (err) {
+      console.error('Delete failed', err);
+      setDialogMessage('Failed to delete sponsor.');
+      setOpenDialog(true);
+    }
+  };
+
+  const handleEditClick = (event, sponsor) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedSponsor(sponsor);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedSponsor(null);
+  };
+
+  const handleActionClick = async (action) => {
+    if (!selectedSponsor) return;
+    if (action === 'toggle') {
+      await handleToggle(selectedSponsor.sponsor_id, selectedSponsor.is_active);
+    } else if (action === 'delete') {
+      if (confirm) await handleDelete(selectedSponsor.sponsor_id);
+    }
+    handleMenuClose();
   };
 
   const totalPages = Math.ceil(filteredSponsors.length / limit);
@@ -192,7 +199,7 @@ function AdminTable() {
         sx={{ mb: 3 }}
       />
 
-      <TableContainer component={Paper} sx={{ maxHeight: 500, overflowX: 'auto' }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -205,8 +212,8 @@ function AdminTable() {
                   {key.replace('_', ' ').toUpperCase()}
                 </TableCell>
               ))}
-              <TableCell sx={{ cursor: 'pointer', fontWeight: 'bold' }}>DOCUMENT</TableCell>
-              <TableCell sx={{ cursor: 'pointer', fontWeight: 'bold' }}>ACTION</TableCell>
+              <TableCell>DOCUMENT</TableCell>
+              <TableCell>ACTION</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -217,51 +224,45 @@ function AdminTable() {
                 <TableCell>{sponsor.email}</TableCell>
                 <TableCell>{sponsor.phone}</TableCell>
                 <TableCell>
-  <select
-    value={
-      editPackage.hasOwnProperty(sponsor.sponsor_id)
-        ? editPackage[sponsor.sponsor_id]
-        : (sponsor.package ?? '')
-    }
-    onChange={async (e) => {
-      const pkg = e.target.value;
-      setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: pkg }));
-      try {
-        await updatePackage(sponsor.sponsor_id, { package: pkg });
-        setSponsors((prev) =>
-          prev.map((s) =>
-            s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s
-          )
-        );
-        setDialogMessage('Package updated successfully.');
-        setOpenDialog(true);
-      } catch (error) {
-        console.error('Failed to update package:', error);
-        setDialogMessage('Failed to update package.');
-        setOpenDialog(true);
-      }
-    }}
-    style={{ padding: '6px', borderRadius: '4px' }}
-  >
-    <option value="">Select</option>
-    {[30, 75, 125, 220, 650].map((val) => (
-      <option key={val} value={val}>
-        ${val}
-      </option>
-    ))}
-  </select>
-</TableCell>
-
+                  <select
+                    value={
+                      editPackage.hasOwnProperty(sponsor.sponsor_id)
+                        ? editPackage[sponsor.sponsor_id]
+                        : sponsor.package ?? ''
+                    }
+                    onChange={async (e) => {
+                      const pkg = e.target.value;
+                      setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: pkg }));
+                      try {
+                        await updatePackage(sponsor.sponsor_id, { package: pkg });
+                        setSponsors((prev) =>
+                          prev.map((s) =>
+                            s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s
+                          )
+                        );
+                      } catch (error) {
+                        console.error('Failed to update package:', error);
+                        setDialogMessage('Failed to update package.');
+                        setOpenDialog(true);
+                      }
+                    }}
+                    style={{ padding: '6px', borderRadius: '4px' }}
+                  >
+                    <option value="">Select</option>
+                    {[30, 75, 125, 220, 650].map((val) => (
+                      <option key={val} value={val}>${val}</option>
+                    ))}
+                  </select>
+                </TableCell>
                 <TableCell>
                   <TextField
                     type="number"
                     size="small"
                     variant="outlined"
                     value={
-                      // eslint-disable-next-line no-prototype-builtins
                       editAmount.hasOwnProperty(sponsor.sponsor_id)
                         ? editAmount[sponsor.sponsor_id]
-                        : (sponsor.amount_deposited ?? '')
+                        : sponsor.amount_deposited ?? ''
                     }
                     onChange={(e) => {
                       const v = e.target.value;
@@ -269,7 +270,6 @@ function AdminTable() {
                         setEditAmount((p) => ({ ...p, [sponsor.sponsor_id]: v }));
                       }
                     }}
-
                     sx={{ width: 100 }}
                   />
                 </TableCell>
@@ -286,12 +286,9 @@ function AdminTable() {
                   <Button
                     variant="contained"
                     size="small"
-                    color={sponsor.is_active ? 'error' : 'success'}
-                    onClick={() => handleToggle(sponsor.sponsor_id, sponsor.is_active)}
-                    disabled={loadingId === sponsor.sponsor_id}
-                    startIcon={loadingId === sponsor.sponsor_id ? <CircularProgress size={14} /> : null}
+                    onClick={(e) => handleEditClick(e, sponsor)}
                   >
-                    {sponsor.is_active ? 'Deactivate' : 'Activate'}
+                    Edit
                   </Button>
                 </TableCell>
               </TableRow>
@@ -300,7 +297,6 @@ function AdminTable() {
         </Table>
       </TableContainer>
 
-      {/* Pagination */}
       <Box mt={3} display="flex" justifyContent="center" alignItems="center" gap={2}>
         <Button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
@@ -316,14 +312,22 @@ function AdminTable() {
           Next
         </Button>
       </Box>
+
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <Box p={3}>
-          <Typography variant="body1">{dialogMessage}</Typography>
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={() => setOpenDialog(false)} variant="contained">OK</Button>
-          </Box>
-        </Box>
+        <DialogTitle>Info</DialogTitle>
+        <DialogContent>{dialogMessage}</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Close</Button>
+        </DialogActions>
       </Dialog>
+
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+        <MenuItem onClick={() => handleActionClick('toggle')}>
+          {selectedSponsor?.is_active ? 'Deactivate' : 'Activate'}
+        </MenuItem>
+        <MenuItem onClick={() => handleActionClick('delete')}>Delete</MenuItem>
+        <MenuItem onClick={handleMenuClose}>Cancel</MenuItem>
+      </Menu>
     </Box>
   );
 }

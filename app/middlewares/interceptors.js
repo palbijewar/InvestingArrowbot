@@ -414,3 +414,13 @@ export const getProfitSummary = async (sponsorId) => {
     throw error;
   }
 };
+
+export const deleteSponsor = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.delete(`/auth/users/sponsor/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
