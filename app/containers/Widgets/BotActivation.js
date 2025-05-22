@@ -40,40 +40,6 @@ function BotActivation() {
         Bot Activation
       </Typography>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Card elevation={3}>
-            <CardContent>
-              <Box display="flex" alignItems="center" gap={1} mb={2}>
-                <AndroidIcon color="primary" />
-                <Typography variant="subtitle1">
-                  Trading Bot Status
-                </Typography>
-              </Box>
-
-              <Typography variant="body1" gutterBottom>
-                The trading bot helps automate buy/sell decisions based on your strategy.
-              </Typography>
-
-              <Box mt={2} mb={2}>
-                <Chip
-                  label={isActivated ? 'Activated' : 'Not Activated'}
-                  color={isActivated ? 'success' : 'default'}
-                  icon={isActivated ? <CheckCircleIcon /> : <HighlightOffIcon />}
-                />
-              </Box>
-
-              <Button
-                variant="contained"
-                color={isActivated ? 'error' : 'primary'}
-                onClick={handleToggle}
-              >
-                {isActivated ? 'Deactivate Bot' : 'Activate Bot'}
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-
         <Grid item xs={12} md={6}>
           <Card elevation={3}>
             <CardContent>
