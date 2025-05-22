@@ -271,7 +271,7 @@ const superAdminMenu = [
         key: 'topup_history',
         name: 'Topup History',
         icon: 'history',
-        link: '/app/widgets/history',
+        link: '/app/widgets/topup-history',
       },
     ],
   },

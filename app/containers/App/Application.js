@@ -40,7 +40,8 @@ import {
   PortfolioInvestment, BotActivation,
   AdminTable, BrokerInformations,
   TradingDetails,
-  SponsorTradingDetails
+  SponsorTradingDetails,
+  TopupHistory
 } from '../pageListAsync';
 import ChangePassword from '../Pages/ChangePassword';
 
@@ -71,6 +72,7 @@ function Application(props) {
         <Route path="widgets/broker-informations" element={<BrokerInformations />} />
         <Route path="widgets/trading-details" element={<TradingDetails />} />
         <Route path="widgets/sponsor-trading-details" element={<SponsorTradingDetails />} />
+        <Route path="widgets/topup-history" element={<TopupHistory />} />
         { /* Layout */ }
         <Route path="layouts" element={<Parent />} />
         <Route path="layouts/grid" element={<Grid />} />

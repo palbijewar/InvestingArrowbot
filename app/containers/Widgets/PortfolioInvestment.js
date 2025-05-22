@@ -1,69 +1,66 @@
 import React from 'react';
 import {
-  Card, CardContent, Typography, Box, Grid, LinearProgress
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
 } from '@mui/material';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import PieChartIcon from '@mui/icons-material/PieChart';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-
-const portfolioData = [
-  {
-    title: 'Total Invested',
-    value: '$12,500',
-    icon: <AccountBalanceWalletIcon color="primary" />,
-  },
-  {
-    title: 'Current Value',
-    value: '$14,200',
-    icon: <TrendingUpIcon color="success" />,
-  },
-  {
-    title: 'Diversification',
-    value: 'Crypto 60%, Stocks 30%, Gold 10%',
-    icon: <PieChartIcon color="secondary" />,
-  },
-];
-
-const progress = 78; // sample portfolio growth %
 
 function PortfolioInvestment() {
+  const [portfolio, setPortfolio] = React.useState('');
+  const [amount, setAmount] = React.useState('100');
+
   return (
     <Box p={3}>
-      <Typography variant="h6" gutterBottom>
-        Portfolio Overview
-      </Typography>
-      <Grid container spacing={3}>
-        {portfolioData.map((item, index) => (
-          <Grid item xs={12} md={4} key={index}>
-            <Card elevation={3}>
-              <CardContent>
-                <Box display="flex" alignItems="center" mb={2}>
-                  {item.icon}
-                  <Typography variant="subtitle1" ml={1}>
-                    {item.title}
-                  </Typography>
-                </Box>
-                <Typography variant="h6">{item.value}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Card elevation={3}>
-            <CardContent>
-              <Typography variant="subtitle1" gutterBottom>
-                Portfolio Growth
-              </Typography>
-              <LinearProgress variant="determinate" value={progress} />
-              <Box display="flex" justifyContent="flex-end" mt={1}>
-                <Typography variant="body2" color="textSecondary">
-                  {progress}% Growth
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Card elevation={3}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            Portfolio Investment
+          </Typography>
+
+          <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+            Fund Balance: <strong>$4850</strong>
+          </Typography>
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Select Portfolio</InputLabel>
+            <Select
+              value={portfolio}
+              label="Select Portfolio"
+              onChange={(e) => setPortfolio(e.target.value)}
+            >
+              <MenuItem value="crypto">Crypto</MenuItem>
+              <MenuItem value="stocks">Stocks</MenuItem>
+              <MenuItem value="gold">Gold</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Amount ($)"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+
+          <Box my={2}>
+            <Typography variant="body2">
+              Gas Fees ($): <strong>10.00</strong>
+            </Typography>
+          </Box>
+
+          <Button variant="contained" color="primary" fullWidth>
+            Submit
+          </Button>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

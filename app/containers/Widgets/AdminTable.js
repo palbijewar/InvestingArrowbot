@@ -33,6 +33,8 @@ function AdminTable() {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
+        console.log({res});
+        
         setSponsors(res.data);
         setFilteredSponsors(res.data);
       } catch (err) {
