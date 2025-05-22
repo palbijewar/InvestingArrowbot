@@ -40,7 +40,7 @@ function BotActivation() {
         Bot Activation
       </Typography>
 
-        <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6}>
           <Card elevation={3}>
             <CardContent>
               <Typography variant="subtitle1" gutterBottom>
@@ -80,7 +80,6 @@ function BotActivation() {
               </Button>
             </CardContent>
           </Card>
-        </Grid>
       </Grid>
     </Box>
   );
