@@ -63,6 +63,9 @@ export const SponsorTradingDetails = loadable(() => import('./Widgets/SponsorTra
 export const TopupHistory = loadable(() => import('./Widgets/TopupHistory'), {
   fallback: <Loading />,
 });
+export const SponsorTradingHistory = loadable(() => import('./Widgets/SponsorTradingHistory'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {

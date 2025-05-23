@@ -287,6 +287,12 @@ const superAdminMenu = [
         link: '/app/widgets/sponsor-trading-details',
       },
       {
+        key: 'sponsor_trading_history',
+        name: 'Sponsor Trading History',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-history',
+      },
+      {
         key: 'fund_transfer',
         name: 'Fund Transfer',
         icon: 'send',
