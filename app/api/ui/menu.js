@@ -50,47 +50,10 @@ const defaultMenu = [
     ],
   },
   {
-    key: 'topup',
-    name: 'Topup',
-    icon: 'attach_money',
-    child: [
-      {
-        key: 'portfolio_investment',
-        name: 'Portfolio Investment',
-        icon: 'show_chart',
-        link: '/app/widgets/portfolio-investment',
-      },
-      {
-        key: 'bot_activation',
-        name: 'Bot Activation',
-        icon: 'android',
-        link: '/app/widgets/bot-activation',
-      },
-      {
-        key: 'topup_history',
-        name: 'Topup History',
-        icon: 'history',
-        link: '/app/widgets/history',
-      },
-    ],
-  },
-  {
     key: 'fund',
     name: 'Fund',
     icon: 'account_balance',
     child: [
-      {
-        key: 'fund_transfer',
-        name: 'Fund Transfer',
-        icon: 'send',
-        link: '/app/widgets/transfer',
-      },
-      {
-        key: 'fund_to_gas_wallet',
-        name: 'Fund To Gas Wallet',
-        icon: 'local_gas_station',
-        link: '/app/widgets/gas-wallet',
-      },
       {
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
@@ -103,43 +66,6 @@ const defaultMenu = [
         icon: 'request_quote',
         link: '/app/widgets/request',
       },
-      {
-        key: 'fund_received_history',
-        name: 'Fund Received History',
-        icon: 'account_balance_wallet',
-        link: '/app/widgets/received-history',
-      },
-    ],
-  },
-  {
-    key: 'my_income',
-    name: 'My Income',
-    icon: 'monetization_on',
-    child: [
-      {
-        key: 'ai_robot',
-        name: 'AI Robot',
-        icon: 'smart_toy',
-        link: '/app/income/ai-robot',
-      },
-      {
-        key: 'level_income',
-        name: 'Level Income',
-        icon: 'trending_up',
-        link: '/app/income/level',
-      },
-      {
-        key: 'trading_portfolio',
-        name: 'Trading Portfolio',
-        icon: 'bar_chart',
-        link: '/app/income/portfolio',
-      },
-      {
-        key: 'rank_income',
-        name: 'Rank Income',
-        icon: 'emoji_events',
-        link: '/app/income/rank',
-      },
     ],
   },
   {
@@ -148,22 +74,10 @@ const defaultMenu = [
     icon: 'credit_card',
     child: [
       {
-        key: 'working_withdrawal',
-        name: 'Working Withdrawal',
-        icon: 'attach_money',
-        link: '/app/withdrawal/working',
-      },
-      {
         key: 'portfolio_withdrawal',
         name: 'Portfolio Withdrawal',
         icon: 'account_balance_wallet',
         link: '/app/withdrawal/portfolio',
-      },
-      {
-        key: 'non_working_withdrawal',
-        name: 'Non-Working Withdrawal',
-        icon: 'money_off',
-        link: '/app/withdrawal/non-working',
       },
       {
         key: 'withdrawal_history',
@@ -251,31 +165,6 @@ const superAdminMenu = [
     linkParent: '/app/widgets/trading-details',
   },
   {
-    key: 'topup',
-    name: 'Topup',
-    icon: 'attach_money',
-    child: [
-      {
-        key: 'portfolio_investment',
-        name: 'Portfolio Investment',
-        icon: 'show_chart',
-        link: '/app/widgets/portfolio-investment',
-      },
-      {
-        key: 'bot_activation',
-        name: 'Bot Activation',
-        icon: 'android',
-        link: '/app/widgets/bot-activation',
-      },
-      {
-        key: 'topup_history',
-        name: 'Topup History',
-        icon: 'history',
-        link: '/app/widgets/topup-history',
-      },
-    ],
-  },
-  {
     key: 'fund',
     name: 'Fund',
     icon: 'account_balance',
@@ -293,18 +182,6 @@ const superAdminMenu = [
         link: '/app/widgets/sponsor-trading-history',
       },
       {
-        key: 'fund_transfer',
-        name: 'Fund Transfer',
-        icon: 'send',
-        link: '/app/widgets/transfer',
-      },
-      {
-        key: 'fund_to_gas_wallet',
-        name: 'Fund To Gas Wallet',
-        icon: 'local_gas_station',
-        link: '/app/widgets/gas-wallet',
-      },
-      {
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
         icon: 'history',
@@ -316,12 +193,6 @@ const superAdminMenu = [
         icon: 'request_quote',
         link: '/app/widgets/request',
       },
-      {
-        key: 'fund_received_history',
-        name: 'Fund Received History',
-        icon: 'account_balance_wallet',
-        link: '/app/widgets/received-history',
-      },
     ],
   },
   {
@@ -330,22 +201,10 @@ const superAdminMenu = [
     icon: 'credit_card',
     child: [
       {
-        key: 'working_withdrawal',
-        name: 'Working Withdrawal',
-        icon: 'attach_money',
-        link: '/app/withdrawal/working',
-      },
-      {
         key: 'portfolio_withdrawal',
         name: 'Portfolio Withdrawal',
         icon: 'account_balance_wallet',
         link: '/app/withdrawal/portfolio',
-      },
-      {
-        key: 'non_working_withdrawal',
-        name: 'Non-Working Withdrawal',
-        icon: 'money_off',
-        link: '/app/withdrawal/non-working',
       },
       {
         key: 'withdrawal_history',
