@@ -27,6 +27,8 @@ function Dashboard(props) {
     signOut(auth).then(() => {
       navigate('/');
       localStorage.removeItem('access_token');
+      localStorage.removeItem('sponsor_details');
+      sessionStorage.clear();
       dispatch(logoutUser());
     }).catch((error) => {
       console.error(error);
