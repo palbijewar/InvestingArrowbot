@@ -293,8 +293,7 @@ export const updateAmount = async (sponsorId, data) => {
 
 export const sponsorPaymentHistory = async (sponsorId) => {
   try {
-    const response = await interceptorInstance.patch(`/payment-options/history/${sponsorId}`);
-
+    const response = await interceptorInstance.get(`/payment-options/history/${sponsorId}`);
     return response.data;
   } catch (error) {
     console.error('error:', error.response?.data || error.message);

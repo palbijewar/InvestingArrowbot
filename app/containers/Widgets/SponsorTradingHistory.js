@@ -1,74 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Typography,
+} from '@mui/material';
 import { sponsorPaymentHistory } from '../../middlewares/interceptors';
 
 function SponsorTradingHistory() {
-  const { sponsorId } = useParams();
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [sponsorId, setSponsorId] = useState(null);
 
   useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await sponsorPaymentHistory(sponsorId);
-        setData(res.data);
-      } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch sponsor payment history.');
-      } finally {
-        setLoading(false);
-      }
-    };
+    const storedSponsorDetails = localStorage.getItem('sponsor_details');
 
+    if (storedSponsorDetails) {
+      const sponsorData = JSON.parse(storedSponsorDetails);
+      setSponsorId(sponsorData?.sponsor_id);
+    }
+  }, []);
+
+  useEffect(() => {
     if (sponsorId) {
-      fetchHistory();
+      sponsorPaymentHistory(sponsorId)
+        .then((res) => {
+          setData(res.data || []);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch referrals:', err);
+        });
     }
   }, [sponsorId]);
 
-  if (loading) return <p className="text-center p-4">Loading...</p>;
-  if (error) return <p className="text-center text-red-500 p-4">{error}</p>;
-  if (!data.length) return <p className="text-center p-4">No payment history found.</p>;
-
   return (
     <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Sponsor Payment History</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-200 text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border px-4 py-2 text-left">Sponsor Name</th>
-              <th className="border px-4 py-2 text-left">Sponsor ID</th>
-              <th className="border px-4 py-2 text-left">Amount</th>
-              <th className="border px-4 py-2 text-left">Demat Amount</th>
-              <th className="border px-4 py-2 text-left">Date</th>
-              <th className="border px-4 py-2 text-left">File</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Typography variant="h6" gutterBottom>
+        Sponsor Payment History
+      </Typography>
+      <TableContainer component={Paper} elevation={2}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Sponsor Name</strong></TableCell>
+              <TableCell><strong>Sponsor ID</strong></TableCell>
+              <TableCell><strong>Amount</strong></TableCell>
+              <TableCell><strong>Demat Amount</strong></TableCell>
+              <TableCell><strong>Date</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {data.map((entry, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">{entry.sponsor_name}</td>
-                <td className="border px-4 py-2">{entry.sponsor_id}</td>
-                <td className="border px-4 py-2">₹{entry.amount.toLocaleString()}</td>
-                <td className="border px-4 py-2">₹{entry.demat_amount.toLocaleString()}</td>
-                <td className="border px-4 py-2">
-                  {new Date(entry.created_at).toLocaleDateString()}
-                </td>
-                <td className="border px-4 py-2">
-                  <a
-                    href={entry.file_path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    View File
-                  </a>
-                </td>
-              </tr>
+              <TableRow key={index}>
+                <TableCell>{entry.sponsor_name}</TableCell>
+                <TableCell>{entry.sponsor_id}</TableCell>
+                <TableCell>₹{entry.amount.toLocaleString()}</TableCell>
+                <TableCell>₹{entry.demat_amount.toLocaleString()}</TableCell>
+                <TableCell>{new Date(entry.created_at).toLocaleDateString()}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
