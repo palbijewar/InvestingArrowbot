@@ -1,22 +1,44 @@
 import React, { useState } from 'react';
+import { createGasWallet } from '../../middlewares/interceptors';
 
 function GasWallet() {
   const [sponsorId, setSponsorId] = useState('');
   const [gasFees, setGasFees] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle submit logic here (e.g., API call)
-    console.log('Sponsor ID:', sponsorId);
-    console.log('Gas Wallet Fees:', gasFees);
-    // Reset form
-    setSponsorId('');
-    setGasFees('');
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const payload = {
+        sponsor_id: sponsorId,
+        gas_wallet_amount: Number(gasFees),
+      };
+
+      const res = await createGasWallet(payload);
+      setMessage(res.message || 'Wallet created successfully!');
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Something went wrong.');
+    } finally {
+      setLoading(false);
+      setSponsorId('');
+      setGasFees('');
+    }
   };
 
   return (
     <div style={{ padding: '2rem', maxWidth: '500px', margin: '0 auto' }}>
-      <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}>
+      <div
+        style={{
+          border: '1px solid #ccc',
+          borderRadius: '8px',
+          padding: '1.5rem',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
             <label>Sponsor ID</label>
@@ -56,20 +78,27 @@ function GasWallet() {
 
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: '100%',
-              backgroundColor: '#007bff',
+              backgroundColor: loading ? '#aaa' : '#007bff',
               color: 'white',
               padding: '0.75rem',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: loading ? 'not-allowed' : 'pointer',
               fontSize: '1rem',
             }}
           >
-            Submit
+            {loading ? 'Submitting...' : 'Submit'}
           </button>
         </form>
+
+        {message && (
+          <p style={{ marginTop: '1rem', color: message.includes('success') ? 'green' : 'red' }}>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

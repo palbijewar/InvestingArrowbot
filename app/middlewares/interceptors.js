@@ -444,3 +444,23 @@ export const deleteSponsor = async (sponsorId) => {
     throw error;
   }
 };
+
+export const createGasWallet = async (gasWalletDetails) => {
+  try {
+    const response = await interceptorInstance.post('/gaswallet', gasWalletDetails);
+    return response.data;
+  } catch (error) {
+    console.error('Create Broker error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getGasWalletHistory = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/gaswallet/history/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};

@@ -197,7 +197,7 @@ const superAdminMenu = [
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
         icon: 'history',
-        link: '/app/widgets/gas-history',
+        link: '/app/widgets/gas-wallet-history',
       },
       {
         key: 'fund_request',

@@ -43,7 +43,8 @@ import {
   SponsorTradingDetails,
   TopupHistory,
   SponsorTradingHistory,
-  GasWallet
+  GasWallet,
+  GasWalletHistory
 } from '../pageListAsync';
 import ChangePassword from '../Pages/ChangePassword';
 
@@ -77,6 +78,7 @@ function Application(props) {
         <Route path="widgets/topup-history" element={<TopupHistory />} />
         <Route path="widgets/sponsor-trading-history" element={<SponsorTradingHistory />} />
         <Route path="widgets/gas-wallet" element={<GasWallet />} />
+        <Route path="widgets/gas-wallet-history" element={<GasWalletHistory />} />
         { /* Layout */ }
         <Route path="layouts" element={<Parent />} />
         <Route path="layouts/grid" element={<Grid />} />
