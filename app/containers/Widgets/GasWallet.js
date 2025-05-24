@@ -1,35 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function GasHistory() {
-  const dummyData = [
-    { id: 1, date: '2025-05-01', gasUsed: '120 gwei', transaction: '0xabc123...' },
-    { id: 2, date: '2025-05-03', gasUsed: '98 gwei', transaction: '0xdef456...' },
-    { id: 3, date: '2025-05-05', gasUsed: '110 gwei', transaction: '0xghi789...' },
-  ];
+function GasWallet() {
+  const [sponsorId, setSponsorId] = useState('');
+  const [gasFees, setGasFees] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle submit logic here (e.g., API call)
+    console.log('Sponsor ID:', sponsorId);
+    console.log('Gas Wallet Fees:', gasFees);
+    // Reset form
+    setSponsorId('');
+    setGasFees('');
+  };
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Gas History</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Date</th>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Gas Used</th>
-            <th style={{ border: '1px solid #ccc', padding: '0.5rem' }}>Transaction Hash</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyData.map((item) => (
-            <tr key={item.id}>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{item.date}</td>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{item.gasUsed}</td>
-              <td style={{ border: '1px solid #ccc', padding: '0.5rem' }}>{item.transaction}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div style={{ padding: '2rem', maxWidth: '500px', margin: '0 auto' }}>
+      <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label>Sponsor ID</label>
+            <input
+              type="text"
+              value={sponsorId}
+              onChange={(e) => setSponsorId(e.target.value)}
+              required
+              placeholder="Enter Sponsor ID"
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                marginTop: '0.5rem',
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label>Gas Wallet Fees</label>
+            <input
+              type="number"
+              value={gasFees}
+              onChange={(e) => setGasFees(e.target.value)}
+              required
+              placeholder="Enter Gas Wallet Fees"
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                marginTop: '0.5rem',
+              }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              backgroundColor: '#007bff',
+              color: 'white',
+              padding: '0.75rem',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+            }}
+          >
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
-export default GasHistory;
+export default GasWallet;

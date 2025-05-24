@@ -66,6 +66,9 @@ export const TopupHistory = loadable(() => import('./Widgets/TopupHistory'), {
 export const SponsorTradingHistory = loadable(() => import('./Widgets/SponsorTradingHistory'), {
   fallback: <Loading />,
 });
+export const GasWallet = loadable(() => import('./Widgets/GasWallet'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {

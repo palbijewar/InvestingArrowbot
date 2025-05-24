@@ -55,6 +55,12 @@ const defaultMenu = [
     icon: 'account_balance',
     child: [
       {
+        key: 'sponsor_trading_history',
+        name: 'Sponsor Trading History',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-history',
+      },
+      {
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
         icon: 'history',
@@ -180,6 +186,12 @@ const superAdminMenu = [
         name: 'Sponsor Trading History',
         icon: 'send',
         link: '/app/widgets/sponsor-trading-history',
+      },
+      {
+        key: 'fund_to_gas_wallet',
+        name: 'Fund To Gas Wallet',
+        icon: 'history',
+        link: '/app/widgets/gas-wallet',
       },
       {
         key: 'fund_to_gas_history',
