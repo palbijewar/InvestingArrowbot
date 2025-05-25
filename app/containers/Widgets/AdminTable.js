@@ -11,7 +11,8 @@ import {
   getSponsorPdf,
   updateAmount,
   updatePackage,
-  deleteSponsor
+  deleteSponsor,
+  updateDematAmount
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -21,6 +22,7 @@ function AdminTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [editAmount, setEditAmount] = useState({});
+  const [editDematAmount, setEditDematAmount] = useState({});
   const [editPackage, setEditPackage] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -33,8 +35,7 @@ function AdminTable() {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors();
-        console.log({res});
-        
+
         setSponsors(res.data);
         setFilteredSponsors(res.data);
       } catch (err) {
@@ -111,6 +112,19 @@ function AdminTable() {
     );
   };
 
+  const handleDematAmountUpdate = async (sponsorId) => {
+    let amountStr = editDematAmount[sponsorId];
+    // eslint-disable-next-line no-prototype-builtins
+    if (!editDematAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
+      amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.demat_amount;
+    }
+    const dematAmount = parseFloat(amountStr?.toString());
+    updateDematAmount(sponsorId, { demat_amount: parseFloat(dematAmount) });
+    setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, demat_amount: dematAmount } : s)
+    )
+    );
+  };
+
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
     const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
@@ -125,6 +139,7 @@ function AdminTable() {
     setLoadingId(sponsorId);
     try {
       await handleAmountUpdate(sponsorId);
+      await handleDematAmountUpdate(sponsorId);
       await activateUser(sponsorId, !currentStatus);
 
       setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId
@@ -201,7 +216,7 @@ function AdminTable() {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited'].map((key) => (
+              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount'].map((key) => (
                 <TableCell
                   key={key}
                   onClick={() => handleSort(key)}
@@ -271,6 +286,25 @@ function AdminTable() {
                     sx={{ width: 100 }}
                   />
                 </TableCell>
+                <TableCell>
+  <TextField
+    type="number"
+    size="small"
+    variant="outlined"
+    value={
+      // eslint-disable-next-line no-prototype-builtins
+      editDematAmount.hasOwnProperty(sponsor.sponsor_id)
+        ? editDematAmount[sponsor.sponsor_id]
+        : sponsor.demat_amount ?? ''
+    }
+    onChange={(e) => setEditDematAmount((prev) => ({
+        ...prev,
+        [sponsor.sponsor_id]: e.target.value,
+      }))
+    }
+  />
+</TableCell>
+
                 <TableCell>
                   <Button
                     variant="outlined"

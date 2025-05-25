@@ -63,7 +63,7 @@ function SponsorTradingDetails() {
   const handleDematChange = (sponsorId, value) => {
     setDematAmounts((prev) => ({ ...prev, [sponsorId]: value }));
   };
-
+ 
   const handleSaveBoth = async (sponsorId) => {
     const profitValue = profits[sponsorId];
     const dematValue = dematAmounts[sponsorId];
