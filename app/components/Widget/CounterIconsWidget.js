@@ -32,6 +32,8 @@ import {
   getBotDirectActivationCount,
   getBotDownlineActivationCount,
   getProfitSummary,
+  getSponsorProfitDetails,
+  getGasWalletTortalFundBySponsorId,
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
@@ -49,8 +51,7 @@ function CounterIconWidget() {
   const [rankIncome, setRankIncome] = useState(0);
   const [directPortfolioIncome, setDirectPortfolioIncome] = useState(0);
   const [downlinePortfolioIncome, setDownlinePortfolioIncome] = useState(0);
-  const [directTradingPortfolio, setDirectTradingPortfolio] = useState(0);
-  const [downlineTradingPortfolio, setDownlineTradingPortfolio] = useState(0);
+  const [gasWalletFund, setGasWalletFund] = useState(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -70,6 +71,7 @@ function CounterIconWidget() {
           levelIncomeResponse,
           rankInformationsResponse,
           profitSummaryResponse,
+          gasWalletTortalFundBySponsorIdResponse,
         ] = await Promise.all([
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
@@ -81,7 +83,8 @@ function CounterIconWidget() {
           getBotDownlineActivationCount(sponsorId),
           getSecondLevelReferralsTotalIncome(sponsorId),
           getRankInformations(sponsorId),
-          getProfitSummary(sponsorId)
+          getSponsorProfitDetails(sponsorId),
+          getGasWalletTortalFundBySponsorId(sponsorId)
         ]);
 
         setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
@@ -93,13 +96,12 @@ function CounterIconWidget() {
         setDownlineBotBusiness(botDownlinePortfolioInvestmentResponse?.data?.downline_bot_income || 0);
         setDirectBotAtivation(botDirectBotActivationResponse?.data?.direct_bot_count || 0);
         setBotAtivation(botDownlineBotActivationResponse?.data?.downline_bot_count || 0);
-        setLevelIncome(levelIncomeResponse?.data?.level_income || 0);
+        setLevelIncome(profitSummaryResponse?.totalIncome || 0);
         setCurrentRank(rankInformationsResponse?.data?.rank || '');
         setRankIncome(rankInformationsResponse?.data?.income || 0);
-        setDirectPortfolioIncome(profitSummaryResponse?.data?.direct_percentage_profit || 0);
-        setDownlinePortfolioIncome(profitSummaryResponse?.data?.downline_percentage_profit || 0);
-        setDirectTradingPortfolio(profitSummaryResponse?.data?.direct_actual_profit || 0);
-        setDownlineTradingPortfolio(profitSummaryResponse?.data?.downline_actual_profit || 0);
+        setDirectPortfolioIncome(profitSummaryResponse?.totalDirectIncome || 0);
+        setDownlinePortfolioIncome(profitSummaryResponse?.totalDownlineIncome || 0);
+        setGasWalletFund(gasWalletTortalFundBySponsorIdResponse?.data?.totalGasWalletFund || 0);
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
@@ -153,16 +155,6 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={directTradingPortfolio} duration={3} title="Direct Trading Portfolio">
-            <Paid className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-dark" start={0} end={downlineTradingPortfolio} duration={3} title="Downline Trading Portfolio">
-            <Savings className={classes.counterIcon} />
-          </CounterWidget>
-        </Grid>
-        <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directPortfolioIncome} duration={3} title="Direct Portfolio Income">
             <LocalAtm className={classes.counterIcon} />
           </CounterWidget>
@@ -194,6 +186,11 @@ function CounterIconWidget() {
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={currentRank} duration={3} title="Current Rank">
+            <MilitaryTech className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-main" start={0} end={gasWalletFund} duration={3} title="Gas Wallet Fund">
             <MilitaryTech className={classes.counterIcon} />
           </CounterWidget>
         </Grid>

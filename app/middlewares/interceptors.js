@@ -464,3 +464,23 @@ export const getGasWalletHistory = async (sponsorId) => {
     throw error;
   }
 };
+
+export const getSponsorProfitDetails = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/profits/summary/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getGasWalletTortalFundBySponsorId = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/gaswallet/total-fund/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
