@@ -12,8 +12,7 @@ import {
   updateAmount,
   updatePackage,
   deleteSponsor,
-  updateDematAmount,
-  updateGasWalletAmount
+  updateDematAmount
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -24,7 +23,6 @@ function AdminTable() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [editAmount, setEditAmount] = useState({});
   const [editDematAmount, setEditDematAmount] = useState({});
-  const [editGasWalletAmount, setEditGasWalletAmount] = useState({});
   const [editPackage, setEditPackage] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -36,7 +34,7 @@ function AdminTable() {
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const res = await getAllSponsors(false);
+        const res = await getAllSponsors();
 
         setSponsors(res.data);
         setFilteredSponsors(res.data);
@@ -127,22 +125,6 @@ function AdminTable() {
     );
   };
 
-  const handleGasWalletUpdate = async (sponsorId) => {
-    let amountStr = editGasWalletAmount[sponsorId];
-    if (!editGasWalletAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
-      amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.gas_wallet_amount;
-    }
-    const gasWalletAmount = parseFloat(amountStr?.toString());
-  
-    await updateGasWalletAmount(sponsorId, { gas_wallet_amount: gasWalletAmount });
-  
-    setSponsors((prev) =>
-      prev.map((s) =>
-        s.sponsor_id === sponsorId ? { ...s, gas_wallet_amount: gasWalletAmount } : s
-      )
-    );
-  };  
-
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
     const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
@@ -158,7 +140,6 @@ function AdminTable() {
     try {
       await handleAmountUpdate(sponsorId);
       await handleDematAmountUpdate(sponsorId);
-      await handleGasWalletUpdate(sponsorId)
       await activateUser(sponsorId, !currentStatus);
 
       setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId
@@ -214,13 +195,11 @@ function AdminTable() {
     handleMenuClose();
   };
 
-  const totalPages = Math.ceil((filteredSponsors?.length || 0) / limit);
-  console.log({filteredSponsors});
-  
-  const paginatedSponsors = (filteredSponsors || []).slice(
+  const totalPages = Math.ceil(filteredSponsors.length / limit);
+  const paginatedSponsors = filteredSponsors.slice(
     (currentPage - 1) * limit,
     currentPage * limit
-  );  
+  );
 
   return (
     <Box p={2}>
@@ -237,7 +216,7 @@ function AdminTable() {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount','gas_wallet'].map((key) => (
+              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount'].map((key) => (
                 <TableCell
                   key={key}
                   onClick={() => handleSort(key)}
@@ -325,24 +304,6 @@ function AdminTable() {
     }
   />
 </TableCell>
-<TableCell>
-  <TextField
-    type="number"
-    size="small"
-    variant="outlined"
-    value={
-      // eslint-disable-next-line no-prototype-builtins
-      editGasWalletAmount.hasOwnProperty(sponsor.sponsor_id)
-        ? editGasWalletAmount[sponsor.sponsor_id]
-        : sponsor.gas_wallet_fees ?? ''
-    }
-    onChange={(e) => setEditGasWalletAmount((prev) => ({
-        ...prev,
-        [sponsor.sponsor_id]: e.target.value,
-      }))
-    }
-  />
-</TableCell>
 
                 <TableCell>
                   <Button
@@ -353,7 +314,6 @@ function AdminTable() {
                     View
                   </Button>
                 </TableCell>
-                
                 <TableCell>
                   <Button
                     variant="contained"

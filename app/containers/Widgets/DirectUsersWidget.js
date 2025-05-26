@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Box,
+} from '@mui/material';
 import { getDirectReferrals } from '../../middlewares/interceptors.js';
 
 function UsersDetailsTable() {
@@ -14,7 +18,6 @@ function UsersDetailsTable() {
 
   useEffect(() => {
     const storedSponsorDetails = localStorage.getItem('sponsor_details');
-
     if (storedSponsorDetails) {
       const sponsorData = JSON.parse(storedSponsorDetails);
       setSponsorId(sponsorData?.sponsor_id);
@@ -43,34 +46,40 @@ function UsersDetailsTable() {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="users details table">
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Sr No.</strong></TableCell>
-            <TableCell><strong>Username</strong></TableCell>
-            <TableCell><strong>Sponsor ID</strong></TableCell>
-            <TableCell><strong>Package</strong></TableCell>
-            <TableCell><strong>Amount Deposited</strong></TableCell>
-            <TableCell><strong>Registration Date</strong></TableCell>
-            <TableCell><strong>Active</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {usersData.map((user, index) => (
-            <TableRow key={index}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{user.username}</TableCell>
-              <TableCell>{user.sponsor_id}</TableCell>
-              <TableCell>{user.package || '-'}</TableCell>
-              <TableCell>{user.amount_deposited || '-'}</TableCell>
-              <TableCell>{formatDate(user.createdAt)}</TableCell>
-              <TableCell>{user.is_active}</TableCell>
+    <Box sx={{ width: '100%', overflowX: 'auto', p: { xs: 1, sm: 2 } }}>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        User Referrals
+      </Typography>
+
+      <TableContainer component={Paper} sx={{ minWidth: 650 }}>
+        <Table stickyHeader aria-label="users details table">
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Sr No.</strong></TableCell>
+              <TableCell><strong>Username</strong></TableCell>
+              <TableCell><strong>Sponsor ID</strong></TableCell>
+              <TableCell><strong>Package</strong></TableCell>
+              <TableCell><strong>Amount Deposited</strong></TableCell>
+              <TableCell><strong>Registration Date</strong></TableCell>
+              <TableCell><strong>Active</strong></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {usersData.map((user, index) => (
+              <TableRow key={index}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.sponsor_id}</TableCell>
+                <TableCell>{user.package || '-'}</TableCell>
+                <TableCell>{user.amount_deposited || '-'}</TableCell>
+                <TableCell>{formatDate(user.createdAt)}</TableCell>
+                <TableCell>{user.is_active ? 'Yes' : 'No'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 
