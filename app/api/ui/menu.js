@@ -13,13 +13,13 @@ const defaultMenu = [
       {
         key: 'view_profile',
         name: 'View Profile',
-        icon: 'account_circle',
+        icon: 'visibility',
         link: '/app/pages/user-profile',
       },
       {
         key: 'change_password',
         name: 'Change Password',
-        icon: 'lock',
+        icon: 'vpn_key',
         link: '/app/pages/change-password',
       },
       {
@@ -38,16 +38,22 @@ const defaultMenu = [
       {
         key: 'direct_team',
         name: 'Direct Team',
-        icon: 'group',
+        icon: 'person_add',
         link: '/app/widgets/direct-users',
       },
       {
         key: 'downline_team',
         name: 'Downline Team',
-        icon: 'device_hub',
+        icon: 'share',
         link: '/app/widgets/downline-stream',
       },
     ],
+  },
+  {
+    key: 'trading_details',
+    name: 'Trading Details',
+    icon: 'show_chart',
+    linkParent: '/app/widgets/trading-details',
   },
   {
     key: 'fund',
@@ -57,26 +63,26 @@ const defaultMenu = [
       {
         key: 'fund_to_gas_wallet',
         name: 'Gas Fees',
-        icon: 'history',
+        icon: 'local_gas_station',
         link: '/app/widgets/gas-wallet',
       },
       {
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
-        icon: 'history',
+        icon: 'history_toggle_off',
         link: '/app/widgets/gas-history',
       },
     ],
   },
   {
     key: 'sponsor_details',
-    name: 'sponsor Details',
-    icon: 'account_balance',
+    name: 'Sponsor Details',
+    icon: 'group_work',
     child: [
       {
         key: 'sponsor_trading_details',
         name: 'Sponsor Trading Details',
-        icon: 'send',
+        icon: 'send_and_archive',
         link: '/app/widgets/sponsor-trading-details',
       },
     ],
@@ -95,7 +101,7 @@ const defaultMenu = [
       {
         key: 'withdrawal_history',
         name: 'Withdrawal History',
-        icon: 'history',
+        icon: 'history_edu',
         link: '/app/withdrawal/history',
       },
     ],
@@ -112,24 +118,24 @@ const superAdminMenu = [
   {
     key: 'dashboard',
     name: 'Dashboard',
-    icon: 'dashboard',
+    icon: 'space_dashboard',
     linkParent: '/app',
   },
   {
     key: 'profile',
     name: 'Profile',
-    icon: 'person',
+    icon: 'face',
     child: [
       {
         key: 'view_profile',
         name: 'View Profile',
-        icon: 'account_circle',
+        icon: 'visibility',
         link: '/app/pages/user-profile',
       },
       {
         key: 'change_password',
         name: 'Change Password',
-        icon: 'lock',
+        icon: 'vpn_key',
         link: '/app/pages/change-password',
       },
       {
@@ -143,24 +149,24 @@ const superAdminMenu = [
   {
     key: 'admin_table',
     name: 'Admin Table',
-    icon: 'dashboard',
+    icon: 'table_chart',
     linkParent: '/app/widgets/admin-table',
   },
   {
     key: 'my_network',
     name: 'My Network',
-    icon: 'people',
+    icon: 'group',
     child: [
       {
         key: 'direct_team',
         name: 'Direct Team',
-        icon: 'group',
+        icon: 'person_add_alt_1',
         link: '/app/widgets/direct-users',
       },
       {
         key: 'downline_team',
         name: 'Downline Team',
-        icon: 'device_hub',
+        icon: 'share',
         link: '/app/widgets/downline-stream',
       },
     ],
@@ -168,49 +174,49 @@ const superAdminMenu = [
   {
     key: 'broker_information',
     name: 'Broker Information',
-    icon: 'monetization_on',
+    icon: 'support_agent',
     linkParent: '/app/widgets/broker-informations',
   },
   {
     key: 'trading_details',
     name: 'Trading Details',
-    icon: 'monetization_on',
+    icon: 'show_chart', // chart icon for trading details
     linkParent: '/app/widgets/trading-details',
   },
   {
     key: 'fund',
     name: 'Fund',
-    icon: 'account_balance',
+    icon: 'savings', // savings icon for fund
     child: [
       {
         key: 'fund_to_gas_wallet',
         name: 'Gas Fees',
-        icon: 'history',
+        icon: 'local_gas_station', // gas pump icon
         link: '/app/widgets/gas-wallet',
       },
       {
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
-        icon: 'history',
+        icon: 'history_toggle_off', // alternate history icon
         link: '/app/widgets/gas-wallet-history',
       },
     ],
   },
   {
     key: 'sponsor_details',
-    name: 'sponsor Details',
-    icon: 'account_balance',
+    name: 'Sponsor Details',
+    icon: 'supervisor_account', // supervisor account for sponsors
     child: [
       {
         key: 'sponsor_trading_details',
         name: 'Sponsor Trading Details',
-        icon: 'send',
+        icon: 'send_and_archive', // send/archive icon
         link: '/app/widgets/sponsor-trading-details',
       },
       {
         key: 'sponsor_trading_history',
         name: 'Sponsor Trading History',
-        icon: 'send',
+        icon: 'history_edu', // education/history icon variant
         link: '/app/widgets/sponsor-trading-history',
       },
     ],
@@ -218,18 +224,18 @@ const superAdminMenu = [
   {
     key: 'withdrawal',
     name: 'Withdrawal',
-    icon: 'credit_card',
+    icon: 'payment', // payment icon for withdrawal
     child: [
       {
         key: 'portfolio_withdrawal',
         name: 'Portfolio Withdrawal',
-        icon: 'account_balance_wallet',
+        icon: 'wallet', // wallet icon variant
         link: '/app/withdrawal/portfolio',
       },
       {
         key: 'withdrawal_history',
         name: 'Withdrawal History',
-        icon: 'history',
+        icon: 'restore', // restore icon for history
         link: '/app/withdrawal/history',
       },
     ],
@@ -237,7 +243,7 @@ const superAdminMenu = [
   {
     key: 'logout',
     name: 'Logout',
-    icon: 'exit_to_app',
+    icon: 'logout', // logout icon variant
     linkParent: '/logout',
   },
 ];
