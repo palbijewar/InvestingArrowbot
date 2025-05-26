@@ -55,6 +55,18 @@ const defaultMenu = [
     icon: 'account_balance',
     child: [
       {
+        key: 'sponsor_trading_details',
+        name: 'Sponsor Trading Details',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-details',
+      },
+      {
+        key: 'sponsor_trading_history',
+        name: 'Sponsor Trading History',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-history',
+      },
+      {
         key: 'sponsor_trading_history',
         name: 'Sponsor Trading History',
         icon: 'send',
