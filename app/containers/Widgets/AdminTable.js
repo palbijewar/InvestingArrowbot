@@ -212,10 +212,10 @@ function AdminTable() {
         sx={{ mb: 3 }}
       />
 
-      <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+      <TableContainer component={Paper} sx={{ maxHeight: 500, whiteSpace: 'nowrap' }}>
         <Table stickyHeader>
           <TableHead>
-            <TableRow>
+            <TableRow >
               {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount'].map((key) => (
                 <TableCell
                   key={key}
