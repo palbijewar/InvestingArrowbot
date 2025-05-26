@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { createGasWallet } from '../../middlewares/interceptors';
+import newQrCode from '../../api/images/newqr.jpg';
 
 function GasWallet() {
   const [sponsorId, setSponsorId] = useState('');
   const [gasFees, setGasFees] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const walletAddress = '0xA1A1458B696Ba84A3C2e92cEc3875f6170A80c0c';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,14 +33,24 @@ function GasWallet() {
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(walletAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div style={{ padding: '2rem', maxWidth: '500px', margin: '0 auto' }}>
+    <div style={{
+      display: 'flex', gap: '2rem', padding: '2rem', justifyContent: 'center', flexWrap: 'wrap'
+    }}>
+      {/* Form Card */}
       <div
         style={{
           border: '1px solid #ccc',
           borderRadius: '8px',
           padding: '1.5rem',
           boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+          width: '350px',
         }}
       >
         <form onSubmit={handleSubmit}>
@@ -99,6 +113,40 @@ function GasWallet() {
             {message}
           </p>
         )}
+      </div>
+
+      {/* QR Code Scanner Section */}
+      <div
+        style={{
+          border: '1px solid #ccc',
+          borderRadius: '8px',
+          padding: '1.5rem',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+          width: '350px',
+          textAlign: 'center',
+        }}
+      >
+        <img
+          src={newQrCode}
+          alt="Scan QR"
+          style={{
+            width: '200px', height: '200px', objectFit: 'contain', marginBottom: '1rem'
+          }}
+        />
+        <p style={{ wordBreak: 'break-all', marginBottom: '0.5rem' }}>{walletAddress}</p>
+        <button
+          onClick={copyToClipboard}
+          style={{
+            backgroundColor: '#28a745',
+            color: 'white',
+            padding: '0.5rem 1rem',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          {copied ? 'Copied!' : 'Copy Wallet Code'}
+        </button>
       </div>
     </div>
   );
