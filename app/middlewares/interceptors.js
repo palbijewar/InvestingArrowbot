@@ -238,9 +238,11 @@ export const activateUser = async (sponsorId, isActive) => {
   }
 };
 
-export const getAllSponsors = async () => {
+export const getAllSponsors = async (is_active) => {
   try {
-    const response = await interceptorInstance.get('/auth/users');
+    const response = await interceptorInstance.get('/auth/users', {
+      params: is_active !== undefined ? { is_active } : {},
+    });
 
     return response.data;
   } catch (error) {
@@ -481,6 +483,17 @@ export const getGasWalletTortalFundBySponsorId = async (sponsorId) => {
     return response.data;
   } catch (error) {
     console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateGasWalletAmount = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/gaswallet/${sponsorId}`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
     throw error;
   }
 };

@@ -55,22 +55,10 @@ const defaultMenu = [
     icon: 'account_balance',
     child: [
       {
-        key: 'sponsor_trading_details',
-        name: 'Sponsor Trading Details',
-        icon: 'send',
-        link: '/app/widgets/sponsor-trading-details',
-      },
-      {
-        key: 'sponsor_trading_history',
-        name: 'Sponsor Trading History',
-        icon: 'send',
-        link: '/app/widgets/sponsor-trading-history',
-      },
-      {
-        key: 'sponsor_trading_history',
-        name: 'Sponsor Trading History',
-        icon: 'send',
-        link: '/app/widgets/sponsor-trading-history',
+        key: 'fund_to_gas_wallet',
+        name: 'Gas Fees',
+        icon: 'history',
+        link: '/app/widgets/gas-wallet',
       },
       {
         key: 'fund_to_gas_history',
@@ -78,11 +66,18 @@ const defaultMenu = [
         icon: 'history',
         link: '/app/widgets/gas-history',
       },
+    ],
+  },
+  {
+    key: 'sponsor_details',
+    name: 'sponsor Details',
+    icon: 'account_balance',
+    child: [
       {
-        key: 'fund_request',
-        name: 'Fund Request',
-        icon: 'request_quote',
-        link: '/app/widgets/request',
+        key: 'sponsor_trading_details',
+        name: 'Sponsor Trading Details',
+        icon: 'send',
+        link: '/app/widgets/sponsor-trading-details',
       },
     ],
   },
@@ -188,6 +183,25 @@ const superAdminMenu = [
     icon: 'account_balance',
     child: [
       {
+        key: 'fund_to_gas_wallet',
+        name: 'Gas Fees',
+        icon: 'history',
+        link: '/app/widgets/gas-wallet',
+      },
+      {
+        key: 'fund_to_gas_history',
+        name: 'Fund To Gas History',
+        icon: 'history',
+        link: '/app/widgets/gas-wallet-history',
+      },
+    ],
+  },
+  {
+    key: 'sponsor_details',
+    name: 'sponsor Details',
+    icon: 'account_balance',
+    child: [
+      {
         key: 'sponsor_trading_details',
         name: 'Sponsor Trading Details',
         icon: 'send',
@@ -198,24 +212,6 @@ const superAdminMenu = [
         name: 'Sponsor Trading History',
         icon: 'send',
         link: '/app/widgets/sponsor-trading-history',
-      },
-      {
-        key: 'fund_to_gas_wallet',
-        name: 'Fund To Gas Wallet',
-        icon: 'history',
-        link: '/app/widgets/gas-wallet',
-      },
-      {
-        key: 'fund_to_gas_history',
-        name: 'Fund To Gas History',
-        icon: 'history',
-        link: '/app/widgets/gas-wallet-history',
-      },
-      {
-        key: 'fund_request',
-        name: 'Fund Request',
-        icon: 'request_quote',
-        link: '/app/widgets/request',
       },
     ],
   },
