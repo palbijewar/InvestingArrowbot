@@ -38,9 +38,6 @@ const BrokerInformations = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5" gutterBottom>
-        Sponsor & Broker Details
-      </Typography>
 
       {brokerData.map((sponsor) => (
         <Card key={sponsor.sponsor_id} variant="outlined" sx={{ mb: 3 }}>

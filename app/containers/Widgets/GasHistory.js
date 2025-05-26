@@ -1,4 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+  Box,
+  Alert,
+} from '@mui/material';
 import { getGasWalletHistory } from '../../middlewares/interceptors';
 
 function GasHistory() {
@@ -37,55 +51,55 @@ function GasHistory() {
   }, [sponsorId]);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
-      <h2>Gas Wallet History</h2>
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h5" gutterBottom>
+        Gas Wallet History
+      </Typography>
 
-      {/* Loader or Error */}
-      {loading && <p>Loading history...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {loading && (
+        <Box display="flex" justifyContent="center" my={4}>
+          <CircularProgress />
+        </Box>
+      )}
 
-      {/* Table */}
+      {error && (
+        <Alert severity="error" sx={{ my: 2 }}>
+          {error}
+        </Alert>
+      )}
+
       {!loading && history.length > 0 && (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f0f0f0' }}>
-                <th style={thStyle}>Date</th>
-                <th style={thStyle}>Sponsor ID</th>
-                <th style={thStyle}>Sponsor Name</th>
-                <th style={thStyle}>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
+        <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+          <Table stickyHeader aria-label="gas history table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>Sponsor ID</TableCell>
+                <TableCell>Sponsor Name</TableCell>
+                <TableCell>Amount</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {history.map((item, index) => (
-                <tr key={index}>
-                  <td style={tdStyle}>{new Date(item.createdAt).toLocaleString()}</td>
-                  <td style={tdStyle}>{item.sponsor_id}</td>
-                  <td style={tdStyle}>{item.sponsor_name}</td>
-                  <td style={tdStyle}>₹{item.gas_wallet_amount}</td>
-                </tr>
+                <TableRow key={index}>
+                  <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
+                  <TableCell>{item.sponsor_id}</TableCell>
+                  <TableCell>{item.sponsor_name}</TableCell>
+                  <TableCell>₹{item.gas_wallet_amount}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {!loading && !error && history.length === 0 && sponsorId && (
-        <p>No history found for Sponsor ID: {sponsorId}</p>
+        <Typography variant="body1" sx={{ mt: 2 }}>
+          No history found for Sponsor ID: {sponsorId}
+        </Typography>
       )}
-    </div>
+    </Container>
   );
 }
-
-const thStyle = {
-  padding: '0.75rem',
-  textAlign: 'left',
-  borderBottom: '1px solid #ddd',
-};
-
-const tdStyle = {
-  padding: '0.75rem',
-  borderBottom: '1px solid #eee',
-};
 
 export default GasHistory;
