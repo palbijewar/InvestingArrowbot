@@ -75,19 +75,6 @@ const defaultMenu = [
     ],
   },
   {
-    key: 'sponsor_details',
-    name: 'Sponsor Details',
-    icon: 'group_work',
-    child: [
-      {
-        key: 'sponsor_trading_details',
-        name: 'Sponsor Trading Details',
-        icon: 'send_and_archive',
-        link: '/app/widgets/sponsor-trading-details',
-      },
-    ],
-  },
-  {
     key: 'withdrawal',
     name: 'Withdrawal',
     icon: 'credit_card',
