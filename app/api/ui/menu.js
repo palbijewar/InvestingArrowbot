@@ -101,7 +101,6 @@ const defaultMenu = [
   },
 ];
 
-
 const superAdminMenu = [
   {
     key: 'dashboard',
