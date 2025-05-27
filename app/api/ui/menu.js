@@ -50,8 +50,8 @@ const defaultMenu = [
     ],
   },
   {
-    key: 'trading_details',
-    name: 'Trading Details',
+    key: 'sponsor_details',
+    name: 'Sponsor Details',
     icon: 'show_chart',
     linkParent: '/app/widgets/trading-details',
   },
@@ -165,8 +165,8 @@ const superAdminMenu = [
     linkParent: '/app/widgets/broker-informations',
   },
   {
-    key: 'trading_details',
-    name: 'Trading Details',
+    key: 'sponsor_details',
+    name: 'Sponsor Details',
     icon: 'show_chart', // chart icon for trading details
     linkParent: '/app/widgets/trading-details',
   },
