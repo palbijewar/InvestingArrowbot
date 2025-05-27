@@ -36,9 +36,15 @@ function TradingDetails() {
       try {
         const storedSponsorDetails = localStorage.getItem('sponsor_details');
         const sponsorData = JSON.parse(storedSponsorDetails);
-        const res = await getSponsorDetailsById(sponsorData?.sponsor_id);
-        setSponsors(res.data);
-        setFilteredSponsors(res.data);
+        if(sponsorData.user_type=="superadmin"){
+          const res = await getAllSponsors();
+          setSponsors(res.data);
+          setFilteredSponsors(res.data);
+        }else{
+          const res = await getSponsorDetailsById(sponsorData?.sponsor_id);
+          setSponsors(res.data);
+          setFilteredSponsors(res.data);
+        }
       } catch (err) {
         console.error('Failed to fetch sponsors:', err);
       }

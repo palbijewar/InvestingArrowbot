@@ -114,7 +114,7 @@ useEffect(() => {
                 console.error('EmailJS error:', error.text);
               }
             );
-
+          
           setTimeout(() => navigate('/app'), 2000);
         } else {
           throw new Error(response?.message || 'Signup failed. Please try again.');
