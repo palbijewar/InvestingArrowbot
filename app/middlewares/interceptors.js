@@ -500,7 +500,6 @@ export const getGasWalletTortalFundBySponsorId = async (sponsorId) => {
 export const updateGasWalletAmount = async (sponsorId, data) => {
   try {
     const response = await interceptorInstance.patch(`/gaswallet/${sponsorId}`, data);
-console.log({response});
 
     return response.data;
   } catch (error) {

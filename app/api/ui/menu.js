@@ -70,7 +70,7 @@ const defaultMenu = [
         key: 'fund_to_gas_history',
         name: 'Fund To Gas History',
         icon: 'history_toggle_off',
-        link: '/app/widgets/gas-history',
+        link: '/app/widgets/gas-wallet-history',
       },
     ],
   },
