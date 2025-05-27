@@ -84,7 +84,7 @@ function SponsorTradingDetails() {
     try {
       const [profitRes, dematRes] = await Promise.all([
         updateProfit(sponsorId, { profit: parseFloat(profitValue) }),
-        updateDematAmount(sponsorId, { demat_amount: parseFloat(dematValue) })
+        updateDematAmount(sponsorId, { demat_amount: parseFloat(dematValue) }, false)
       ]);
   
       // Update state with responses

@@ -43,6 +43,16 @@ export const getSponsorDetails = async (sponsorId) => {
   }
 };
 
+export const getSponsorDetailsById = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/users/sponsors/${sponsorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Get Sponsor Details error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const loginService = async (credentials) => {
   try {
     const response = await interceptorInstance.post(

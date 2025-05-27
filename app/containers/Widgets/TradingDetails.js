@@ -14,8 +14,9 @@ import {
   Box,
   useMediaQuery,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
-import { getAllSponsors } from '../../middlewares/interceptors.js';
+import { getAllSponsors, getSponsorDetailsById } from '../../middlewares/interceptors.js';
 
 function TradingDetails() {
   const [sponsors, setSponsors] = useState([]);
@@ -23,6 +24,8 @@ function TradingDetails() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedSponsorDetails, setSelectedSponsorDetails] = useState(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
   const limit = 10;
 
   const theme = useTheme();
@@ -72,13 +75,24 @@ function TradingDetails() {
     setFilteredSponsors(sorted);
   };
 
+  const handleRowClick = async (sponsorId) => {
+    try {
+      setLoadingDetails(true);
+      const details = await getSponsorDetailsById(sponsorId);
+      setSelectedSponsorDetails(details);
+    } catch (err) {
+      console.error('Error fetching sponsor details:', err);
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
   const totalPages = Math.ceil((filteredSponsors?.length || 0) / limit);
   const paginatedSponsors = filteredSponsors.slice(
     (currentPage - 1) * limit,
     currentPage * limit
   );
 
-  // Define columns to show, optionally hide some on mobile for better fit
   const columns = [
     { key: 'sponsor_id', label: 'SPONSOR ID', showOnMobile: true },
     { key: 'username', label: 'USERNAME', showOnMobile: true },
@@ -102,11 +116,10 @@ function TradingDetails() {
         sx={{ mb: 3 }}
       />
 
-      {/* Horizontal scroll wrapper */}
       <Box sx={{ overflowX: 'auto' }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 500, minWidth: 650 }} // minWidth prevents squeezing on small screens
+          sx={{ maxHeight: 500, minWidth: 650 }}
         >
           <Table stickyHeader aria-label="sponsors table" size={isMobile ? 'small' : 'medium'}>
             <TableHead>
@@ -126,7 +139,12 @@ function TradingDetails() {
             </TableHead>
             <TableBody>
               {paginatedSponsors.map((sponsor) => (
-                <TableRow key={sponsor.sponsor_id}>
+                <TableRow
+                  key={sponsor.sponsor_id}
+                  hover
+                  onClick={() => handleRowClick(sponsor.sponsor_id)}
+                  sx={{ cursor: 'pointer' }}
+                >
                   {columns.map(({ key, showOnMobile }) =>
                     (!isMobile || showOnMobile) ? (
                       <TableCell key={key} sx={{ whiteSpace: 'nowrap' }}>
@@ -162,6 +180,25 @@ function TradingDetails() {
           Next
         </Button>
       </Box>
+
+      {/* Sponsor Details Section */}
+      {selectedSponsorDetails && (
+        <Box mt={4} p={2} border="1px solid #ccc" borderRadius={2}>
+          <Typography variant="h6">Sponsor Details</Typography>
+          {loadingDetails ? (
+            <Box display="flex" alignItems="center" mt={2}>
+              <CircularProgress size={24} />
+              <Typography ml={2}>Loading...</Typography>
+            </Box>
+          ) : (
+            Object.entries(selectedSponsorDetails).map(([key, value]) => (
+              <Typography key={key} sx={{ wordBreak: 'break-word' }}>
+                <strong>{key}:</strong> {String(value)}
+              </Typography>
+            ))
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

@@ -34,7 +34,8 @@ function AdminTable() {
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const res = await getAllSponsors();
+        const res = await getAllSponsors(false);
+console.log({res});
 
         setSponsors(res.data);
         setFilteredSponsors(res.data);
@@ -105,7 +106,7 @@ function AdminTable() {
     }
     const amount = parseFloat(amountStr?.toString());
 
-    await updateAmount(sponsorId, { amount });
+    await updateAmount(sponsorId, { amount }, true);
 
     setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, amount_deposited: amount } : s)
     )
@@ -119,7 +120,7 @@ function AdminTable() {
       amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.demat_amount;
     }
     const dematAmount = parseFloat(amountStr?.toString());
-    updateDematAmount(sponsorId, { demat_amount: parseFloat(dematAmount) });
+    updateDematAmount(sponsorId, { demat_amount: parseFloat(dematAmount) }, true);
     setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, demat_amount: dematAmount } : s)
     )
     );
@@ -129,28 +130,25 @@ function AdminTable() {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
     const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
     const amount = parseFloat(raw);
-
+  
     if (!currentStatus && (isNaN(amount) || amount <= 0)) {
       setDialogMessage('Amount must be greater than 0 to activate sponsor.');
       setOpenDialog(true);
       return;
     }
-
+  
     setLoadingId(sponsorId);
     try {
       await handleAmountUpdate(sponsorId);
       await handleDematAmountUpdate(sponsorId);
       await activateUser(sponsorId, !currentStatus);
-
-      setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId
-        ? {
-          ...s,
-          is_active: !currentStatus,
-          ...(amount && !currentStatus ? { amount_deposited: amount.toString() } : {}),
-        }
-        : s)
-      )
+  
+      setSponsors((prev) =>
+        prev.map((s) =>
+          s.sponsor_id === sponsorId ? { ...s, is_active: !currentStatus } : s
+        )
       );
+  
       setDialogMessage(currentStatus ? 'Sponsor deactivated.' : 'Sponsor activated.');
       setOpenDialog(true);
     } catch (err) {
@@ -161,6 +159,7 @@ function AdminTable() {
       setLoadingId(null);
     }
   };
+  
 
   const handleDelete = async (sponsorId) => {
     try {
@@ -248,7 +247,7 @@ function AdminTable() {
                       const pkg = e.target.value;
                       setEditPackage((prev) => ({ ...prev, [sponsor.sponsor_id]: pkg }));
                       try {
-                        await updatePackage(sponsor.sponsor_id, { package: pkg });
+                        await updatePackage(sponsor.sponsor_id, { package: pkg }, true);
                         setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsor.sponsor_id ? { ...s, package: pkg } : s)
                         )
                         );
