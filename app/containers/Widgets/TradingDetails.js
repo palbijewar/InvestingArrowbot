@@ -34,7 +34,9 @@ function TradingDetails() {
   useEffect(() => {
     const fetchSponsors = async () => {
       try {
-        const res = await getAllSponsors();
+        const storedSponsorDetails = localStorage.getItem('sponsor_details');
+        const sponsorData = JSON.parse(storedSponsorDetails);
+        const res = await getSponsorDetailsById(sponsorData?.sponsor_id);
         setSponsors(res.data);
         setFilteredSponsors(res.data);
       } catch (err) {
@@ -79,6 +81,8 @@ function TradingDetails() {
     try {
       setLoadingDetails(true);
       const details = await getSponsorDetailsById(sponsorId);
+      console.log({details});
+      
       setSelectedSponsorDetails(details);
     } catch (err) {
       console.error('Error fetching sponsor details:', err);
