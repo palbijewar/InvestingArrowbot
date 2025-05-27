@@ -22,6 +22,7 @@ import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
 import { signUpUser, getSponsorName } from '../../middlewares/interceptors.js';
+import { useLocation } from 'react-router-dom';
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
@@ -50,6 +51,16 @@ function RegisterForm({
   const [loading, setLoading] = useState(false);
   const [serverMessage, setServerMessage] = useState(null);
   const [referralSponsorName, setReferralSponsorName] = useState('');
+  const location = useLocation();
+
+useEffect(() => {
+  const queryParams = new URLSearchParams(location.search);
+  const referralId = queryParams.get('ref');
+
+  if (referralId) {
+    formik.setFieldValue('referralSponsorId', referralId);
+  }
+}, [location.search]);
 
   const formik = useFormik({
     enableReinitialize: true,
