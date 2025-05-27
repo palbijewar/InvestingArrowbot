@@ -12,7 +12,8 @@ import {
   updateAmount,
   updatePackage,
   deleteSponsor,
-  updateDematAmount
+  updateDematAmount,
+  updateGasWalletAmount
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -24,6 +25,7 @@ function AdminTable() {
   const [editAmount, setEditAmount] = useState({});
   const [editDematAmount, setEditDematAmount] = useState({});
   const [editPackage, setEditPackage] = useState({});
+  const [editGasWalletFees, setEditGasWalletFees] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
@@ -126,21 +128,34 @@ console.log({res});
     );
   };
 
+  const handleGasWalletAmountUpdate = async (sponsorId) => {
+    let amountStr = editGasWalletFees[sponsorId];
+  
+    if (!editGasWalletFees.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
+      amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.gas_wallet_amount;
+    }
+  
+    const gasWalletAmount = parseFloat(amountStr?.toString());
+  
+    await updateGasWalletAmount(sponsorId, { gas_wallet_amount: gasWalletAmount, is_active: true }); // ✅ Fix here
+  
+    setSponsors((prev) =>
+      prev.map((s) =>
+        s.sponsor_id === sponsorId ? { ...s, gas_wallet_amount: gasWalletAmount } : s
+      )
+    );
+  };  
+
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
     const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
     const amount = parseFloat(raw);
   
-    if (!currentStatus && (isNaN(amount) || amount <= 0)) {
-      setDialogMessage('Amount must be greater than 0 to activate sponsor.');
-      setOpenDialog(true);
-      return;
-    }
-  
     setLoadingId(sponsorId);
     try {
       await handleAmountUpdate(sponsorId);
       await handleDematAmountUpdate(sponsorId);
+      await handleGasWalletAmountUpdate(sponsorId);
       await activateUser(sponsorId, !currentStatus);
   
       setSponsors((prev) =>
@@ -215,7 +230,7 @@ console.log({res});
         <Table stickyHeader>
           <TableHead>
             <TableRow >
-              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount'].map((key) => (
+              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount','gas_wallet_fees'].map((key) => (
                 <TableCell
                   key={key}
                   onClick={() => handleSort(key)}
@@ -303,7 +318,23 @@ console.log({res});
     }
   />
 </TableCell>
-
+<TableCell>
+  <TextField
+    value={
+      editGasWalletFees.hasOwnProperty(sponsor.sponsor_id)
+        ? editGasWalletFees[sponsor.sponsor_id]
+        : sponsor.gas_wallet_amount ?? ''
+    }
+    onChange={(e) =>
+      setEditGasWalletFees((prev) => ({
+        ...prev,
+        [sponsor.sponsor_id]: e.target.value,
+      }))
+    }
+    onBlur={() => handleGasWalletAmountUpdate(sponsor.sponsor_id)}
+    size="small"
+  />
+</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"
