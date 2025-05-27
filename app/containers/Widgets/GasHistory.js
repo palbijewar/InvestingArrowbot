@@ -82,7 +82,7 @@ function GasHistory() {
             <TableBody>
               {history.map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
                   <TableCell>{item.sponsor_id}</TableCell>
                   <TableCell>{item.sponsor_name}</TableCell>
                   <TableCell>₹{item.gas_wallet_amount}</TableCell>
