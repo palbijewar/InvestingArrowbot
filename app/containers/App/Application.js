@@ -73,7 +73,7 @@ function Application(props) {
         <Route path="widgets/bot-activation" element={<BotActivation />} />
         <Route path="widgets/admin-table" element={<AdminTable />} />
         <Route path="widgets/broker-informations" element={<BrokerInformations />} />
-        <Route path="widgets/trading-details" element={<TradingDetails />} />
+        <Route path="widgets/sponsor-details" element={<TradingDetails />} />
         <Route path="widgets/sponsor-trading-details" element={<SponsorTradingDetails />} />
         <Route path="widgets/topup-history" element={<TopupHistory />} />
         <Route path="widgets/sponsor-trading-history" element={<SponsorTradingHistory />} />

@@ -53,7 +53,7 @@ const defaultMenu = [
     key: 'sponsor_details',
     name: 'Sponsor Details',
     icon: 'show_chart',
-    linkParent: '/app/widgets/trading-details',
+    linkParent: '/app/widgets/sponsor-details',
   },
   {
     key: 'fund',
@@ -168,7 +168,7 @@ const superAdminMenu = [
     key: 'sponsor_details',
     name: 'Sponsor Details',
     icon: 'show_chart', // chart icon for trading details
-    linkParent: '/app/widgets/trading-details',
+    linkParent: '/app/widgets/sponsor-details',
   },
   {
     key: 'fund',
