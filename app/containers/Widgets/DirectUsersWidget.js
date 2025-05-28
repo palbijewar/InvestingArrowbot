@@ -58,10 +58,6 @@ function UsersDetailsTable() {
 
   return (
     <Box sx={{ width: '100%', overflowX: 'auto', p: { xs: 1, sm: 2 } }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        User Referrals
-      </Typography>
-
       <TableContainer component={Paper} sx={{ minWidth: 650 }}>
         <Table stickyHeader aria-label="users details table">
           <TableHead>

@@ -42,9 +42,6 @@ export default function DownlineUsersWidget() {
 
   return (
     <Box sx={{ width: '100%', overflowX: 'auto', p: { xs: 1, sm: 2 } }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Second-Level Referrals
-      </Typography>
 
       <TableContainer component={Paper} sx={{ minWidth: 800 }}>
         <Table stickyHeader aria-label="second level referral users table">
