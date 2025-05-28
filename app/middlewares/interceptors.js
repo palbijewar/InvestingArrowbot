@@ -98,12 +98,8 @@ export const signUpUser = async (formData) => {
 
   try {
     const response = await interceptorInstance.post('/auth/signup', reqBody);
-
     if (reqBody.sponsor_id) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
       const sponsorDetails = await getSponsorDetails(reqBody.sponsor_id);
-
       localStorage.setItem('sponsor_details', JSON.stringify(sponsorDetails?.data));
     }
 

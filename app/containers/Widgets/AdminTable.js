@@ -37,7 +37,6 @@ function AdminTable() {
     const fetchSponsors = async () => {
       try {
         const res = await getAllSponsors(false);
-console.log({res});
 
         setSponsors(res.data);
         setFilteredSponsors(res.data);
@@ -130,14 +129,15 @@ console.log({res});
 
   const handleGasWalletAmountUpdate = async (sponsorId) => {
     let amountStr = editGasWalletFees[sponsorId];
-  
+    const storedSponsorDetails = localStorage.getItem('sponsor_details');
+    const sponsorData = JSON.parse(storedSponsorDetails);
     if (!editGasWalletFees.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
       amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.gas_wallet_amount;
     }
   
     const gasWalletAmount = parseFloat(amountStr?.toString());
   
-    await updateGasWalletAmount(sponsorId, { gas_wallet_amount: gasWalletAmount, is_active: true }); // ✅ Fix here
+    await updateGasWalletAmount(sponsorId, { gas_wallet_amount: gasWalletAmount, is_active: true ,  payment_sponsor_id:sponsorData?.sponsor_id}); // ✅ Fix here
   
     setSponsors((prev) =>
       prev.map((s) =>
@@ -230,7 +230,7 @@ console.log({res});
         <Table stickyHeader>
           <TableHead>
             <TableRow >
-              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount','gas_wallet_fees'].map((key) => (
+              {['sponsor_id', 'username', 'email', 'phone', 'package', 'amount_deposited','demat_amount','gas_wallet'].map((key) => (
                 <TableCell
                   key={key}
                   onClick={() => handleSort(key)}

@@ -43,6 +43,12 @@ export default function MenuListComposition() {
     }
   }
 
+  const signOut = (navigate) => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('sponsor_details');
+    navigate('/login'); // or your login route
+  };  
+
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
