@@ -130,14 +130,13 @@ function AdminTable() {
   const handleGasWalletAmountUpdate = async (sponsorId) => {
     const amountStr = editGasWalletFees[sponsorId];
   
-    // Return early if no value is provided
     if (
       !editGasWalletFees.hasOwnProperty(sponsorId) ||
       amountStr === '' ||
       amountStr == null ||
       isNaN(parseFloat(amountStr))
     ) {
-      return; // 🔁 Do not perform update
+      return; 
     }
   
     const gasWalletAmount = parseFloat(amountStr.toString());
@@ -162,7 +161,6 @@ function AdminTable() {
       console.error('Failed to update gas wallet amount:', err);
     }
   };
-  
 
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);

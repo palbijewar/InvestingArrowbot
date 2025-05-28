@@ -148,25 +148,29 @@ function TradingDetails() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedSponsors.map((sponsor) => (
-                <TableRow
-                  key={sponsor.sponsor_id}
-                  hover
-                  onClick={() => handleRowClick(sponsor.sponsor_id)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  {columns.map(({ key, showOnMobile }) =>
-                    (!isMobile || showOnMobile) ? (
-                      <TableCell key={key} sx={{ whiteSpace: 'nowrap' }}>
-                        {key === 'is_active'
-                          ? sponsor.is_active ? 'Active' : 'Deactive'
-                          : sponsor[key] ?? ''}
-                      </TableCell>
-                    ) : null
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
+  {paginatedSponsors.map((sponsor) => (
+    <TableRow
+      key={sponsor.sponsor_id}
+      hover
+      onClick={() => handleRowClick(sponsor.sponsor_id)}
+      sx={{ cursor: 'pointer' }}
+    >
+      {columns.map(({ key, showOnMobile }) =>
+        (!isMobile || showOnMobile) ? (
+          <TableCell key={key} sx={{ whiteSpace: 'nowrap' }}>
+            {key === 'is_active'
+              ? sponsor.is_active ? 'Active' : 'Deactive'
+              : !sponsor.is_active &&
+                ['package', 'amount_deposited', 'demat_amount', 'gas_wallet_fees'].includes(key)
+                ? ''
+                : sponsor[key] ?? ''}
+          </TableCell>
+        ) : null
+      )}
+    </TableRow>
+  ))}
+</TableBody>
+
           </Table>
         </TableContainer>
       </Box>
