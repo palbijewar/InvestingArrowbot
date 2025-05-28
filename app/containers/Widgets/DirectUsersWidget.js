@@ -77,8 +77,13 @@ function UsersDetailsTable() {
                 <TableCell sx={headerCellStyle}>{index + 1}</TableCell>
                 <TableCell sx={headerCellStyle}>{user.username}</TableCell>
                 <TableCell sx={headerCellStyle}>{user.sponsor_id}</TableCell>
-                <TableCell sx={headerCellStyle}>{user.package || '-'}</TableCell>
-                <TableCell sx={headerCellStyle}>{user.amount_deposited || '-'}</TableCell>
+                <TableCell sx={headerCellStyle}>
+  {user.package ? `$ ${user.package}` : '-'}
+</TableCell>
+
+                <TableCell sx={headerCellStyle}>
+  {user.amount_deposited ? `$ ${user.amount_deposited}` : '-'}
+</TableCell>
                 <TableCell sx={headerCellStyle}>{formatDate(user.createdAt)}</TableCell>
                 <TableCell sx={headerCellStyle}>{user.is_active ? 'Yes' : 'No'}</TableCell>
               </TableRow>

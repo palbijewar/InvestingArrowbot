@@ -292,7 +292,7 @@ function AdminTable() {
                   >
                     <option value="">Select</option>
                     {[30, 75, 125, 220, 650].map((val) => (
-                      <option key={val} value={val}>${val}</option>
+                      <option key={val} value={val}>$ {val}</option>
                     ))}
                   </select>
                 </TableCell>
