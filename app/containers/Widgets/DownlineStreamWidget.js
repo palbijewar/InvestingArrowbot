@@ -71,7 +71,9 @@ export default function DownlineUsersWidget() {
                 <TableCell sx={headerCellStyle}>
                   {user.package ? `$ ${user.package}` : '-'}
                 </TableCell>
-                <TableCell sx={headerCellStyle}>{user.amount_deposited || '-'}</TableCell>
+                <TableCell sx={headerCellStyle}>
+                  {user.amount_deposited ? `$ ${user.amount_deposited}` : '-'}
+                </TableCell>
                 <TableCell sx={headerCellStyle}>{user.level || '-'}</TableCell>
                 <TableCell sx={headerCellStyle}>{user.is_active ? 'Yes' : 'No'}</TableCell>
               </TableRow>
