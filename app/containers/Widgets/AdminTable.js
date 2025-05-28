@@ -128,23 +128,41 @@ function AdminTable() {
   };
 
   const handleGasWalletAmountUpdate = async (sponsorId) => {
-    let amountStr = editGasWalletFees[sponsorId];
-    const storedSponsorDetails = localStorage.getItem('sponsor_details');
-    const sponsorData = JSON.parse(storedSponsorDetails);
-    if (!editGasWalletFees.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
-      amountStr = sponsors.find((s) => s.sponsor_id === sponsorId)?.gas_wallet_amount;
+    const amountStr = editGasWalletFees[sponsorId];
+  
+    // Return early if no value is provided
+    if (
+      !editGasWalletFees.hasOwnProperty(sponsorId) ||
+      amountStr === '' ||
+      amountStr == null ||
+      isNaN(parseFloat(amountStr))
+    ) {
+      return; // 🔁 Do not perform update
     }
   
-    const gasWalletAmount = parseFloat(amountStr?.toString());
+    const gasWalletAmount = parseFloat(amountStr.toString());
+    const storedSponsorDetails = localStorage.getItem('sponsor_details');
+    const sponsorData = JSON.parse(storedSponsorDetails);
   
-    await updateGasWalletAmount(sponsorId, { gas_wallet_amount: gasWalletAmount, is_active: true ,  payment_sponsor_id:sponsorData?.sponsor_id}); // ✅ Fix here
+    try {
+      await updateGasWalletAmount(sponsorId, {
+        gas_wallet_amount: gasWalletAmount,
+        is_active: true,
+        payment_sponsor_id: sponsorData?.sponsor_id,
+      });
   
-    setSponsors((prev) =>
-      prev.map((s) =>
-        s.sponsor_id === sponsorId ? { ...s, gas_wallet_amount: gasWalletAmount } : s
-      )
-    );
-  };  
+      setSponsors((prev) =>
+        prev.map((s) =>
+          s.sponsor_id === sponsorId
+            ? { ...s, gas_wallet_amount: gasWalletAmount }
+            : s
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update gas wallet amount:', err);
+    }
+  };
+  
 
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
