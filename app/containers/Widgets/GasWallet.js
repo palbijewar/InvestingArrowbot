@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createGasWallet } from '../../middlewares/interceptors';
+import { updateGasWalletAmount } from '../../middlewares/interceptors';
 import newQrCode from '../../api/images/newqr.jpg';
 
 function GasWallet() {
@@ -20,9 +20,11 @@ function GasWallet() {
       const payload = {
         sponsor_id: sponsorId,
         gas_wallet_amount: Number(gasFees),
+        is_active: false,
       };
-
-      const res = await createGasWallet(payload);
+      const storedSponsorDetails = localStorage.getItem('sponsor_details');
+      const sponsorData = JSON.parse(storedSponsorDetails);
+      const res = await updateGasWalletAmount(sponsorData?.sponsor_id, payload);
       setMessage(res.message || 'Wallet created successfully!');
     } catch (error) {
       setMessage(error.response?.data?.message || 'Something went wrong.');

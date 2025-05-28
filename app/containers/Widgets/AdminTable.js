@@ -339,7 +339,7 @@ function AdminTable() {
     value={
       editGasWalletFees.hasOwnProperty(sponsor.sponsor_id)
         ? editGasWalletFees[sponsor.sponsor_id]
-        : sponsor.gas_wallet_amount ?? ''
+        : sponsor.gas_wallet_fees ?? ''
     }
     onChange={(e) =>
       setEditGasWalletFees((prev) => ({
