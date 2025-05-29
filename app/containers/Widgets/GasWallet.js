@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { updateGasWalletAmount } from '../../middlewares/interceptors';
 import newQrCode from '../../api/images/newqr.jpg';
+import {
+  IconButton,
+  Tooltip,
+  Typography,
+  Box,
+} from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 function GasWallet() {
   const [sponsorId, setSponsorId] = useState('');
@@ -9,7 +16,7 @@ function GasWallet() {
   const [message, setMessage] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const walletAddress = '0xA1A1458B696Ba84A3C2e92cEc3875f6170A80c0c';
+  const walletAddress = 'TMrquvJNB8NDG4VKW4NpvRUdPqC5y9DiRz';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +42,7 @@ function GasWallet() {
     }
   };
 
-  const copyToClipboard = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -132,23 +139,31 @@ function GasWallet() {
           src={newQrCode}
           alt="Scan QR"
           style={{
-            width: '200px', height: '200px', objectFit: 'contain', marginBottom: '1rem'
+            width: '200px',
+            height: '200px',
+            objectFit: 'contain',
+            marginBottom: '1rem',
           }}
         />
-        <p style={{ wordBreak: 'break-all', marginBottom: '0.5rem' }}>{walletAddress}</p>
-        <button
-          onClick={copyToClipboard}
-          style={{
-            backgroundColor: '#28a745',
-            color: 'white',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
-        >
-          {copied ? 'Copied!' : 'Copy Wallet Code'}
-        </button>
+        <Typography variant="body1" align="center" gutterBottom>
+          <strong>Note:</strong> Only send Tether (TRC20) assets to this address.
+          <br />
+          Scan this QR code for payment details.
+        </Typography>
+
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+          <Typography
+            variant="body2"
+            sx={{ wordBreak: 'break-all', textAlign: 'center', mr: 1 }}
+          >
+            {walletAddress}
+          </Typography>
+          <Tooltip title={copied ? 'Copied!' : 'Copy'}>
+            <IconButton onClick={handleCopy} size="small" aria-label="Copy wallet address">
+              <ContentCopyIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </div>
     </div>
   );
