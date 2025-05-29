@@ -64,13 +64,6 @@ function CounterIconWidget() {
         const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
         const sponsorId = sponsorDetails?.sponsor_id;
 
-        const time = async (label, fn) => {
-          const start = performance.now();
-          const result = await fn();
-          console.log(`${label} took ${(performance.now() - start).toFixed(2)} ms`);
-          return result;
-        };
-
         const [
           directTeamCountResponse,
           downlineTeamCountResponse,
