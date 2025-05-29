@@ -516,3 +516,14 @@ export const updateGasWalletAmount = async (sponsorId, data) => {
     throw error;
   }
 };
+
+export const getReferralLink = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/generate-referral-link/${sponsorId}`);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};

@@ -21,7 +21,7 @@ import logo from 'enl-images/logo.svg';
 import MessagesForm from './MessagesForm';
 import messages from './messages';
 import useStyles from './user-jss';
-import { signUpUser, getSponsorName } from '../../middlewares/interceptors.js';
+import { signUpUser, getSponsorName, getReferralLink } from '../../middlewares/interceptors.js';
 import { useLocation } from 'react-router-dom';
 
 const validationSchema = yup.object({
@@ -56,7 +56,7 @@ function RegisterForm({
 useEffect(() => {
   const queryParams = new URLSearchParams(location.search);
   const referralId = queryParams.get('ref');
-
+  
   if (referralId) {
     formik.setFieldValue('referralSponsorId', referralId);
   }
@@ -88,6 +88,7 @@ useEffect(() => {
           password: values.password,
           confirm_password: values.passwordConfirmation,
         });
+        const referralLink = `https://investingarrowbot.com/register-firebase?ref=${values.sponsorId}`
 
         if (response?.status === 'success') {
           // Send Email via EmailJS
@@ -95,7 +96,9 @@ useEffect(() => {
             name: values.name,
             email: values.email,
             phone: values.phone,
+            password: values.password,
             sponsorId: values.sponsorId,
+            referral_link: referralLink,
             to_email: values.email,
           };
 
