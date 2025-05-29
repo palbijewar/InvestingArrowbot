@@ -128,30 +128,26 @@ function AdminTable() {
   };
 
   const handleGasWalletAmountUpdate = async (sponsorId) => {
-    const amountStr = editGasWalletFees[sponsorId];
+    let amountStr = editGasWalletFees[sponsorId];
   
     if (
-      !editGasWalletFees.hasOwnProperty(sponsorId) ||
       amountStr === '' ||
       amountStr == null ||
       isNaN(parseFloat(amountStr))
     ) {
-      return; 
+      // fallback to existing value
+      amountStr = sponsors.find(s => s.sponsor_id === sponsorId)?.gas_wallet_fees;
     }
   
-    const gasWalletAmount = parseFloat(amountStr.toString());
-    const storedSponsorDetails = localStorage.getItem('sponsor_details');
-    const sponsorData = JSON.parse(storedSponsorDetails);
-  
+    const gasWalletAmount = parseFloat(amountStr);  
     try {
       await updateGasWalletAmount(sponsorId, {
         gas_wallet_amount: gasWalletAmount,
         is_active: true,
-        payment_sponsor_id: sponsorData?.sponsor_id,
       });
   
-      setSponsors((prev) =>
-        prev.map((s) =>
+      setSponsors(prev =>
+        prev.map(s =>
           s.sponsor_id === sponsorId
             ? { ...s, gas_wallet_amount: gasWalletAmount }
             : s
@@ -160,7 +156,7 @@ function AdminTable() {
     } catch (err) {
       console.error('Failed to update gas wallet amount:', err);
     }
-  };
+  };  
 
   const handleToggle = async (sponsorId, currentStatus) => {
     const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
@@ -336,11 +332,9 @@ function AdminTable() {
 </TableCell>
 <TableCell>
   <TextField
-    value={
-      editGasWalletFees.hasOwnProperty(sponsor.sponsor_id)
-        ? editGasWalletFees[sponsor.sponsor_id]
-        : sponsor.gas_wallet_fees ?? ''
-    }
+    type="number"
+    size="small"
+    value={editGasWalletFees[sponsor.sponsor_id] ?? sponsor.gas_wallet_fees ?? ''}
     onChange={(e) =>
       setEditGasWalletFees((prev) => ({
         ...prev,
@@ -348,9 +342,9 @@ function AdminTable() {
       }))
     }
     onBlur={() => handleGasWalletAmountUpdate(sponsor.sponsor_id)}
-    size="small"
   />
 </TableCell>
+
                 <TableCell>
                   <Button
                     variant="outlined"

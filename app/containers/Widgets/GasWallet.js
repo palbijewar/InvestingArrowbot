@@ -24,14 +24,15 @@ function GasWallet() {
     setMessage('');
 
     try {
+      const storedSponsorDetails = localStorage.getItem('sponsor_details');
+      const sponsorData = JSON.parse(storedSponsorDetails);
       const payload = {
-        payment_sponsor_id: sponsorId,
+        payment_sponsor_id: sponsorData.sponsor_id,
         gas_wallet_amount: Number(gasFees),
         is_active: false,
       };
-      const storedSponsorDetails = localStorage.getItem('sponsor_details');
-      const sponsorData = JSON.parse(storedSponsorDetails);
-      const res = await updateGasWalletAmount(sponsorData?.sponsor_id, payload);
+    
+      const res = await updateGasWalletAmount(sponsorId, payload);
       setMessage(res.message || 'Wallet created successfully!');
     } catch (error) {
       setMessage(error.response?.data?.message || 'Something went wrong.');
