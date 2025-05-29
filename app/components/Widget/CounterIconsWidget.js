@@ -34,6 +34,7 @@ import {
   getProfitSummary,
   getSponsorProfitDetails,
   getGasWalletTortalFundBySponsorId,
+  getBotIncome,
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
@@ -47,6 +48,7 @@ function CounterIconWidget() {
   const [directBotBusiness, setDirectBotBusiness] = useState(0);
   const [downlineBotBusiness, setDownlineBotBusiness] = useState(0);
   const [levelIncome, setLevelIncome] = useState(0);
+  const [botLevelIncome, setBotLevelIncome] = useState(0);
   const [currentRank, setCurrentRank] = useState(0);
   const [rankIncome, setRankIncome] = useState(0);
   const [directPortfolioIncome, setDirectPortfolioIncome] = useState(0);
@@ -54,29 +56,45 @@ function CounterIconWidget() {
   const [gasWalletFund, setGasWalletFund] = useState(0);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
+    const sponsorId = sponsorDetails?.sponsor_id;
+  
+    const fetchPrimaryData = async () => {
       try {
-        const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
-        const sponsorId = sponsorDetails?.sponsor_id;
-
         const [
-          directTeamCountResponse,
-          downlineTeamCountResponse,
-          directPortfolioInvestmentResponse,
-          downlinePortfolioInvestmentResponse,
-          botDirectPortfolioInvestmentResponse,
-          botDownlinePortfolioInvestmentResponse,
-          botDirectBotActivationResponse,
-          botDownlineBotActivationResponse,
-          levelIncomeResponse,
-          rankInformationsResponse,
-          profitSummaryResponse,
-          gasWalletTortalFundBySponsorIdResponse,
+          directTeamCountRes,
+          downlineTeamCountRes,
+          directPortfolioInvestmentRes,
+          downlinePortfolioInvestmentRes
         ] = await Promise.all([
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
           getDirectPortfolioInvestment(sponsorId),
-          getDownlinePortfolioInvestment(sponsorId),
+          getDownlinePortfolioInvestment(sponsorId)
+        ]);
+  
+        setDirectTeamCount(directTeamCountRes?.data?.count || 0);
+        setDownlineTeamCount(downlineTeamCountRes?.data?.count || 0);
+        setDirectPortfolioInvestment(directPortfolioInvestmentRes?.data?.direct_portfolio_investment || 0);
+        setDownlinePortfolioInvestment(downlinePortfolioInvestmentRes?.data?.downline_portfolio_investment || 0);
+      } catch (error) {
+        console.error('Error fetching primary dashboard data:', error);
+      }
+    };
+  
+    const fetchSecondaryData = async () => {
+      try {
+        const [
+          botDirectPortfolioInvestmentRes,
+          botDownlinePortfolioInvestmentRes,
+          botDirectBotActivationRes,
+          botDownlineBotActivationRes,
+          levelIncomeRes,
+          rankInfoRes,
+          profitSummaryRes,
+          gasWalletRes,
+          botIncomeRes
+        ] = await Promise.all([
           getBotDirectPortfolioInvestment(sponsorId),
           getBotDownlinePortfolioInvestment(sponsorId),
           getBotDirectActivationCount(sponsorId),
@@ -84,31 +102,29 @@ function CounterIconWidget() {
           getSecondLevelReferralsTotalIncome(sponsorId),
           getRankInformations(sponsorId),
           getSponsorProfitDetails(sponsorId),
-          getGasWalletTortalFundBySponsorId(sponsorId)
+          getGasWalletTortalFundBySponsorId(sponsorId),
+          getBotIncome(sponsorId)
         ]);
-
-        setDirectTeamCount(directTeamCountResponse?.data?.count || 0);
-        setDownlineTeamCount(downlineTeamCountResponse?.data?.count || 0);
-
-        setDirectPortfolioInvestment(directPortfolioInvestmentResponse?.data?.direct_portfolio_investment || 0);
-        setDownlinePortfolioInvestment(downlinePortfolioInvestmentResponse?.data?.downline_portfolio_investment || 0);
-        setDirectBotBusiness(botDirectPortfolioInvestmentResponse?.data?.direct_bot_income || 0);
-        setDownlineBotBusiness(botDownlinePortfolioInvestmentResponse?.data?.downline_bot_income || 0);
-        setDirectBotAtivation(botDirectBotActivationResponse?.data?.direct_bot_count || 0);
-        setBotAtivation(botDownlineBotActivationResponse?.data?.downline_bot_count || 0);
-        setLevelIncome(profitSummaryResponse?.totalIncome || 0);
-        setCurrentRank(rankInformationsResponse?.data?.rank || '');
-        setRankIncome(rankInformationsResponse?.data?.income || 0);
-        setDirectPortfolioIncome(profitSummaryResponse?.totalDirectIncome || 0);
-        setDownlinePortfolioIncome(profitSummaryResponse?.totalDownlineIncome || 0);
-        setGasWalletFund(gasWalletTortalFundBySponsorIdResponse?.data?.totalGasWalletFund || 0);
+  
+        setDirectBotBusiness(botDirectPortfolioInvestmentRes?.data?.direct_bot_income || 0);
+        setDownlineBotBusiness(botDownlinePortfolioInvestmentRes?.data?.downline_bot_income || 0);
+        setDirectBotAtivation(botDirectBotActivationRes?.data?.direct_bot_count || 0);
+        setBotAtivation(botDownlineBotActivationRes?.data?.downline_bot_count || 0);
+        setLevelIncome(profitSummaryRes?.totalIncome || 0);
+        setCurrentRank(rankInfoRes?.data?.rank || 0);
+        setRankIncome(rankInfoRes?.data?.income || 0);
+        setDirectPortfolioIncome(profitSummaryRes?.totalDirectIncome || 0);
+        setDownlinePortfolioIncome(profitSummaryRes?.totalDownlineIncome || 0);
+        setGasWalletFund(gasWalletRes?.data?.totalGasWalletFund || 0);
+        setBotLevelIncome(botIncomeRes?.data?.totalLevelIncome || 0);
       } catch (error) {
-        console.error('Error fetching dashboard data', error);
+        console.error('Error fetching secondary dashboard data:', error);
       }
     };
-    fetchDashboardData();
+  
+    fetchPrimaryData().then(fetchSecondaryData);
   }, []);
-
+  
   return (
     <div className={classes.rootCounterFull}>
       <Grid container spacing={2}>
@@ -191,6 +207,11 @@ function CounterIconWidget() {
         </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-main" start={0} end={gasWalletFund} duration={3} title="Gas Wallet Fund">
+            <MilitaryTech className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-main" start={0} end={botLevelIncome} duration={3} title="Bot Level income">
             <MilitaryTech className={classes.counterIcon} />
           </CounterWidget>
         </Grid>

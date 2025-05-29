@@ -495,6 +495,17 @@ export const getGasWalletTortalFundBySponsorId = async (sponsorId) => {
   }
 };
 
+export const getBotIncome = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/cards/bot-income/${sponsorId}`);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const updateGasWalletAmount = async (sponsorId, data) => {
   try {
     const response = await interceptorInstance.patch(`/gaswallet/${sponsorId}`, data);
