@@ -25,7 +25,7 @@ function GasWallet() {
 
     try {
       const payload = {
-        sponsor_id: sponsorId,
+        payment_sponsor_id: sponsorId,
         gas_wallet_amount: Number(gasFees),
         is_active: false,
       };
