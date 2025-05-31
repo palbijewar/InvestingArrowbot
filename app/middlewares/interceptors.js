@@ -517,6 +517,17 @@ export const updateGasWalletAmount = async (sponsorId, data) => {
   }
 };
 
+export const updatePaymentOption = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.put(`/payment-options/${sponsorId}`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 export const getReferralLink = async (sponsorId) => {
   try {
     const response = await interceptorInstance.get(`/auth/generate-referral-link/${sponsorId}`);
@@ -524,6 +535,39 @@ export const getReferralLink = async (sponsorId) => {
     return response.data;
   } catch (error) {
     console.error('Get Direct Team Count error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateGasWalletAmountStrictly = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/gas-wallet-update`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateDematAmountStrictly = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/demat-amount`, data);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateAmountStrictly = async (sponsorId, data) => {
+  try {
+    const response = await interceptorInstance.patch(`/payment-options/${sponsorId}/amount`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
     throw error;
   }
 };

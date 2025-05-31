@@ -72,6 +72,9 @@ export const GasWallet = loadable(() => import('./Widgets/GasWallet'), {
 export const GasWalletHistory = loadable(() => import('./Widgets/GasHistory'), {
   fallback: <Loading />,
 });
+export const AdminSponsorTradingDetails = loadable(() => import('./Widgets/AdminSponsorTradingDetails'), {
+  fallback: <Loading />,
+});
 
 // Layouts
 export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {

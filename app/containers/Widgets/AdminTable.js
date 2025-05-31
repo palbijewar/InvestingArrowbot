@@ -13,7 +13,8 @@ import {
   updatePackage,
   deleteSponsor,
   updateDematAmount,
-  updateGasWalletAmount
+  updateGasWalletAmount,
+  updatePaymentOption
 } from '../../middlewares/interceptors.js';
 
 function AdminTable() {
@@ -99,6 +100,39 @@ function AdminTable() {
     }
   };
 
+    const handlePaymentOptionUpdate = async (sponsorId) => {
+      let amountStr = editAmount[sponsorId];
+      let dematAmountStr = editDematAmount[sponsorId];
+    
+      const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
+      
+      // Fallback to existing values if inputs are missing or invalid
+      if (!editAmount.hasOwnProperty(sponsorId) || amountStr === '' || amountStr == null) {
+        amountStr = sponsor?.amount_deposited;
+      }
+      if (!editDematAmount.hasOwnProperty(sponsorId) || dematAmountStr === '' || dematAmountStr == null) {
+        dematAmountStr = sponsor?.demat_amount;
+      }
+      
+      const amount = parseFloat(amountStr?.toString());
+      const dematAmount = parseFloat(dematAmountStr?.toString());
+      console.log({amount,dematAmount});
+    
+      try {
+        await updatePaymentOption(sponsorId, { amount, dematAmount });
+    
+        setSponsors((prev) =>
+          prev.map((s) =>
+            s.sponsor_id === sponsorId
+              ? { ...s, amount_deposited: amount, demat_amount: dematAmount }
+              : s
+          )
+        );
+      } catch (err) {
+        console.error('Failed to update payment option:', err);
+      }
+    };    
+
   const handleAmountUpdate = async (sponsorId) => {
     let amountStr = editAmount[sponsorId];
     // eslint-disable-next-line no-prototype-builtins
@@ -111,7 +145,7 @@ function AdminTable() {
 
     setSponsors((prev) => prev.map((s) => (s.sponsor_id === sponsorId ? { ...s, amount_deposited: amount } : s)
     )
-    );
+  );
   };
 
   const handleDematAmountUpdate = async (sponsorId) => {
@@ -159,14 +193,9 @@ function AdminTable() {
   };  
 
   const handleToggle = async (sponsorId, currentStatus) => {
-    const sponsor = sponsors.find((s) => s.sponsor_id === sponsorId);
-    const raw = editAmount[sponsorId] ?? sponsor.amount_deposited;
-    const amount = parseFloat(raw);
-  
     setLoadingId(sponsorId);
     try {
-      await handleAmountUpdate(sponsorId);
-      await handleDematAmountUpdate(sponsorId);
+      await handlePaymentOptionUpdate(sponsorId);
       await handleGasWalletAmountUpdate(sponsorId);
       await activateUser(sponsorId, !currentStatus);
   
@@ -185,8 +214,7 @@ function AdminTable() {
     } finally {
       setLoadingId(null);
     }
-  };
-  
+  };  
 
   const handleDelete = async (sponsorId) => {
     try {

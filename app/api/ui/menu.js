@@ -168,7 +168,7 @@ const superAdminMenu = [
     key: 'sponsor_details',
     name: 'Sponsor Details',
     icon: 'show_chart', // chart icon for trading details
-    linkParent: '/app/widgets/sponsor-details',
+    linkParent: '/app/widgets/admin-sponsors-details',
   },
   {
     key: 'fund',

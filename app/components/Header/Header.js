@@ -39,6 +39,7 @@ function Header(props) {
   const [showTitle, setShowTitle] = useState(false);
   const [userId, setUserId] = useState(null);
   const [userInitial, setUserInitial] = useState('');
+  const [sponsorStatus, setSponsorStatus] = useState(null);
 
   const isAuthenticated = localStorage.getItem('access_token');
   // Initial header style
@@ -54,6 +55,7 @@ function Header(props) {
           if (parsed.username) {
             setUserId(parsed.sponsor_id);
             setUserInitial(parsed.username.charAt(0).toUpperCase());
+            setSponsorStatus(parsed.is_active);
           }
         } catch (e) {
           console.warn('Invalid user_info in localStorage', e);
@@ -141,9 +143,12 @@ function Header(props) {
         <div className={classes.userToolbar}>
           {isAuthenticated ? (
             <>
-              <Typography variant="body1" style={{ marginRight: 10, color: mode === 'light' ? '#000' : '#fff' }}>
-                Sponsor ID: {userId || 'Loading...'}
-              </Typography>
+           <Typography
+  variant="body1"
+  style={{ marginRight: 10, color: mode === 'light' ? '#000' : '#fff' }}
+>
+  Sponsor ID: {userId || 'Loading...'} ({sponsorStatus ? 'Activated' : 'Deactivated'})
+</Typography>
               <UserMenu signOut={signOut} avatar={userInitial} />
             </>
           ) : (
