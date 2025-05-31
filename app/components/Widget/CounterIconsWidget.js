@@ -35,6 +35,7 @@ import {
   getSponsorProfitDetails,
   getGasWalletTortalFundBySponsorId,
   getBotIncome,
+  getExpiryDays,
 } from '../../middlewares/interceptors';
 
 function CounterIconWidget() {
@@ -54,6 +55,7 @@ function CounterIconWidget() {
   const [directPortfolioIncome, setDirectPortfolioIncome] = useState(0);
   const [downlinePortfolioIncome, setDownlinePortfolioIncome] = useState(0);
   const [gasWalletFund, setGasWalletFund] = useState(0);
+  const [expiryDays, setExpiryDays] = useState(0);
 
   useEffect(() => {
     const sponsorDetails = JSON.parse(localStorage.getItem('sponsor_details'));
@@ -65,14 +67,18 @@ function CounterIconWidget() {
           directTeamCountRes,
           downlineTeamCountRes,
           directPortfolioInvestmentRes,
-          downlinePortfolioInvestmentRes
+          downlinePortfolioInvestmentRes,
+          getExpiryDaysResponse,
         ] = await Promise.all([
           getDirectTeamCount(sponsorId),
           getTotalDownlineTeamCount(sponsorId),
           getDirectPortfolioInvestment(sponsorId),
-          getDownlinePortfolioInvestment(sponsorId)
+          getDownlinePortfolioInvestment(sponsorId),
+          getExpiryDays(sponsorId)
         ]);
+  console.log({getExpiryDaysResponse});
   
+        setExpiryDays(getExpiryDaysResponse?.data?.remaining_days || 0);
         setDirectTeamCount(directTeamCountRes?.data?.count || 0);
         setDownlineTeamCount(downlineTeamCountRes?.data?.count || 0);
         setDirectPortfolioInvestment(directPortfolioInvestmentRes?.data?.direct_portfolio_investment || 0);
@@ -93,7 +99,7 @@ function CounterIconWidget() {
           rankInfoRes,
           profitSummaryRes,
           gasWalletRes,
-          botIncomeRes
+          botIncomeRes,
         ] = await Promise.all([
           getBotDirectPortfolioInvestment(sponsorId),
           getBotDownlinePortfolioInvestment(sponsorId),
@@ -103,7 +109,7 @@ function CounterIconWidget() {
           getRankInformations(sponsorId),
           getSponsorProfitDetails(sponsorId),
           getGasWalletTortalFundBySponsorId(sponsorId),
-          getBotIncome(sponsorId)
+          getBotIncome(sponsorId),
         ]);
   
         setDirectBotBusiness(botDirectPortfolioInvestmentRes?.data?.direct_bot_income || 0);
@@ -116,7 +122,7 @@ function CounterIconWidget() {
         setDirectPortfolioIncome(profitSummaryRes?.totalDirectIncome || 0);
         setDownlinePortfolioIncome(profitSummaryRes?.totalDownlineIncome || 0);
         setGasWalletFund(gasWalletRes?.data?.totalGasWalletFund || 0);
-        setBotLevelIncome(botIncomeRes?.data?.totalLevelIncome || 0);
+        setBotLevelIncome(botIncomeRes?.data?.totalIncome || 0);
       } catch (error) {
         console.error('Error fetching secondary dashboard data:', error);
       }
@@ -128,6 +134,11 @@ function CounterIconWidget() {
   return (
     <div className={classes.rootCounterFull}>
       <Grid container spacing={2}>
+      <Grid item xs={6} md={3}>
+          <CounterWidget color="secondary-dark" start={0} end={expiryDays} duration={3} title="Expiry Days">
+            <PrecisionManufacturing className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
         <Grid item xs={6} md={3}>
           <CounterWidget color="secondary-dark" start={0} end={directBotAtivation} duration={3} title="Direct Bot Activation">
             <SmartToy className={classes.counterIcon} />
@@ -211,9 +222,15 @@ function CounterIconWidget() {
           </CounterWidget>
         </Grid>
         <Grid item xs={6} md={3}>
-          <CounterWidget color="secondary-main" start={0} end={botLevelIncome} duration={3} title="Bot Level income">
-            <MilitaryTech className={classes.counterIcon} />
-          </CounterWidget>
+        <CounterWidget
+  color="secondary-main"
+  start={0}
+  end={parseFloat(botLevelIncome.toFixed(4))}
+  duration={3}
+  title="Bot Level Income"
+>
+  <MilitaryTech className={classes.counterIcon} />
+</CounterWidget>
         </Grid>
       </Grid>
     </div>

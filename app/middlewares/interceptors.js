@@ -234,9 +234,9 @@ export const getSecondLevelReferralsTotalIncome = async (sponsorId) => {
 
 export const activateUser = async (sponsorId, isActive) => {
   try {
-    const response = await interceptorInstance.patch(
+const response = await interceptorInstance.patch(
       `/auth/activate/${sponsorId}`,
-      { is_active: isActive }
+      { isActive }
     );
 
     return response.data;
@@ -568,6 +568,28 @@ export const updateAmountStrictly = async (sponsorId, data) => {
     return response.data;
   } catch (error) {
     console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateActivationDate = async (sponsorId, data) => {
+  try {
+ const response = await interceptorInstance.patch(`/auth/${sponsorId}/activate-date`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Activate User error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getExpiryDays = async (sponsorId) => {
+  try {
+    const response = await interceptorInstance.get(`/auth/users/${sponsorId}/expiry`);
+    
+    return response.data;
+  } catch (error) {
+    console.error('Get Direct Team Count error:', error.response?.data || error.message);
     throw error;
   }
 };
