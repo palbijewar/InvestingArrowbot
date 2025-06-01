@@ -519,6 +519,8 @@ export const updateGasWalletAmount = async (sponsorId, data) => {
 
 export const updatePaymentOption = async (sponsorId, data) => {
   try {
+    console.log({data});
+    
     const response = await interceptorInstance.put(`/payment-options/${sponsorId}`, data);
 
     return response.data;

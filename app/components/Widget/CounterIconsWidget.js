@@ -76,7 +76,11 @@ function CounterIconWidget() {
           getDownlinePortfolioInvestment(sponsorId),
           getExpiryDays(sponsorId)
         ]);
-  console.log({getExpiryDaysResponse});
+  console.log({ directTeamCountRes,
+          downlineTeamCountRes,
+          directPortfolioInvestmentRes,
+          downlinePortfolioInvestmentRes,
+          getExpiryDaysResponse});
   
         setExpiryDays(getExpiryDaysResponse?.data?.remaining_days || 0);
         setDirectTeamCount(directTeamCountRes?.data?.count || 0);

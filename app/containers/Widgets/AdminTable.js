@@ -119,7 +119,7 @@ function AdminTable() {
       console.log({amount,dematAmount});
     
       try {
-        await updatePaymentOption(sponsorId, { amount, dematAmount });
+        await updatePaymentOption(sponsorId, { amount, demat_amount:dematAmount });
     
         setSponsors((prev) =>
           prev.map((s) =>
@@ -175,8 +175,11 @@ function AdminTable() {
   
     const gasWalletAmount = parseFloat(amountStr);  
     try {
+      const storedSponsorDetails = localStorage.getItem('sponsor_details');
+      const sponsorData = JSON.parse(storedSponsorDetails);
       await updateGasWalletAmount(sponsorId, {
         gas_wallet_amount: gasWalletAmount,
+        payment_sponsor_id: sponsorData?.sponsor_id,
         is_active: true,
       });
   
